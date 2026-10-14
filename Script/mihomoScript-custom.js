@@ -1,3 +1,4 @@
+// 我的自定义脚本订阅地址：https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js
 /**
  * mihomo配置覆写脚本（全量版）
  * 作者：AIsouler
