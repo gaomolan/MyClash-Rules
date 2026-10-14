@@ -112,7 +112,7 @@ jobs:
           # 验证生成文件包含订阅地址、原有低倍率补丁和 DNS 覆盖补丁
           grep -q '我的自定义脚本订阅地址' Script/mihomoScript-custom.js
           grep -q 'MyClash 用户追加功能' Script/mihomoScript-custom.js
-          grep -q 'MyClash 用户自定义 DNS 覆盖' Script/mihomoScript-custom.js
+          ! grep -q 'CUSTOM_DNS_ORIGINAL_MAIN' Script/mihomoScript-custom.js
           node --check Script/mihomoScript-custom.js
 
       - name: Commit and push generated script
