@@ -64,6 +64,11 @@ const ruleOptionsEnable = {
   屏蔽国外QUIC: true, // 是否屏蔽国外QUIC流量
   代理IPV4优先: false, // 是否将订阅节点统一为 IPv4 优先（与“代理IPV6优先”同时开启时不生效）
   代理IPV6优先: false, // 是否将订阅节点统一为 IPv6 优先（与“代理IPV4优先”同时开启时不生效）
+
+  // 以下为 Smart 内核专用（Bettbox GUI 可视化开关，在「⚙️ 其他设置」中实时生效）
+  Smart优先ASN: false, // smart 选路时优先按 ASN 判断（prefer-asn）
+  Smart收集训练数据: false, // 收集连接数据用于训练自己的模型（collectdata，存 smart_weight_data.csv）
+  Smart低倍率优先: false, // 给名字含"低倍率"的节点加权（policy-priority: 低倍率:1.2）
 };
 
 // 定义前置规则
@@ -391,12 +396,33 @@ const smartBaseOption = {
   type: 'smart',
   tolerance: 50,
   uselightgbm: false,
-  // 'prefer-asn': true,
-  // 'policy-priority': '低倍率:1.2',
+  // 'prefer-asn' / collectdata / 'policy-priority' 由下方 buildSmartGroupOption()
+  // 根据 Bettbox GUI 开关（ruleOptionsEnable）实时填入，见【GUI 开关】说明。
   'exclude-type': 'DIRECT',
   icon: `${iconBaseUrl}Auto.svg`,
   hidden: true,
 };
+
+// ------------------------------------------------------------
+// 【GUI 开关】
+//   Bettbox 把 ruleOptionsEnable 里的布尔项渲染成可视化开关，
+//   在脚本顶层执行完、main() 运行前把用户修改写回 ruleOptionsEnable，
+//   因此开关值必须在这里实时读取，不能写死在上面的 const 里。
+//   新增开关（在「⚙️ 其他设置」中）：
+//   - Smart优先ASN      → 'prefer-asn': true
+//   - Smart收集训练数据 → collectdata: true
+//   - Smart低倍率优先   → 'policy-priority': '低倍率:1.2'
+// ------------------------------------------------------------
+function buildSmartGroupOption() {
+  return {
+    ...smartBaseOption,
+    'prefer-asn': !!ruleOptionsEnable.Smart优先ASN,
+    collectdata: !!ruleOptionsEnable.Smart收集训练数据,
+    ...(ruleOptionsEnable.Smart低倍率优先
+      ? { 'policy-priority': '低倍率:1.2' }
+      : {}),
+  };
+}
 
 // load-balance策略组通用配置
 const loadBalanceBaseOption = {
@@ -418,7 +444,7 @@ const baseGroups = [
   },
   {
     name: '自动选择',
-    baseOption: smartBaseOption,
+    baseOption: buildSmartGroupOption,
     includeAll: true,
     icon: `${iconBaseUrl}Auto.svg`,
   },
@@ -988,7 +1014,7 @@ function createRegionGroup(name, icon, proxies) {
     const smartAutoName = `${name}-自动选择`;
     return [
       {
-        ...smartBaseOption,
+        ...buildSmartGroupOption(),
         name: smartAutoName,
         proxies,
       },
@@ -1185,7 +1211,8 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     }
 
     functionalGroups.push({
-      ...svc.baseOption,
+      // baseOption 可能是函数（smart 组需实时读取 GUI 开关）或静态对象
+      ...(typeof svc.baseOption === 'function' ? svc.baseOption() : svc.baseOption),
       name: svc.name,
       icon: svc.icon,
       proxies: groupProxies,
@@ -1816,7 +1843,7 @@ function main(config) {
 // 4. 直接复用 MyClash 原脚本已有的：
 //      - rateRegionDefinitions
 //      - lowRateRegionName
-//      - smartBaseOption（Smart 内核专用，低倍率组原生 smart）
+//      - buildSmartGroupOption()（Smart 内核专用，低倍率组原生 smart，实时读取 GUI 开关）
 //      - iconBaseUrl
 // 5. 通过包装原 main() 的方式，在原配置生成完成后追加策略组。
 // 6. 因此这是“只增加代码”，不需要修改上游原有代码。
@@ -1899,7 +1926,7 @@ main = function customMain(config) {
     }
 
     result['proxy-groups'].push({
-      ...smartBaseOption,
+      ...buildSmartGroupOption(),
       name: lowRateGroupName,
       proxies: lowRateProxies,
       icon: `${iconBaseUrl}Available.svg`,
