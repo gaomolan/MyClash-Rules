@@ -66,6 +66,7 @@ const ruleOptionsEnable = {
   代理IPV6优先: false, // 是否将订阅节点统一为 IPv6 优先（与“代理IPV4优先”同时开启时不生效）
 
   // 以下为 Smart 内核专用（Bettbox GUI 可视化开关，在「⚙️ 其他设置」中实时生效）
+  // ※ 详细说明见【Smart专区】
   Smart优先ASN: false, // smart 选路时优先按 ASN 判断（prefer-asn）
   Smart收集训练数据: false, // 收集连接数据用于训练自己的模型（collectdata，存 smart_weight_data.csv）
   Smart低倍率优先: false, // 给名字含"低倍率"的节点加权（policy-priority: 低倍率:1.2）
@@ -347,6 +348,20 @@ const urlTestBaseOption = {
 };
 
 // ============================================================
+// ############################################################
+// # 【Smart专区】Smart 内核相关代码集中区
+// # 本文件所有 Smart 特性的「定义」都在这里；
+// # 散在别处因架构原因动不了的，用「【Smart专区】」标记指回这里。
+// # 改 smart 参数只看这一区。
+// #
+// # 散在各处的触点（均为一行，带标记，勿删）：
+// #  1. ruleOptionsEnable 内的「Smart 内核专用」开关（Bettbox GUI 可视化开关）
+// #  2. baseGroups「自动选择」条目 → baseOption: buildSmartGroupOption
+// #  3. createRegionGroup() 的「地区-自动选择」组 → ...buildSmartGroupOption()
+// #  4. buildFunctionalGroups() 的 ...svc.baseOption 展开处（兼容函数写法）
+// #  5. main() 内的 Smart 全局配置（lgbm-auto-update 等）
+// #  6. 文件尾自定义区的「地区-低倍率自动选择」组 → ...buildSmartGroupOption()
+// ############################################################
 // smart 策略组通用配置（Smart 内核专用）
 // 文档参考：vernesong/mihomo（Alpha 分支）Smart 说明、KevinChen222/Bettbox readme/Smart.md
 // ------------------------------------------------------------
@@ -444,7 +459,7 @@ const baseGroups = [
   },
   {
     name: '自动选择',
-    baseOption: buildSmartGroupOption,
+    baseOption: buildSmartGroupOption, // 【Smart专区】定义见 buildSmartGroupOption()
     includeAll: true,
     icon: `${iconBaseUrl}Auto.svg`,
   },
@@ -1014,7 +1029,7 @@ function createRegionGroup(name, icon, proxies) {
     const smartAutoName = `${name}-自动选择`;
     return [
       {
-        ...buildSmartGroupOption(),
+        ...buildSmartGroupOption(), // 【Smart专区】
         name: smartAutoName,
         proxies,
       },
@@ -1211,7 +1226,7 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     }
 
     functionalGroups.push({
-      // baseOption 可能是函数（smart 组需实时读取 GUI 开关）或静态对象
+      // 【Smart专区】baseOption 可能是函数（smart 组需实时读取 GUI 开关）或静态对象
       ...(typeof svc.baseOption === 'function' ? svc.baseOption() : svc.baseOption),
       name: svc.name,
       icon: svc.icon,
@@ -1788,7 +1803,7 @@ function main(config) {
   };
 
   // ============================================================
-  // Smart 内核全局配置（参考 vernesong/mihomo Smart 文档）
+  // 【Smart专区】Smart 内核全局配置（参考 vernesong/mihomo Smart 文档）
   // ------------------------------------------------------------
   // lgbm-auto-update     模型自动更新总开关，默认 false。
   //                      ※ 安卓端注意：当前 smart-core 的模型更新流程有 bug
@@ -1843,7 +1858,7 @@ function main(config) {
 // 4. 直接复用 MyClash 原脚本已有的：
 //      - rateRegionDefinitions
 //      - lowRateRegionName
-//      - buildSmartGroupOption()（Smart 内核专用，低倍率组原生 smart，实时读取 GUI 开关）
+//      - buildSmartGroupOption()【Smart专区】（低倍率组原生 smart，实时读取 GUI 开关）
 //      - iconBaseUrl
 // 5. 通过包装原 main() 的方式，在原配置生成完成后追加策略组。
 // 6. 因此这是“只增加代码”，不需要修改上游原有代码。
@@ -1926,7 +1941,7 @@ main = function customMain(config) {
     }
 
     result['proxy-groups'].push({
-      ...buildSmartGroupOption(),
+      ...buildSmartGroupOption(), // 【Smart专区】
       name: lowRateGroupName,
       proxies: lowRateProxies,
       icon: `${iconBaseUrl}Available.svg`,
