@@ -62,6 +62,7 @@ const ruleOptionsEnable = {
   过滤高倍率节点: false, // 是否过滤高倍率节点
   过滤非地区节点: true, // 是否过滤非地区节点
   屏蔽国外QUIC: true, // 是否屏蔽国外QUIC流量
+  防WebRTC泄露: false, // 关 IPv6 + 给缺省 udp 的节点补 udp:true，防 STUN/UDP 经 DIRECT 泄露真实 IP（开后 WebRTC 经代理中转，视频通话等不受影响）
   代理IPV4优先: false, // 是否将订阅节点统一为 IPv4 优先（与“代理IPV6优先”同时开启时不生效）
   代理IPV6优先: false, // 是否将订阅节点统一为 IPv6 优先（与“代理IPV4优先”同时开启时不生效）
 
@@ -1696,7 +1697,7 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
 
   const dns = {
     enable: true,
-    ipv6: true,
+    ipv6: !ruleOptionsEnable.防WebRTC泄露, // 开「防WebRTC泄露」时关闭：AAAA 不再返回，封死 DNSv6/IPv6 通道的泄露路径
     'use-hosts': true,
     'cache-algorithm': 'arc',
     'use-system-hosts': true,
@@ -1773,7 +1774,8 @@ function main(config) {
   newConfig['hosts'] = hosts;
   newConfig['mixed-port'] = 7890;
   newConfig['allow-lan'] = true;
-  newConfig['ipv6'] = true;
+  // 【防 WebRTC 泄露】GUI 开关：关闭 IPv6（TUN/DNS 不再走 v6），封死 IPv6 通道的真实 IP 泄露
+  newConfig['ipv6'] = ruleOptionsEnable.防WebRTC泄露 ? false : true;
   newConfig['mode'] = 'rule';
   newConfig['log-level'] = ruleOptionsEnable.日志级别调试 ? 'debug' : 'info'; // 【Smart专区】GUI 开关控制
   newConfig['bind-address'] = '*';
@@ -1829,7 +1831,17 @@ function main(config) {
   newConfig['lgbm-update-interval'] = 72;
   // newConfig['lgbm-url'] = 'https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin';
 
-  newConfig['proxies'] = [...mappedProxies, ...customProxies, ...directProxies];
+  // 【防 WebRTC 泄露】GUI 开关：mihomo 对缺省 udp 的节点按 udp:false 处理，
+  // tunnel 匹配不到可用出站时，UDP（STUN/QUIC 等）会 fallback 到 DIRECT，用真实 IP 发包——
+  // 这是 WebRTC 泄露最常见的真实原因。这里给缺省的节点补 udp:true，让 UDP 正常走代理；
+  // 已显式声明 udp（true/false）的节点保持原样，direct/reject 类伪节点跳过。
+  newConfig['proxies'] = [...mappedProxies, ...customProxies, ...directProxies].map((proxy) => {
+    const type = String(proxy.type ?? '').toLowerCase();
+    if (!ruleOptionsEnable.防WebRTC泄露 || proxy.udp !== undefined || type === 'direct' || type === 'reject' || type === 'rematch') {
+      return proxy;
+    }
+    return { ...proxy, udp: true };
+  });
   newConfig['proxy-groups'] = [
     globalGroup,
     ...functionalGroups,
