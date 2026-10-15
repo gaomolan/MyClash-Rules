@@ -341,16 +341,58 @@ const urlTestBaseOption = {
   hidden: true,
 };
 
-// smart策略组通用配置（Smart 内核专用，参考 vernesong/mihomo Smart 文档）
-// 与 url-test 的区别：按目标独立选路，综合真实连接表现（成功率/速度/丢包）打分，
-// 不再是全局唯一的"延迟最低者"。tolerance / url / interval / lazy 与 url-test 通用。
+// ============================================================
+// smart 策略组通用配置（Smart 内核专用）
+// 文档参考：vernesong/mihomo（Alpha 分支）Smart 说明、KevinChen222/Bettbox readme/Smart.md
+// ------------------------------------------------------------
+// 【smart 是什么】
+//   Smart 内核新增的策略组类型（type: 'smart'），可视为 url-test 的上位替代，
+//   但两者选路逻辑完全不同：
+//   - url-test：定时 ping 一圈，「延迟最低者」获胜，全局只有一个答案；
+//   - smart：按「目标」独立选路（访问不同网站可用不同节点），综合真实连接
+//     表现打分——成功率、速度、丢包率（EMA 滑动平均）、无响应 stall，
+//     五维权重 Model（LightGBM 预测）+ TCP + UDP + Base + Priority 加权，
+//     分高者胜；某节点对某目标连续失败会被记 strike 并针对该目标排除，
+//     而不是全局拉黑。
+// 【和 url-test 通用的字段】
+//   url / interval / timeout / lazy / tolerance / exclude-type 含义不变，
+//   可直接沿用原来的值。
+// 【smart 专有字段】
+//   uselightgbm    是否用 LightGBM 模型预测权重。true 需要 Model.bin 已就位；
+//                  没有模型时内核会自动回退到纯统计选路；false 则完全不依赖模型。
+//                  ※ 安卓端注意：在模型手动放置好之前保持 false。
+//   collectdata    是否收集连接数据用于训练自己的模型（存 HomeDir 下
+//                  smart_weight_data.csv，上限见 smart-collector-size）。
+//                  平时建议 false，省空间省 IO。
+//   sample-rate    数据采集采样率，0~1，默认 1。collectdata 开启时有效。
+//   prefer-asn     选路时优先按 ASN 判断（先查 ASN 再选节点），默认 false。
+//                  节点 IP 归属混乱、落地与标注不符时可尝试开启。
+//   policy-priority 节点加权，支持正则与字符串：<1 降权，>1 加权，默认 1，
+//                  多条用分号隔开。例："低倍率:1.2"（名字含"低倍率"的节点×1.2）、
+//                  "Premium:0.9;SG:1.3"。想让某类节点优先被 smart 选中时用，
+//                  不写则一视同仁。
+// 【url-test 专有字段】
+//   如 max-failed-times 在 smart 组会被忽略，无需删除。
+// ------------------------------------------------------------
+// 【建议参数】
+//   日常（无模型）：uselightgbm: false，tolerance: 50，interval: 300~600，lazy: true
+//   有模型后     ：uselightgbm: true（其余不动）
+//   进阶         ：prefer-asn / policy-priority 按需开；
+//                  collectdata 仅在想自己训练模型时开
+// ------------------------------------------------------------
+// 【验证 smart 是否生效】
+//   1. 配置能正常加载（官方内核会直接拒绝 type: smart，能加载即内核支持）；
+//   2. 代理页点 smart 组内节点：点一下固定，再点已固定的取消、恢复自动；
+//   3. 内核日志搜 [Smart]：出现 "Connection Group" / "Updated weights"
+//      即统计引擎在工作（模型下载相关的报错可忽略，不影响选路）。
+// ============================================================
 const smartBaseOption = {
   ...groupBaseOption,
   type: 'smart',
   tolerance: 50,
-  uselightgbm: false, // 暂无 LightGBM 模型时用纯统计选路；模型就绪后改 true
-  // 'prefer-asn': true, // 选路时优先参考 ASN，按需开启
-  // 'policy-priority': '低倍率:1.2', // 按节点名正则加权示例，按需开启
+  uselightgbm: false,
+  // 'prefer-asn': true,
+  // 'policy-priority': '低倍率:1.2',
   'exclude-type': 'DIRECT',
   icon: `${iconBaseUrl}Auto.svg`,
   hidden: true,
@@ -1718,11 +1760,25 @@ function main(config) {
     'dns-hijack': ['any:53', 'tcp://any:53'],
   };
 
+  // ============================================================
   // Smart 内核全局配置（参考 vernesong/mihomo Smart 文档）
-  // 注意：安卓端「资源页 → LightGBM → 同步」存在临时文件写 /data/local/tmp 的 bug，
-  // 修复前保持 lgbm-auto-update: false，模型如需使用请手动放置。
+  // ------------------------------------------------------------
+  // lgbm-auto-update     模型自动更新总开关，默认 false。
+  //                      ※ 安卓端注意：当前 smart-core 的模型更新流程有 bug
+  //                        （临时文件写到 /data/local/tmp，App 无写权限），
+  //                        自动更新必失败。在作者修复前保持 false，
+  //                        如需用模型请手动下载放到 App 私有目录再开 uselightgbm。
+  // lgbm-update-interval 自动更新间隔（小时），默认 72。
+  // lgbm-url             模型下载地址（可选，默认官方地址）。
+  //                      GitHub 直连困难时可换镜像加速，例：
+  //                      'https://gh-proxy.com/https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin'
+  // smart-collector-size 数据收集文件上限（MB），默认 100，
+  //                      collectdata 开启时有效。profile 是顶层字段，示例：
+  //                      newConfig['profile'] = { ...newConfig['profile'], 'smart-collector-size': 100 };
+  // ============================================================
   newConfig['lgbm-auto-update'] = false;
   newConfig['lgbm-update-interval'] = 72;
+  // newConfig['lgbm-url'] = 'https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/Model.bin';
 
   newConfig['proxies'] = [...mappedProxies, ...customProxies, ...directProxies];
   newConfig['proxy-groups'] = [
