@@ -67,6 +67,7 @@ const ruleOptionsEnable = {
 
   // 以下为 Smart 内核专用（Bettbox GUI 可视化开关，在「⚙️ 其他设置」中实时生效）
   // ※ 详细说明见【Smart专区】
+  Smart启用GBM模型: false, // 用 LightGBM 模型预测权重（uselightgbm，无模型时自动下载，失败则回退统计选路）
   Smart优先ASN: false, // smart 选路时优先按 ASN 判断（prefer-asn）
   Smart收集训练数据: false, // 收集连接数据用于训练自己的模型（collectdata，存 smart_weight_data.csv）
   Smart低倍率优先: false, // 给名字含"低倍率"的节点加权（policy-priority: 低倍率:1.2）
@@ -378,9 +379,11 @@ const urlTestBaseOption = {
 //   url / interval / timeout / lazy / tolerance / exclude-type 含义不变，
 //   可直接沿用原来的值。
 // 【smart 专有字段】
-//   uselightgbm    是否用 LightGBM 模型预测权重。true 需要 Model.bin 已就位；
-//                  没有模型时内核会自动回退到纯统计选路；false 则完全不依赖模型。
-//                  ※ 安卓端注意：在模型手动放置好之前保持 false。
+//   uselightgbm    是否用 LightGBM 模型预测权重（GUI 开关「Smart启用GBM模型」）。
+//                  true 时：无 Model.bin 会自动下载（直写应用目录，不走有 bug 的
+//                  临时文件路径）；下载失败则优雅回退到纯统计选路，不会崩。
+//                  即使模型加载成功，单个目标数据攒够最小样本数之前仍走统计权重，
+//                  所以短期体感差异不大，模型是锦上添花。
 //   collectdata    是否收集连接数据用于训练自己的模型（存 HomeDir 下
 //                  smart_weight_data.csv，上限见 smart-collector-size）。
 //                  平时建议 false，省空间省 IO。
@@ -396,7 +399,8 @@ const urlTestBaseOption = {
 // ------------------------------------------------------------
 // 【建议参数】
 //   日常（无模型）：uselightgbm: false，tolerance: 50，interval: 300~600，lazy: true
-//   有模型后     ：uselightgbm: true（其余不动）
+//   想试模型     ：把 GUI 开关「Smart启用GBM模型」打开（其余不动），
+//                  日志出现 [Smart] Model file loaded successfully 即生效
 //   进阶         ：prefer-asn / policy-priority 按需开；
 //                  collectdata 仅在想自己训练模型时开
 // ------------------------------------------------------------
@@ -424,6 +428,7 @@ const smartBaseOption = {
 //   在脚本顶层执行完、main() 运行前把用户修改写回 ruleOptionsEnable，
 //   因此开关值必须在这里实时读取，不能写死在上面的 const 里。
 //   新增开关（在「⚙️ 其他设置」中）：
+//   - Smart启用GBM模型   → uselightgbm: true（无 Model.bin 时自动下载，失败回退统计选路）
 //   - Smart优先ASN      → 'prefer-asn': true
 //   - Smart收集训练数据 → collectdata: true
 //   - Smart低倍率优先   → 'policy-priority': '低倍率:1.2'
@@ -431,6 +436,7 @@ const smartBaseOption = {
 function buildSmartGroupOption() {
   return {
     ...smartBaseOption,
+    uselightgbm: !!ruleOptionsEnable.Smart启用GBM模型,
     'prefer-asn': !!ruleOptionsEnable.Smart优先ASN,
     collectdata: !!ruleOptionsEnable.Smart收集训练数据,
     ...(ruleOptionsEnable.Smart低倍率优先
