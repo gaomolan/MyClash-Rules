@@ -71,6 +71,7 @@ const ruleOptionsEnable = {
   Smart优先ASN: false, // smart 选路时优先按 ASN 判断（prefer-asn）
   Smart收集训练数据: false, // 收集连接数据用于训练自己的模型（collectdata，存 smart_weight_data.csv）
   Smart低倍率优先: false, // 给名字含"低倍率"的节点加权（policy-priority: 低倍率:1.2）
+  日志级别调试: false, // 内核日志级别改为 debug（非 smart 专有，测试观察用；长期开费电占空间）
 };
 
 // 定义前置规则
@@ -1774,7 +1775,7 @@ function main(config) {
   newConfig['allow-lan'] = true;
   newConfig['ipv6'] = true;
   newConfig['mode'] = 'rule';
-  newConfig['log-level'] = 'info';
+  newConfig['log-level'] = ruleOptionsEnable.日志级别调试 ? 'debug' : 'info'; // 【Smart专区】GUI 开关控制
   newConfig['bind-address'] = '*';
   newConfig['unified-delay'] = true;
   newConfig['tcp-concurrent'] = true;
