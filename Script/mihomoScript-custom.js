@@ -1826,39 +1826,5 @@ main = function customMain(config) {
     regionGroup.proxies.push(lowRateGroupName);
   }
 
-  // url-test → smart 转换（追加式：只处理生成后的配置，不动上游原有代码）
-  customConvertToSmart(result);
-
   return result;
 };
-// ============================================================
-// MyClash 用户追加功能
-// 功能：将指定的 url-test 策略组转换为 smart 策略组
-// ============================================================
-//
-// 设计说明：
-// 1. 不修改上游原有代码，只在配置生成完成后转换指定组。
-// 2. 只有 CUSTOM_SMART_CONVERT_GROUPS 名单里的组会被转换，其余组原样不动。
-// 3. smart 内核完全兼容旧组类型，不在名单里的组无需任何改动。
-// 4. tolerance / url / interval / lazy 沿用原 url-test 配置，smart 同样支持；
-//    max-failed-times 等 url-test 专有字段 smart 会忽略，无需删除。
-// ============================================================
-
-const CUSTOM_SMART_CONVERT_ENABLED = true;
-
-// 需要转为 smart 的组名，按需增删（例如 '香港-低倍率自动选择'）
-const CUSTOM_SMART_CONVERT_GROUPS = new Set([
-  '自动选择',
-]);
-
-function customConvertToSmart(result) {
-  if (!CUSTOM_SMART_CONVERT_ENABLED) return;
-  if (!result || !Array.isArray(result['proxy-groups'])) return;
-
-  for (const group of result['proxy-groups']) {
-    if (!group || group.type !== 'url-test') continue;
-    if (!CUSTOM_SMART_CONVERT_GROUPS.has(group.name)) continue;
-    group.type = 'smart';
-    group.uselightgbm = false; // 暂无 LightGBM 模型，用纯统计选路
-  }
-}
