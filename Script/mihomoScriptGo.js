@@ -50,8 +50,8 @@ const ruleOptionsEnable = {
   隐藏地区手动选择组: false, // 是否隐藏地区手动选择策略组
   生成倍率组: true, // 是否生成低倍率/高倍率策略组
   分流组添加所有节点: false, // 是否为分流策略组添加所有节点
-  过滤低倍率节点: false, // 是否过滤低倍率节点
-  过滤高倍率节点: false, // 是否过滤高倍率节点
+  显示低倍率节点: true, // 是否显示低倍率节点（关闭则隐藏）
+  显示高倍率节点: true, // 是否显示高倍率节点（关闭则隐藏）
   过滤非地区节点: true, // 是否过滤非地区节点
   屏蔽国外QUIC: true, // 是否屏蔽国外QUIC流量
   代理IPV4优先: true, // 是否将订阅节点统一为 IPv4 优先（与“代理IPV6优先”同时开启时不生效）
@@ -915,14 +915,14 @@ function getIpVersionPreference() {
 function filterAndNormalizeProxies(config) {
   regionMatchCache.clear();
 
-  const filterLowRateProxiesEnabled = ruleOptionsEnable.过滤低倍率节点;
-  const filterHighRateProxiesEnabled = ruleOptionsEnable.过滤高倍率节点;
+  const showLowRateProxiesEnabled = ruleOptionsEnable.显示低倍率节点;
+  const showHighRateProxiesEnabled = ruleOptionsEnable.显示高倍率节点;
   const filterNonRegionProxiesEnabled = ruleOptionsEnable.过滤非地区节点;
 
-  const lowRateRegex = filterLowRateProxiesEnabled
+  const lowRateRegex = !showLowRateProxiesEnabled
     ? rateRegionDefinitions.find((r) => r.name === lowRateRegionName)?.regex
     : null;
-  const highRateRegex = filterHighRateProxiesEnabled
+  const highRateRegex = !showHighRateProxiesEnabled
     ? rateRegionDefinitions.find((r) => r.name === highRateRegionName)?.regex
     : null;
 
