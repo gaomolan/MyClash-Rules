@@ -507,22 +507,13 @@ const serviceConfigs = [
     name: 'Claude/OpenAI',
     baseOption: selectBaseOption,
     defaultSelected: defaultSelectedMap['Claude/OpenAI'],
-    providers: {
-      // Anthropic ASN 兜底（官网挂 CDN，域名规则为主，ASN 仅 IP 直连场景兜底）
-      asn_anthropic_399358: {
-        ...ruleProviderCommonIpcidr,
-        url: `${asnBaseUrl}AS399358.mrs`,
-        path: './ruleset/AS399358.mrs',
-        'path-in-bundle': 'geo/asn/AS399358.mrs',
-      },
-    },
+    // 注：bett-rules 无 AS399358 数据，ASN 兜底已移除，域名规则为主。
     icon: `${iconBaseUrl}OpenAI.svg`,
     rules: [
       // Claude / Anthropic
       'DOMAIN-SUFFIX,anthropic.com,Claude/OpenAI',
       'DOMAIN-SUFFIX,claude.ai,Claude/OpenAI',
       'DOMAIN-SUFFIX,claude.com,Claude/OpenAI',
-      'RULE-SET,asn_anthropic_399358,Claude/OpenAI,no-resolve',
       // ChatGPT / OpenAI（含静态资源与生成内容域名）
       'DOMAIN-SUFFIX,openai.com,Claude/OpenAI',
       'DOMAIN-SUFFIX,chatgpt.com,Claude/OpenAI',
@@ -746,38 +737,7 @@ const serviceConfigs = [
         path: './ruleset/cryptocurrency.mrs',
         'path-in-bundle': 'geo/geosite/category-cryptocurrency.mrs',
       },
-      // --- 传统金融 ASN 兜底（bett-rules asn/ 目录，按 ASN 切分的 IP 段） ---
-      // ⚠️ IBKR 官网挂 Akamai CDN，ASN 抓不到，必须配合域名规则；ASN 仅作 IP 直连场景兜底。
-      asn_ibkr_27163: {
-        ...ruleProviderCommonIpcidr,
-        url: `${asnBaseUrl}AS27163.mrs`,
-        path: './ruleset/AS27163.mrs',
-        'path-in-bundle': 'geo/asn/AS27163.mrs',
-      },
-      asn_ibkr_33121: {
-        ...ruleProviderCommonIpcidr,
-        url: `${asnBaseUrl}AS33121.mrs`,
-        path: './ruleset/AS33121.mrs',
-        'path-in-bundle': 'geo/asn/AS33121.mrs',
-      },
-      asn_ibkr_40711: {
-        ...ruleProviderCommonIpcidr,
-        url: `${asnBaseUrl}AS40711.mrs`,
-        path: './ruleset/AS40711.mrs',
-        'path-in-bundle': 'geo/asn/AS40711.mrs',
-      },
-      asn_ibkr_9468: {
-        ...ruleProviderCommonIpcidr,
-        url: `${asnBaseUrl}AS9468.mrs`,
-        path: './ruleset/AS9468.mrs',
-        'path-in-bundle': 'geo/asn/AS9468.mrs',
-      },
-      asn_firstrade_32699: {
-        ...ruleProviderCommonIpcidr,
-        url: `${asnBaseUrl}AS32699.mrs`,
-        path: './ruleset/AS32699.mrs',
-        'path-in-bundle': 'geo/asn/AS32699.mrs',
-      },
+      // 注：bett-rules asn/ 目录无 IBKR/Firstrade 相关 ASN 数据，ASN 兜底已移除，域名规则为主。
     },
     icon: `${iconBaseUrl}Bitcoin.svg`,
     rules: [
@@ -792,10 +752,6 @@ const serviceConfigs = [
       'DOMAIN-SUFFIX,interactivebrokers.com,Financial',
       'DOMAIN-SUFFIX,interactivebrokers.com.hk,Financial',
       'DOMAIN-SUFFIX,interactivebrokers.sg,Financial',
-      'RULE-SET,asn_ibkr_27163,Financial,no-resolve',
-      'RULE-SET,asn_ibkr_33121,Financial,no-resolve',
-      'RULE-SET,asn_ibkr_40711,Financial,no-resolve',
-      'RULE-SET,asn_ibkr_9468,Financial,no-resolve',
       // ---- MT5 / MetaQuotes：只用域名规则（券商服务器无法穷举，用户按开户券商自行补充） ----
       'DOMAIN-SUFFIX,metaquotes.net,Financial',
       'DOMAIN-SUFFIX,metatrader5.com,Financial',
@@ -808,7 +764,6 @@ const serviceConfigs = [
       'DOMAIN-SUFFIX,tradingview.com,Financial',
       // ---- Firstrade（第一证券） ----
       'DOMAIN-SUFFIX,firstrade.com,Financial',
-      'RULE-SET,asn_firstrade_32699,Financial,no-resolve',
       // ---- Mitrade（无自有 ASN，切勿用 ASN 规则） ----
       'DOMAIN-SUFFIX,mitrade.com,Financial',
       'DOMAIN-SUFFIX,mitrade.eu,Financial',
@@ -1857,7 +1812,8 @@ function main(config) {
   if (newConfig['tun'] === undefined) newConfig['tun'] = {};
   const tunCfg = newConfig['tun'];
   if (tunCfg['enable'] === undefined) tunCfg['enable'] = true;
-  if (tunCfg['stack'] === undefined) tunCfg['stack'] = 'mips';
+  // ⚠️ 不设 stack 默认值：mips 在 Windows 上不可用会导致 TUN 起不来（2026-10-16 实测断网）；
+  // 交给 Mihomo 按平台选默认（Windows 默认 gvisor）。
   if (tunCfg['auto-route'] === undefined) tunCfg['auto-route'] = true;
   if (tunCfg['strict-route'] === undefined) tunCfg['strict-route'] = true;
   if (tunCfg['auto-redirect'] === undefined) tunCfg['auto-redirect'] = true;
