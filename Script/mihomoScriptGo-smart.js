@@ -1199,8 +1199,10 @@ function buildServiceGroups(ctx) {
     if (svc.fixedMembers) {
       // 固定成员组（如 Cloudflare）：仅含指定地区组，不跟随默认成员逻辑。
       // 过滤掉无节点未生成的地区组，避免引用不存在的组名。
+      // 另加「手动选择」和「默认代理」方便兜底。
       const existingNames = new Set(ctx.generatedRegionGroupNames);
-      groupProxies = svc.fixedMembers.filter((n) => existingNames.has(n));
+      const members = svc.fixedMembers.filter((n) => existingNames.has(n));
+      groupProxies = ['手动选择', '默认代理', ...members];
     } else if (svc.includeAll) {
       groupProxies = [...allProxiesNames];
     } else if (svc.reject) {
