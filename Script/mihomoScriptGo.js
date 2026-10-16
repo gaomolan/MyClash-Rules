@@ -820,7 +820,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/cloudflare.mrs',
       },
     },
-    icon: `${iconBaseUrl}Server.svg`,
+    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/Cloudflare.svg',
     rules: [
       // cloudflare@cn → 直连：CF 中国节点（中国 IP）优先直连，不进 Cloudflare 组。
       // cn_ip 规则集已在 baseRuleProviders 定义，此处复用；放在 CF IP 规则之前。
