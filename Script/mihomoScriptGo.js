@@ -50,8 +50,8 @@ const ruleOptionsEnable = {
   隐藏地区手动选择组: false, // 是否隐藏地区手动选择策略组
   生成倍率组: true, // 是否生成低倍率/高倍率策略组
   分流组添加所有节点: false, // 是否为分流策略组添加所有节点
-  显示低倍率节点: true, // 是否显示低倍率节点（关闭则隐藏）
-  显示高倍率节点: true, // 是否显示高倍率节点（关闭则隐藏）
+  显示低倍率节点: true, // 是否显示低倍率策略组（关闭则不生成该组）
+  显示高倍率节点: true, // 是否显示高倍率策略组（关闭则不生成该组）
   过滤低倍率节点: false, // 是否过滤低倍率节点（旧开关，保留兼容）
   过滤高倍率节点: false, // 是否过滤高倍率节点（旧开关，保留兼容）
   过滤非地区节点: true, // 是否过滤非地区节点
@@ -919,9 +919,9 @@ function filterAndNormalizeProxies(config) {
 
   const showLowRateProxiesEnabled = ruleOptionsEnable.显示低倍率节点;
   const showHighRateProxiesEnabled = ruleOptionsEnable.显示高倍率节点;
-  // 旧开关保留兼容：过滤开关开 或 显示开关关，都触发过滤
-  const filterLowRateProxiesEnabled = ruleOptionsEnable.过滤低倍率节点 || !showLowRateProxiesEnabled;
-  const filterHighRateProxiesEnabled = ruleOptionsEnable.过滤高倍率节点 || !showHighRateProxiesEnabled;
+  // 旧开关：过滤开关开，则从节点列表中过滤掉对应倍率节点
+  const filterLowRateProxiesEnabled = ruleOptionsEnable.过滤低倍率节点;
+  const filterHighRateProxiesEnabled = ruleOptionsEnable.过滤高倍率节点;
   const filterNonRegionProxiesEnabled = ruleOptionsEnable.过滤非地区节点;
 
   const lowRateRegex = filterLowRateProxiesEnabled
@@ -1044,7 +1044,8 @@ function createRegionGroup(name, icon, proxies) {
  * 将节点按地区/倍率归类，构建地区策略组、倍率策略组与“其他节点”组
  */
 function buildRegionGroups(filteredProxies, customProxies) {
-  const generateRateGroupEnabled = ruleOptionsEnable.生成倍率组;
+  const showLowRateGroupEnabled = ruleOptionsEnable.显示低倍率节点;
+  const showHighRateGroupEnabled = ruleOptionsEnable.显示高倍率节点;
 
   const regionGroups = Object.fromEntries(allRegionDefinitions.map(({ name }) => [name, []]));
   const otherProxies = [];
@@ -1065,7 +1066,13 @@ function buildRegionGroups(filteredProxies, customProxies) {
   }
 
   const generatedRegionGroups = allRegionDefinitions
-    .filter((r) => regionGroups[r.name].length > 0 && (generateRateGroupEnabled || !rateRegionDefinitions.includes(r)))
+    .filter((r) => {
+      if (regionGroups[r.name].length === 0) return false;
+      // 倍率组由各自的显示开关控制
+      if (r.name === lowRateRegionName) return showLowRateGroupEnabled;
+      if (r.name === highRateRegionName) return showHighRateGroupEnabled;
+      return true;
+    })
     .flatMap((r) => createRegionGroup(r.name, r.icon, regionGroups[r.name]));
 
   if (otherProxies.length > 0) {
