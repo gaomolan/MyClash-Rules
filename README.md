@@ -18,6 +18,18 @@ https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScri
 https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
 ```
 
+Smart 内核版 mihomoScriptGo-smart 订阅地址（CDN）：
+
+```text
+https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-smart.js
+```
+
+Smart 内核版直连 GitHub（无 CDN 缓存）：
+
+```text
+https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-smart.js
+```
+
 ---
 
 # mihomoScriptGo
