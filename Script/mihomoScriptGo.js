@@ -433,7 +433,7 @@ const baseGroups = [
     icon: `${iconBaseUrl}Static.svg`,
   },
   {
-    name: '自动选择',
+    name: 'Auto',
     baseOption: urlTestBaseOption,
     includeAll: true,
     icon: `${iconBaseUrl}Auto.svg`,
@@ -507,13 +507,14 @@ const serviceConfigs = [
     name: 'Claude/OpenAI',
     baseOption: selectBaseOption,
     defaultSelected: defaultSelectedMap['Claude/OpenAI'],
-    // 注：bett-rules 无 AS399358 数据，ASN 兜底已移除，域名规则为主。
+    // ASN 兜底：IP-ASN 原生规则（需 geox-url.asn 数据库）。Anthropic 官网挂 CDN，域名规则为主。
     icon: `${iconBaseUrl}OpenAI.svg`,
     rules: [
       // Claude / Anthropic
       'DOMAIN-SUFFIX,anthropic.com,Claude/OpenAI',
       'DOMAIN-SUFFIX,claude.ai,Claude/OpenAI',
       'DOMAIN-SUFFIX,claude.com,Claude/OpenAI',
+      'IP-ASN,399358,Claude/OpenAI,no-resolve',
       // ChatGPT / OpenAI（含静态资源与生成内容域名）
       'DOMAIN-SUFFIX,openai.com,Claude/OpenAI',
       'DOMAIN-SUFFIX,chatgpt.com,Claude/OpenAI',
@@ -737,7 +738,7 @@ const serviceConfigs = [
         path: './ruleset/cryptocurrency.mrs',
         'path-in-bundle': 'geo/geosite/category-cryptocurrency.mrs',
       },
-      // 注：bett-rules asn/ 目录无 IBKR/Firstrade 相关 ASN 数据，ASN 兜底已移除，域名规则为主。
+      // 注：bett-rules asn/ 目录无 IBKR/Firstrade 相关 ASN 数据，改用 IP-ASN 原生规则（需 geox-url.asn 数据库）。
     },
     icon: `${iconBaseUrl}Bitcoin.svg`,
     rules: [
@@ -752,6 +753,10 @@ const serviceConfigs = [
       'DOMAIN-SUFFIX,interactivebrokers.com,Financial',
       'DOMAIN-SUFFIX,interactivebrokers.com.hk,Financial',
       'DOMAIN-SUFFIX,interactivebrokers.sg,Financial',
+      'IP-ASN,27163,Financial,no-resolve',
+      'IP-ASN,33121,Financial,no-resolve',
+      'IP-ASN,40711,Financial,no-resolve',
+      'IP-ASN,9468,Financial,no-resolve',
       // ---- MT5 / MetaQuotes：只用域名规则（券商服务器无法穷举，用户按开户券商自行补充） ----
       'DOMAIN-SUFFIX,metaquotes.net,Financial',
       'DOMAIN-SUFFIX,metatrader5.com,Financial',
@@ -764,6 +769,7 @@ const serviceConfigs = [
       'DOMAIN-SUFFIX,tradingview.com,Financial',
       // ---- Firstrade（第一证券） ----
       'DOMAIN-SUFFIX,firstrade.com,Financial',
+      'IP-ASN,32699,Financial,no-resolve',
       // ---- Mitrade（无自有 ASN，切勿用 ASN 规则） ----
       'DOMAIN-SUFFIX,mitrade.com,Financial',
       'DOMAIN-SUFFIX,mitrade.eu,Financial',
@@ -977,7 +983,7 @@ function filterAndNormalizeProxies(config) {
  * 构建地区策略组，可附带自动选择组与地区低倍率自动选择组。
  *
  * 地区低倍率自动选择（Phase 3 原生集成，原 customPatch.js 包装逻辑改为内置实现）：
- * 对五大地区组，用低倍率正则过滤该地区节点，生成 `{地区}-低倍率自动选择`（url-test，
+ * 对五大地区组，用低倍率正则过滤该地区节点，生成 `{地区}-Eco-Auto`（url-test，
  * hidden:true），并挂入地区组的可选项。倍率组与"其他节点"不生成（无意义）。
  * 修复原补丁 bug：原补丁用"台湾省"匹配上游"台湾"导致台湾组从未生成；现用地区注册表
  * 名称直接比对，不再依赖外部硬编码名单。
@@ -996,7 +1002,7 @@ function createRegionGroup(name, icon, proxies) {
     const lowRateRegex = rateRegionDefinitions.find((r) => r.name === lowRateRegionName)?.regex;
     const lowRateProxies = lowRateRegex ? proxies.filter((n) => lowRateRegex.test(n)) : [];
     if (lowRateProxies.length > 0) {
-      const lowRateAutoName = `${name}-低倍率自动选择`;
+      const lowRateAutoName = `${name}-Eco-Auto`;
       groups.push({
         ...urlTestBaseOption,
         name: lowRateAutoName,
@@ -1009,7 +1015,7 @@ function createRegionGroup(name, icon, proxies) {
   }
 
   if (generateRegionAutoSelectEnabled) {
-    const urlTestName = `${name}-自动选择`;
+    const urlTestName = `${name}-Auto`;
     groups.push({
       ...urlTestBaseOption,
       name: urlTestName,
@@ -1839,6 +1845,16 @@ function main(config) {
   if (newConfig['geo-auto-update'] === undefined) newConfig['geo-auto-update'] = true;
   if (newConfig['geo-update-interval'] === undefined) newConfig['geo-update-interval'] = 168;
   if (newConfig['etag-support'] === undefined) newConfig['etag-support'] = true; // 规则集 ETag 去重下载
+  // ⚠️ ASN 数据库：IP-ASN 原生规则依赖此库（Claude/OpenAI、Financial 组的 ASN 兜底）。
+  //   不配则 IP-ASN 规则无效。URL 与 geoip/geosite 保持同一源（MetaCubeX 官方）。
+  if (newConfig['geox-url'] === undefined) {
+    newConfig['geox-url'] = {
+      geoip: 'https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat',
+      geosite: 'https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat',
+      mmdb: 'https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.metadb',
+      asn: 'https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/GeoLite2-ASN.mmdb',
+    };
+  }
 
   // ============ Sniffer：开关控制，默认关闭 ============
   // ⚠️ 域名嗅探会改写部分 App 的流量目标，银行/券商类 App 对此敏感可能断连。
