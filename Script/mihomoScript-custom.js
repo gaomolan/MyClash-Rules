@@ -56,6 +56,8 @@ const ruleOptionsEnable = {
   过滤高倍率节点: false, // 是否过滤高倍率节点
   过滤非地区节点: true, // 是否过滤非地区节点
   屏蔽国外QUIC: true, // 是否屏蔽国外QUIC流量
+  WebRTC走代理: true, // 关闭 IPv6，并仅为缺省 udp 字段的代理节点补 udp:true；不强制所有 UDP 走代理
+  屏蔽STUN端口: false, // 拦截常见 STUN/TURN 端口；优先于 WebRTC走代理，非全覆盖
   代理IPV4优先: false, // 是否将订阅节点统一为 IPv4 优先（与“代理IPV6优先”同时开启时不生效）
   代理IPV6优先: false, // 是否将订阅节点统一为 IPv6 优先（与“代理IPV4优先”同时开启时不生效）
 };
@@ -106,6 +108,26 @@ const excludeFilter =
 // 屏蔽国外QUIC
 const blockForeignQuic = [
   'AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,cn_additional),(RULE-SET,cn_ip,no-resolve)))))),REJECT',
+];
+
+// 常见 STUN/TURN 端口拦截：只匹配列出的端口，不拦截全部 UDP。
+// UDP 19302-19309 是常见 WebRTC 实现使用范围，不代表所有 STUN/TURN 流量。
+// TURN over TCP 443 不在此拦截，避免影响普通 HTTPS。
+// 私有 IP 的同端口例外规则必须排在拒绝规则前，避免误伤内网服务。
+const privateStunDirectRules = [
+  'AND,((NETWORK,UDP),(DST-PORT,3478),(RULE-SET,private_ip,no-resolve)),直连',
+  'AND,((NETWORK,TCP),(DST-PORT,3478),(RULE-SET,private_ip,no-resolve)),直连',
+  'AND,((NETWORK,UDP),(DST-PORT,5349),(RULE-SET,private_ip,no-resolve)),直连',
+  'AND,((NETWORK,TCP),(DST-PORT,5349),(RULE-SET,private_ip,no-resolve)),直连',
+  'AND,((NETWORK,UDP),(DST-PORT,19302-19309),(RULE-SET,private_ip,no-resolve)),直连',
+];
+
+const blockStunPorts = [
+  'AND,((NETWORK,UDP),(DST-PORT,3478)),REJECT',
+  'AND,((NETWORK,TCP),(DST-PORT,3478)),REJECT',
+  'AND,((NETWORK,UDP),(DST-PORT,5349)),REJECT',
+  'AND,((NETWORK,TCP),(DST-PORT,5349)),REJECT',
+  'AND,((NETWORK,UDP),(DST-PORT,19302-19309)),REJECT',
 ];
 
 // 直连节点
@@ -1584,7 +1606,7 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
 
   const dns = {
     enable: true,
-    ipv6: true,
+    ipv6: !ruleOptionsEnable.WebRTC走代理,
     'use-hosts': true,
     'cache-algorithm': 'arc',
     'use-system-hosts': true,
@@ -1661,7 +1683,7 @@ function main(config) {
   newConfig['hosts'] = hosts;
   newConfig['mixed-port'] = 7890;
   newConfig['allow-lan'] = true;
-  newConfig['ipv6'] = true;
+  newConfig['ipv6'] = ruleOptionsEnable.WebRTC走代理 ? false : true;
   newConfig['mode'] = 'rule';
   newConfig['log-level'] = 'info';
   newConfig['bind-address'] = '*';
@@ -1697,7 +1719,23 @@ function main(config) {
     'dns-hijack': ['any:53', 'tcp://any:53'],
   };
 
-  newConfig['proxies'] = [...mappedProxies, ...customProxies, ...directProxies];
+  // 开启「WebRTC走代理」时，仅修复未声明 udp 的普通代理节点。
+  // 显式 udp:false 代表订阅明确声明不支持 UDP，必须原样保留；这类节点仍可能导致
+  // UDP 请求继续匹配后续规则，因此本开关不保证每个节点都能承载 STUN。
+  // direct/reject/rematch 等伪节点不改写；不添加全局 UDP 劫持规则。
+  newConfig['proxies'] = [...mappedProxies, ...customProxies, ...directProxies].map((proxy) => {
+    const type = String(proxy.type ?? '').toLowerCase();
+    if (
+      !ruleOptionsEnable.WebRTC走代理 ||
+      proxy.udp !== undefined ||
+      type === 'direct' ||
+      type === 'reject' ||
+      type === 'rematch'
+    ) {
+      return proxy;
+    }
+    return { ...proxy, udp: true };
+  });
   newConfig['proxy-groups'] = [
     globalGroup,
     ...functionalGroups,
@@ -1709,6 +1747,9 @@ function main(config) {
 
   newConfig['rules'] = [
     ...prefixRules,
+    ...(ruleOptionsEnable.屏蔽STUN端口
+      ? [...privateStunDirectRules, ...blockStunPorts]
+      : []),
     ...(ruleOptionsEnable.屏蔽国外QUIC ? blockForeignQuic : []),
     ...functionalRules,
 
