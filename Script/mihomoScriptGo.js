@@ -44,14 +44,14 @@ const ruleOptionsEnable = {
   Financial: true, // 金融统一组（加密货币+传统金融）
   AdBlock: true, // 广告拦截
   Cloudflare: true, // Cloudflare 策略组（Phase 2 新增）
-  显示低倍率节点: true, // 是否显示低倍率策略组（关闭则不生成该组）
-  显示高倍率节点: true, // 是否显示高倍率策略组（关闭则不生成该组）
 
   // 以下为非分流策略配置
   生成地区自动选择组: true, // 是否生成地区自动选择策略组
   隐藏地区手动选择组: false, // 是否隐藏地区手动选择策略组
   生成倍率组: true, // 是否生成低倍率/高倍率策略组
   分流组添加所有节点: false, // 是否为分流策略组添加所有节点
+  显示低倍率节点: true, // 是否显示低倍率策略组（关闭则不生成该组）
+  显示高倍率节点: true, // 是否显示高倍率策略组（关闭则不生成该组）
   过滤低倍率节点: false, // 是否过滤低倍率节点（旧开关，保留兼容）
   过滤高倍率节点: false, // 是否过滤高倍率节点（旧开关，保留兼容）
   过滤非地区节点: true, // 是否过滤非地区节点
@@ -993,7 +993,7 @@ function filterAndNormalizeProxies(config) {
  * 修复原补丁 bug：原补丁用"台湾省"匹配上游"台湾"导致台湾组从未生成；现用地区注册表
  * 名称直接比对，不再依赖外部硬编码名单。
  */
-function createRegionGroup(name, icon, proxies) {
+function createRegionGroup(name, icon, proxies, hidden = false) {
   const generateRegionAutoSelectEnabled = ruleOptionsEnable.生成地区自动选择组;
   const hideManualSelectGroupEnabled = ruleOptionsEnable.隐藏地区手动选择组;
 
@@ -1034,7 +1034,7 @@ function createRegionGroup(name, icon, proxies) {
     name,
     icon,
     proxies: selectProxies,
-    hidden: hideManualSelectGroupEnabled,
+    hidden: hidden || hideManualSelectGroupEnabled,
   });
 
   return groups;
@@ -1066,14 +1066,14 @@ function buildRegionGroups(filteredProxies, customProxies) {
   }
 
   const generatedRegionGroups = allRegionDefinitions
-    .filter((r) => {
-      if (regionGroups[r.name].length === 0) return false;
-      // 倍率组由各自的显示开关控制
-      if (r.name === lowRateRegionName) return showLowRateGroupEnabled;
-      if (r.name === highRateRegionName) return showHighRateGroupEnabled;
-      return true;
-    })
-    .flatMap((r) => createRegionGroup(r.name, r.icon, regionGroups[r.name]));
+    .filter((r) => regionGroups[r.name].length > 0)
+    .flatMap((r) => {
+      // 倍率组：显示开关控制 hidden 属性（隐藏而非删除，组依然可用）
+      let hidden = false;
+      if (r.name === lowRateRegionName) hidden = !showLowRateGroupEnabled;
+      if (r.name === highRateRegionName) hidden = !showHighRateGroupEnabled;
+      return createRegionGroup(r.name, r.icon, regionGroups[r.name], hidden);
+    });
 
   if (otherProxies.length > 0) {
     generatedRegionGroups.push(...createRegionGroup('其他节点', `${iconBaseUrl}WorldMap.svg`, otherProxies));
