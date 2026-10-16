@@ -1,1 +1,57 @@
-IyBDbGFzaC1ydWxlcy1nbwoKRm9ya2VkIGZyb20gW0FJc291bGVyL015Q2xhc2hdKGh0dHBzOi8vZ2l0aHViLmNvbS9BSXNvdWxlci9NeUNsYXNoKQoK5LiA5LiqTWlob21vIOimhuWGmeiEmuacrO+8jOmAgueUqOS6jiBCZXR0Ym94IC8gQ2xhc2ggVmVyZ2UgUmV2IC8g5pSv5oyBIE1paG9tbyBTY3JpcHQg6KaG5YaZ55qE5a6i5oi356uv44CCCgrorqLpmIXlnLDlnYDvvJpodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvZ2gvbHk2OTgwL015Q2xhc2gtUnVsZXNAbXljbGFzaC1ydWxlcy9TY3JpcHQvbWlob21vU2NyaXB0R28uanMKCi0tLQoKIyMg5Yqf6IO954m55oCnCgojIyMgMS4g5paw5aKeCgoqKuetlueVpee7hCoqCgotICoqRmluYW5jaWFsKirvvJrph5Hono3nrZbnlaXnu4QKLSAqKkFJIC8gQ2xhdWRlK09wZW5BSSoq77ya6YCa55SoIEFJIOe7hOS4jiBDbGF1ZGUrT3BlbkFJIOWQiOW5tue7hOOAggotICoqQ2xvdWRmbGFyZSoq77ya5a6Y5pa5IElQIOauteWPjOinhOWImembhu+8jOaJi+WKqCBzZWxlY3QuCi0gKirlnLDljLrkvY7lgI3njofoh6rliqjpgInmi6kqKu+8muavj+S4quWcsOWMuue7hOWGheW7uiBge+WcsOWMun0t5L2O5YCN546H6Ieq5Yqo6YCJ5oupYO+8iHVybC10ZXN077yM6ZqQ6JeP77yJ44CCCgoqKuiDveWKmyoqCgotICoqU25pZmZlcioq77ya6aKE572u5ZCr6YeR6J6NIGBza2lwLWRvbWFpbmAg6Lez6L+H5ZCN5Y2V55qE5a6M5pW06YWN572u77yI5byA5YWz5o6n5Yi277yM6buY6K6k5YWz6Zet77yJ44CCCi0gKipnZW8tYXV0by11cGRhdGUqKu+8mjE2OCDlsI/ml7boh6rliqjmm7TmlrAgR0VPIOaVsOaNruW6k+OAggotICoq5Ya35ZCv5Yqo5LyY5YyWKirvvJpgZXRhZy1zdXBwb3J0YO+8iOinhOWImembhiBFVGFnIOWOu+mHjeS4i+i9ve+8ieOAgWBwcmVmZXItaDM6IGZhbHNlYO+8iOWGt+WQr+WKqOi3s+i/hyBIVFRQLzMg5o6i5rWL77yJ44CCCi0gKirlnLDljLrmraPliJnmianlhYUqKu+8muWPsOa5vuWinuWKoOWPsOWMly/pq5jpm4QvaGluZXQg562J5Z+O5biC5YWz6ZSu6K+N44CCCi0gKip1cmwtdGVzdCDkvJjljJYqKu+8muajgOa1iyBVUkwg5o2i5Li6IGBjcC5jbG91ZGZsYXJlLmNvbS9nZW5lcmF0ZV8yMDRg77ybYGVtcHR5LWZhbGxiYWNrYCDmlLnkuLogZmFsbGJhY2sg5Yiw5omL5Yqo6YCJ5oup44CCCgoqKuW8gOWFsyoqCgotICoqV2ViUlRD6LWw5Luj55CGKirvvIjpu5jorqTlvIDvvInvvJpTVFVOIOa1gemHj+i1sOS7o+eQhuOAggotICoq5bGP6JS9U1RVTuerr+WPoyoq77yI6buY6K6k5YWz77yJ77ya5Lil5qC85Zy65pmv55u05o6l5bGP6JS9IFNUVU4g56uv5Y+j44CCCi0gKipJUHY25oC75byA5YWzKirvvIjpu5jorqTlhbPvvInvvJrmjqfliLYgYGRucy5pcHY2YO+8jOmhtuWxgiBgaXB2NmAg55WZ56m65Lqk5a6i5oi356uv44CCCi0gKirlm73lhoVETlPotbDku6PnkIYqKu+8iOm7mOiupOWFs++8ie+8muS4jiBgZGlyZWN0LW5hbWVzZXJ2ZXItZm9sbG93LXBvbGljeWAg6IGU5Yqo44CCCi0gKirml6Xlv5fnuqfliKvosIPor5UqKu+8iOm7mOiupOWFs++8ie+8muS4gOmUruW8gOWQryBkZWJ1ZyDml6Xlv5fjgIIKLSAqKlNuaWZmZXIg6YWN572uKirvvIjpu5jorqTlhbPvvInvvJrpooTnva7ph5Hono3ot7Pov4flkI3ljZXvvIzliIbkuqvlnLrmma/lhZzlupXjgIIKCiMjIyAyLiDnsr7nroAKCi0g5Yig6ZmkIDcg5Liq5pyN5Yqh57uE77yaU3RlYW0gLyBFSGVudGFpIC8gTGluZSAvIE5ldGZsaXggLyBTcG90aWZ5IC8gUGF5UGFsIC8gUGF0cmVvbu+8jOS7o+eggeS4gOW5tuWIoOmZpOOAggotIOWIoOmZpOaegeeugOaooeW8j+OAggotIOWIoOmZpOi/nOaOp+W3peWFt+e7hO+8iOS7peWQjumcgOimgeWGjeWKoO+8ieOAggoKIyMjIDMuIOaUueWKqAoKKirphY3nva7kvJjlhYjnuqfvvJrlrqLmiLfnq6/orr7nva7kvJjlhYjvvIzohJrmnKzku4XooaXpu5jorqQqKgoKLSDov57mjqXpnaLphY3nva7vvIhgaXB2NmAgLyBgbG9nLWxldmVsYCAvIOerr+WPoyAvIFRVTiDnrYkgMTMg5aSE77yJ77ya6K+7546w5pyJ5YC844CB57y65aSx5omN6KGl6buY6K6k77yM5a6i5oi356uv6K6+572u5LyY5YWI44CCCi0g56uv5Y+j5Yik5pat6KaG55uWIDUg5Liq56uv5Y+j77ybYDBgIOinhuS4uuaYjuehruemgeeUqO+8jOeUqCBgPT09IHVuZGVmaW5lZGAg5Yik5pat44CCCgoqKuWFtuS7luaUueWKqCoqCgotIGBuYW1lc2VydmVyLXBvbGljeWAg5LiJ5bGC6YC76L6R77ya6K6i6ZiF6Ieq5bim4oaS5L+d55WZ77yb57y65aSx4oaS6KGlIGBjbiDihpIgY2hpbmFETlNg77yb5a6i5oi356uv5byAIEROUyDopoblhpnihpLlrqLmiLfnq6/mjqXnrqHvvJtg5Zu95YaFRE5T6LWw5Luj55CGYOW8gOWFs+KGkuaYvuW8j+imhuebluS4uuS7o+eQhiBEb0jjgIIKLSBRVUlDIOeLrOeri+e7hO+8muWbveWGhSBEaXJlY3TvvIzlm73lpJbov5vnu4TmiYvliqjnrqHmjqfjgIIKCi0tLQ==
+# Clash-rules-go
+
+Forked from [AIsouler/MyClash](https://github.com/AIsouler/MyClash)
+
+一个Mihomo 覆写脚本，适用于 Bettbox / Clash Verge Rev / 支持 Mihomo Script 覆写的客户端。
+
+订阅地址：https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
+
+---
+
+## 功能特性
+
+### 1. 新增
+
+**策略组**
+
+- **Financial**：金融策略组
+- **AI / Claude+OpenAI**：通用 AI 组与 Claude+OpenAI 合并组。
+- **Cloudflare**：官方 IP 段双规则集，手动 select.
+- **地区低倍率自动选择**：每个地区组内建 `{地区}-低倍率自动选择`（url-test，隐藏）。
+
+**能力**
+
+- **Sniffer**：预置含金融 `skip-domain` 跳过名单的完整配置（开关控制，默认关闭）。
+- **geo-auto-update**：168 小时自动更新 GEO 数据库。
+- **冷启动优化**：`etag-support`（规则集 ETag 去重下载）、`prefer-h3: false`（冷启动跳过 HTTP/3 探测）。
+- **地区正则扩充**：台湾增加台北/高雄/hinet 等城市关键词。
+- **url-test 优化**：检测 URL 换为 `cp.cloudflare.com/generate_204`；`empty-fallback` 改为 fallback 到手动选择。
+
+**开关**
+
+- **WebRTC走代理**（默认开）：STUN 流量走代理。
+- **屏蔽STUN端口**（默认关）：严格场景直接屏蔽 STUN 端口。
+- **IPv6总开关**（默认关）：控制 `dns.ipv6`，顶层 `ipv6` 留空交客户端。
+- **国内DNS走代理**（默认关）：与 `direct-nameserver-follow-policy` 联动。
+- **日志级别调试**（默认关）：一键开启 debug 日志。
+- **Sniffer 配置**（默认关）：预置金融跳过名单，分享场景兜底。
+
+### 2. 精简
+
+- 删除 7 个服务组：Steam / EHentai / Line / Netflix / Spotify / PayPal / Patreon，代码一并删除。
+- 删除极简模式。
+- 删除远控工具组（以后需要再加）。
+
+### 3. 改动
+
+**配置优先级：客户端设置优先，脚本仅补默认**
+
+- 连接面配置（`ipv6` / `log-level` / 端口 / TUN 等 13 处）：读现有值、缺失才补默认，客户端设置优先。
+- 端口判断覆盖 5 个端口；`0` 视为明确禁用，用 `=== undefined` 判断。
+
+**其他改动**
+
+- `nameserver-policy` 三层逻辑：订阅自带→保留；缺失→补 `cn → chinaDNS`；客户端开 DNS 覆写→客户端接管；`国内DNS走代理`开关→显式覆盖为代理 DoH。
+- QUIC 独立组：国内 Direct，国外进组手动管控。
+
+---
