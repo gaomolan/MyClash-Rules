@@ -6,10 +6,16 @@
 https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js
 ```
 
-改动版 mihomoScriptGo 订阅地址：
+改动版 mihomoScriptGo 订阅地址（CDN，可能有缓存延迟）：
 
 ```text
 https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
+```
+
+直连 GitHub（无 CDN 缓存，最新版本）：
+
+```text
+https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
 ```
 
 ---
