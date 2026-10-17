@@ -370,6 +370,14 @@ const baseRuleProviders = {
     'path-in-bundle': 'geo/geosite/geolocation-!cn.mrs',
   },
 
+  // 国内域名直连：小红书、B站等国内 App 必须直连，走代理会被拒。
+  'cn': {
+    ...ruleProviderCommonDomain,
+    url: `${ruleSetBaseUrl}geosite/cn.mrs`,
+    path: './ruleset/cn.mrs',
+    'path-in-bundle': 'geo/geosite/cn.mrs',
+  },
+
   // --- 其他规则集 ---
 
   fakeip_filter: {
@@ -1958,6 +1966,7 @@ function main(config) {
     ...functionalRules,
 
     // 兜底规则
+    'RULE-SET,cn,直连',
     'RULE-SET,geolocation-!cn,默认代理',
     'RULE-SET,cn_ip,直连',
     'RULE-SET,private_ip,直连',
