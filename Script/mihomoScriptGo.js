@@ -793,15 +793,17 @@ const serviceConfigs = [
     baseOption: selectBaseOption,
     reject: true,
     providers: {
-      'category-ads': {
+      'avenue-ads': {
         ...ruleProviderCommonDomain,
-        url: `${ruleSetBaseUrl}geosite/category-ads.mrs`,
-        path: './ruleset/category-ads.mrs',
-        'path-in-bundle': 'geo/geosite/category-ads.mrs',
+        // AWAvenue 秋风广告规则·完整版（广告+隐私+不受欢迎），替代原 geosite category-ads。
+        // 项目地址：https://github.com/TG-Twilight/AWAvenue-Ads-Rule
+        url: 'https://cdn.jsdelivr.net/gh/TG-Twilight/AWAvenue-Ads-Rule@main/Filters/AWAvenue-Ads-Rule-Clash.mrs',
+        path: './ruleset/avenue-ads.mrs',
+        'path-in-bundle': 'geo/geosite/avenue-ads.mrs',
       },
     },
     icon: `${iconBaseUrl}AdBlock.svg`,
-    rules: ['RULE-SET,category-ads,AdBlock'],
+    rules: ['RULE-SET,avenue-ads,AdBlock'],
   },
   // ---- Phase 2 新增：Cloudflare 策略组 ----
   // 设计冻结：手动 select，五地区组成员，Server.svg 图标，规则插 geolocation-!cn 之前。
