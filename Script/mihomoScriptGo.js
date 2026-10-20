@@ -24,7 +24,7 @@ const Compatible_With_Bettbox = { ruleOptionsEnable: true };
 const ruleOptionsEnable = {
   // 基础策略组
   手动选择: true, // 是否启用手动选择策略组
-  自动选择: true, // 是否启用自动选择策略组
+  Auto: true, // 是否启用 Auto 自动选择策略组（与实际策略组名称一致）
   负载均衡: true, // 是否启用负载均衡策略组
 
   // 以下为分流策略配置
@@ -120,6 +120,9 @@ const snifferFinanceSkipDomains = [
 
 // 定义前置规则
 const prefixRules = [
+  // 规则集下载域名直连，避免规则集尚未加载时出现循环依赖
+  'DOMAIN,cdn.jsdmirror.com,直连',
+
   // 私有网络直连
   'RULE-SET,private,直连',
 
@@ -272,7 +275,7 @@ const rateRegionDefinitions = [
   {
     name: highRateRegionName,
     regex:
-      /(?:[*×✕✖⨯⨉x](?:[2-9]\d*|[1-9]\d+)(?:\.\d+)?)|(?:(?<![\d.])(?:[2-9]\d*|[1-9]\d+)(?:\.\d+)?(?:倍|[*×✕✖⨯⨉x]))/i,
+      /(?:[*×✕✖⨯⨉x](?:1\.(?:[1-9]\d*)|[2-9](?:\.\d+)?|[1-9]\d+(?:\.\d+)?))|(?:(?<![\d.])(?:1\.(?:[1-9]\d*)|[2-9](?:\.\d+)?|[1-9]\d+(?:\.\d+)?)(?:倍|[*×✕✖⨯⨉x]))/i,
     icon: `${iconBaseUrl}Airport.svg`,
   },
 ];
@@ -852,13 +855,20 @@ Compatible_With_Bettbox.policyGroupOptions = serviceConfigs.map((svc) => svc.nam
 /**
  * 节点匹配缓存，避免重复执行正则
  */
+// 剥离节点名称中的零宽/不可见字符，仅用于匹配；不改写用户看到的节点名称。
+const invisibleCharsRegex = /[\u00AD\u180E\u200B\u200E\u200F\u202A-\u202E\u2060-\u206F\uFEFF\u115F\u1160\u3164\uFFA0]/g;
+function toMatchableName(name) {
+  return typeof name === 'string' ? name.replace(invisibleCharsRegex, '') : name;
+}
+
 const regionMatchCache = new Map();
 function getMatchedRegions(proxyName) {
   if (regionMatchCache.has(proxyName)) {
     return regionMatchCache.get(proxyName);
   }
 
-  const regions = allRegionDefinitions.filter((region) => region.regex.test(proxyName));
+  const matchableName = toMatchableName(proxyName);
+  const regions = allRegionDefinitions.filter((region) => region.regex.test(matchableName));
   regionMatchCache.set(proxyName, regions);
 
   return regions;
@@ -947,13 +957,14 @@ function filterAndNormalizeProxies(config) {
     const type = String(proxy.type ?? '').toLowerCase();
     if (type === 'direct' || type === 'reject' || type === 'rematch') return false;
 
-    if (lowRateRegex?.test(proxy.name) || highRateRegex?.test(proxy.name)) return false;
+    const matchableName = toMatchableName(proxy.name);
+    if (lowRateRegex?.test(matchableName) || highRateRegex?.test(matchableName)) return false;
 
     if (!filterNonRegionProxiesEnabled) return true;
 
     const isRegionProxy = getMatchedRegions(proxy.name).some((region) => regionDefinitions.includes(region));
 
-    return isRegionProxy || !excludeFilter.test(proxy.name);
+    return isRegionProxy || !excludeFilter.test(matchableName);
   });
 
   const renameMap = new Map();
