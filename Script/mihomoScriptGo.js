@@ -32,6 +32,7 @@ const ruleOptionsEnable = {
   YouTube: true, // YouTube视频平台
   Google: true, // Google服务
   AI: true, // 国外AI服务
+  GitHub: true, // GitHub代码托管平台
   'Claude/OpenAI': true, // Claude 与 ChatGPT/OpenAI（从通用AI组拆分）
   Microsoft: true, // Microsoft服务
   Apple: true, // Apple服务
@@ -549,9 +550,8 @@ const serviceConfigs = [
     rules: ['RULE-SET,ai,AI'],
   },
   {
-    name: 'Microsoft',
+    name: 'GitHub',
     baseOption: selectBaseOption,
-    direct: true,
     providers: {
       github: {
         ...ruleProviderCommonDomain,
@@ -559,6 +559,15 @@ const serviceConfigs = [
         path: './ruleset/github.mrs',
         'path-in-bundle': 'geo/geosite/github.mrs',
       },
+    },
+    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/GitHub.svg',
+    rules: ['RULE-SET,github,GitHub'],
+  },
+  {
+    name: 'Microsoft',
+    baseOption: selectBaseOption,
+    direct: true,
+    providers: {
       microsoft: {
         ...ruleProviderCommonDomain,
         url: `${ruleSetBaseUrl}geosite/microsoft.mrs`,
@@ -573,7 +582,7 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Microsoft.svg`,
-    rules: ['RULE-SET,github,默认代理', 'RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
+    rules: ['RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
   },
   {
     name: 'Apple',
@@ -830,7 +839,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/cloudflare.mrs',
       },
     },
-    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/Cloudflare.svg',
+    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/Cloudflare-v2.svg',
     rules: [
       // cloudflare@cn → 直连：CF 中国节点（中国 IP）优先直连，不进 Cloudflare 组。
       // cn_ip 规则集已在 baseRuleProviders 定义，此处复用；放在 CF IP 规则之前。
