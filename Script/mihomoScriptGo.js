@@ -1195,7 +1195,7 @@ function buildServiceGroups(ctx) {
   });
 
   for (const svc of serviceConfigs) {
-    if (!ruleOptionsEnable[svc.name]) continue;
+    if (ruleOptionsEnable[svc.name] === false) continue;
 
     let groupProxies = [];
     if (svc.fixedMembers) {
@@ -1275,7 +1275,7 @@ function buildServiceRules() {
     ...serviceConfigs.filter((svc) => svc.name !== 'AdBlock'),
   ];
   for (const svc of orderedServiceConfigs) {
-    if (!ruleOptionsEnable[svc.name]) continue;
+    if (ruleOptionsEnable[svc.name] === false) continue;
     functionalRules.push(...(svc.rules || []));
   }
   return functionalRules;
@@ -1294,7 +1294,7 @@ function buildRuleProviders() {
   }
 
   for (const svc of serviceConfigs) {
-    if (!ruleOptionsEnable[svc.name]) continue;
+    if (ruleOptionsEnable[svc.name] === false) continue;
     Object.assign(finalRuleProviders, svc.providers || {});
   }
 
