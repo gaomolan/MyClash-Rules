@@ -33,6 +33,7 @@ const ruleOptionsEnable = {
   YouTube: true, // YouTube视频平台
   Google: true, // Google服务
   AI: true, // 国外AI服务
+  GitHub: true, // GitHub代码托管平台
   'Claude/OpenAI': true, // Claude 与 ChatGPT/OpenAI（从通用AI组拆分）
   Microsoft: true, // Microsoft服务
   Apple: true, // Apple服务
@@ -579,6 +580,20 @@ const serviceConfigs = [
     rules: ['RULE-SET,ai,AI'],
   },
   {
+    name: 'GitHub',
+    baseOption: selectBaseOption,
+    providers: {
+      github: {
+        ...ruleProviderCommonDomain,
+        url: `${ruleSetBaseUrl}geosite/github.mrs`,
+        path: './ruleset/github.mrs',
+        'path-in-bundle': 'geo/geosite/github.mrs',
+      },
+    },
+    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/GitHub.svg',
+    rules: ['RULE-SET,github,GitHub'],
+  },
+  {
     name: 'Microsoft',
     baseOption: selectBaseOption,
     direct: true,
@@ -603,7 +618,7 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Microsoft.svg`,
-    rules: ['RULE-SET,github,默认代理', 'RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
+    rules: ['RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
   },
   {
     name: 'Apple',
