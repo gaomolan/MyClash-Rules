@@ -24,7 +24,7 @@ const Compatible_With_Bettbox = { ruleOptionsEnable: true };
 const ruleOptionsEnable = {
   // 基础策略组
   手动选择: true, // 是否启用手动选择策略组
-  Auto: true, // 是否启用 Auto 自动选择策略组（与实际策略组名称一致）
+  自动选择: true, // 是否启用自动选择策略组
   负载均衡: true, // 是否启用负载均衡策略组
 
   // 以下为分流策略配置
@@ -32,7 +32,6 @@ const ruleOptionsEnable = {
   YouTube: true, // YouTube视频平台
   Google: true, // Google服务
   AI: true, // 国外AI服务
-  GitHub: true, // GitHub代码托管平台
   'Claude/OpenAI': true, // Claude 与 ChatGPT/OpenAI（从通用AI组拆分）
   Microsoft: true, // Microsoft服务
   Apple: true, // Apple服务
@@ -121,12 +120,6 @@ const snifferFinanceSkipDomains = [
 
 // 定义前置规则
 const prefixRules = [
-  // 规则集下载域名直连，避免规则集尚未加载时出现循环依赖
-  'DOMAIN,cdn.jsdmirror.com,直连',
-
-  // 规则集下载域名直连，避免规则集尚未加载时出现循环依赖
-  'DOMAIN,cdn.jsdmirror.com,直连',
-
   // 私有网络直连
   'RULE-SET,private,直连',
 
@@ -273,13 +266,13 @@ const rateRegionDefinitions = [
   {
     name: lowRateRegionName,
     regex:
-      /^(?!.*(?:剩|期)).*(?:(?<![\d.])0(\.[0-5]|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])/i,
+      /^(?!.*(?:剩|期)).*(?:(?<!\d)0(\.[0-5]|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])/i,
     icon: `${iconBaseUrl}Available.svg`,
   },
   {
     name: highRateRegionName,
     regex:
-      /(?:[*×✕✖⨯⨉x](?:1\.(?:[1-9]\d*)|[2-9](?:\.\d+)?|[1-9]\d+(?:\.\d+)?))|(?:(?<![\d.])(?:1\.(?:[1-9]\d*)|[2-9](?:\.\d+)?|[1-9]\d+(?:\.\d+)?)(?:倍|[*×✕✖⨯⨉x]))/i,
+      /(?:[*×✕✖⨯⨉x](?:[2-9]\d*|[1-9]\d+)(?:\.\d+)?)|(?:(?<![\d.])(?:[2-9]\d*|[1-9]\d+)(?:\.\d+)?(?:倍|[*×✕✖⨯⨉x]))/i,
     icon: `${iconBaseUrl}Airport.svg`,
   },
 ];
@@ -556,8 +549,9 @@ const serviceConfigs = [
     rules: ['RULE-SET,ai,AI'],
   },
   {
-    name: 'GitHub',
+    name: 'Microsoft',
     baseOption: selectBaseOption,
+    direct: true,
     providers: {
       github: {
         ...ruleProviderCommonDomain,
@@ -565,15 +559,6 @@ const serviceConfigs = [
         path: './ruleset/github.mrs',
         'path-in-bundle': 'geo/geosite/github.mrs',
       },
-    },
-    icon: `${iconBaseUrl}GitHub.svg`,
-    rules: ['RULE-SET,github,GitHub'],
-  },
-  {
-    name: 'Microsoft',
-    baseOption: selectBaseOption,
-    direct: true,
-    providers: {
       microsoft: {
         ...ruleProviderCommonDomain,
         url: `${ruleSetBaseUrl}geosite/microsoft.mrs`,
@@ -588,7 +573,7 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Microsoft.svg`,
-    rules: ['RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
+    rules: ['RULE-SET,github,默认代理', 'RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
   },
   {
     name: 'Apple',
@@ -867,20 +852,13 @@ Compatible_With_Bettbox.policyGroupOptions = serviceConfigs.map((svc) => svc.nam
 /**
  * 节点匹配缓存，避免重复执行正则
  */
-// 剥离节点名称中的零宽/不可见字符，仅用于匹配；不改写用户看到的节点名称。
-const invisibleCharsRegex = /[\u00AD\u180E\u200B\u200E\u200F\u202A-\u202E\u2060-\u206F\uFEFF\u115F\u1160\u3164\uFFA0]/g;
-function toMatchableName(name) {
-  return typeof name === 'string' ? name.replace(invisibleCharsRegex, '') : name;
-}
-
 const regionMatchCache = new Map();
 function getMatchedRegions(proxyName) {
   if (regionMatchCache.has(proxyName)) {
     return regionMatchCache.get(proxyName);
   }
 
-  const matchableName = toMatchableName(proxyName);
-  const regions = allRegionDefinitions.filter((region) => region.regex.test(matchableName));
+  const regions = allRegionDefinitions.filter((region) => region.regex.test(proxyName));
   regionMatchCache.set(proxyName, regions);
 
   return regions;
@@ -969,14 +947,13 @@ function filterAndNormalizeProxies(config) {
     const type = String(proxy.type ?? '').toLowerCase();
     if (type === 'direct' || type === 'reject' || type === 'rematch') return false;
 
-    const matchableName = toMatchableName(proxy.name);
-    if (lowRateRegex?.test(matchableName) || highRateRegex?.test(matchableName)) return false;
+    if (lowRateRegex?.test(proxy.name) || highRateRegex?.test(proxy.name)) return false;
 
     if (!filterNonRegionProxiesEnabled) return true;
 
     const isRegionProxy = getMatchedRegions(proxy.name).some((region) => regionDefinitions.includes(region));
 
-    return isRegionProxy || !excludeFilter.test(matchableName);
+    return isRegionProxy || !excludeFilter.test(proxy.name);
   });
 
   const renameMap = new Map();
@@ -1029,6 +1006,7 @@ function filterAndNormalizeProxies(config) {
 function createRegionGroup(name, icon, proxies, hidden = false) {
   const generateRegionAutoSelectEnabled = ruleOptionsEnable.生成地区自动选择组;
   const hideManualSelectGroupEnabled = ruleOptionsEnable.隐藏地区手动选择组;
+  const generateRateGroupsEnabled = ruleOptionsEnable.生成倍率组 !== false; // 关则不生成 Eco-Auto 等倍率组
 
   const groups = [];
   const selectProxies = [...proxies];
@@ -1036,7 +1014,7 @@ function createRegionGroup(name, icon, proxies, hidden = false) {
   // ---- 地区低倍率自动选择 ----
   // 性能原则：lowRateRegex 为模块级不变数据，循环外一次求值（rateRegionDefinitions 静态）。
   const isMainRegion = regionDefinitions.some((r) => r.name === name);
-  if (isMainRegion) {
+  if (isMainRegion && generateRateGroupsEnabled) {
     const lowRateRegex = rateRegionDefinitions.find((r) => r.name === lowRateRegionName)?.regex;
     const lowRateProxies = lowRateRegex ? proxies.filter((n) => lowRateRegex.test(n)) : [];
     if (lowRateProxies.length > 0) {
@@ -1079,6 +1057,7 @@ function createRegionGroup(name, icon, proxies, hidden = false) {
 function buildRegionGroups(filteredProxies, customProxies) {
   const showLowRateGroupEnabled = ruleOptionsEnable.显示低倍率节点;
   const showHighRateGroupEnabled = ruleOptionsEnable.显示高倍率节点;
+  const generateRateGroupsEnabled = ruleOptionsEnable.生成倍率组 !== false; // 关则不生成低倍率/高倍率节点组
 
   const regionGroups = Object.fromEntries(allRegionDefinitions.map(({ name }) => [name, []]));
   const otherProxies = [];
@@ -1098,7 +1077,7 @@ function buildRegionGroups(filteredProxies, customProxies) {
     }
   }
 
-  const generatedRegionGroups = allRegionDefinitions
+  const generatedRegionGroups = (generateRateGroupsEnabled ? allRegionDefinitions : regionDefinitions)
     .filter((r) => regionGroups[r.name].length > 0)
     .flatMap((r) => {
       // 倍率组：显示开关控制 hidden 属性（隐藏而非删除，组依然可用）
