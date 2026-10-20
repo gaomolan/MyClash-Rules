@@ -32,6 +32,7 @@ const ruleOptionsEnable = {
   YouTube: true, // YouTube视频平台
   Google: true, // Google服务
   AI: true, // 国外AI服务
+  GitHub: true, // GitHub代码托管平台
   'Claude/OpenAI': true, // Claude 与 ChatGPT/OpenAI（从通用AI组拆分）
   Microsoft: true, // Microsoft服务
   Apple: true, // Apple服务
@@ -120,6 +121,9 @@ const snifferFinanceSkipDomains = [
 
 // 定义前置规则
 const prefixRules = [
+  // 规则集下载域名直连，避免规则集尚未加载时出现循环依赖
+  'DOMAIN,cdn.jsdmirror.com,直连',
+
   // 规则集下载域名直连，避免规则集尚未加载时出现循环依赖
   'DOMAIN,cdn.jsdmirror.com,直连',
 
@@ -552,9 +556,8 @@ const serviceConfigs = [
     rules: ['RULE-SET,ai,AI'],
   },
   {
-    name: 'Microsoft',
+    name: 'GitHub',
     baseOption: selectBaseOption,
-    direct: true,
     providers: {
       github: {
         ...ruleProviderCommonDomain,
@@ -562,6 +565,15 @@ const serviceConfigs = [
         path: './ruleset/github.mrs',
         'path-in-bundle': 'geo/geosite/github.mrs',
       },
+    },
+    icon: `${iconBaseUrl}GitHub.svg`,
+    rules: ['RULE-SET,github,GitHub'],
+  },
+  {
+    name: 'Microsoft',
+    baseOption: selectBaseOption,
+    direct: true,
+    providers: {
       microsoft: {
         ...ruleProviderCommonDomain,
         url: `${ruleSetBaseUrl}geosite/microsoft.mrs`,
@@ -576,7 +588,7 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Microsoft.svg`,
-    rules: ['RULE-SET,github,默认代理', 'RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
+    rules: ['RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
   },
   {
     name: 'Apple',
