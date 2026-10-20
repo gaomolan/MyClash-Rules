@@ -1215,14 +1215,14 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
     ...serviceConfigs.filter((svc) => svc.name !== 'AdBlock'),
   ];
   for (const svc of orderedServiceConfigs) {
-    if (!ruleOptionsEnable[svc.name]) continue;
+    if (ruleOptionsEnable[svc.name] === false) continue;
 
     functionalRules.push(...(svc.rules || []));
     Object.assign(finalRuleProviders, svc.providers || {});
   }
 
   for (const svc of serviceConfigs) {
-    if (!ruleOptionsEnable[svc.name]) continue;
+    if (ruleOptionsEnable[svc.name] === false) continue;
 
     let groupProxies = [];
     if (svc.includeAll) {
