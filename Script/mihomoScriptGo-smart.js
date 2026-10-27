@@ -132,6 +132,7 @@ const snifferFinanceSkipDomains = [
 const prefixRules = [
   // 规则集下载域名直连，避免规则集尚未加载时出现循环依赖
   'DOMAIN,cdn.jsdmirror.com,直连',
+  'DOMAIN,raw.githubusercontent.com,直连',
 
   // 私有网络直连
   'RULE-SET,private,直连',
@@ -232,7 +233,7 @@ const directProxies = [
 const iconBaseUrl = 'https://cdn.jsdmirror.com/gh/AIsouler/MyClash@main/Icons/svg/';
 
 // 规则集 URL 公共前缀
-const ruleSetBaseUrl = 'https://cdn.jsdmirror.com/gh/appshubcc/bett-rules@meta/geo/';
+const ruleSetBaseUrl = 'https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/';
 // ASN 规则集基础地址（bett-rules asn/ 目录，按 ASN 切分的 IP 段，供 Financial 组 ASN 兜底用）
 const asnBaseUrl = ruleSetBaseUrl.replace(/\/geo\/$/, '/asn/');
 
