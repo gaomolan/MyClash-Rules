@@ -1,6 +1,7 @@
 // ============================================================
 // Clash-rules-go · 专属全局 Mihomo 覆写脚本 v1.0.0-phase3【组合脚本 · 仅自用，不对外发布】
 // 脚本地址：https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-combo.js
+// 直连地址：https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-combo.js
 // 本文件由 mihomoScriptGo.js 派生：通用逻辑与 Go 主版保持同步，个人定制只存在于
 // 标记为 [组合脚本专属] 的代码段（Spark 港/新专属分组 + 其余 Spark 节点剔除 + 全局可见性隔离）。
 // 更新规矩：底板永远是 Go 主版；Go 更新时把 [组合脚本专属] 段整体迁移到新底板，不在本文件上单独演进通用逻辑。
