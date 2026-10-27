@@ -1,7 +1,7 @@
-// Smart 内核专用脚本订阅地址：https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScript-smart.js
+// Smart 内核专用脚本订阅地址：https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScript-smart.js
 /**
  * mihomo配置覆写脚本（Smart 内核专用版，与 mihomoScript-custom.js 完全隔离）
- * 作者：AIsouler（上游），ly6980 适配 Smart 内核
+ * 作者：AIsouler（上游），gaomolan 适配 Smart 内核
  * 源仓库：https://github.com/AIsouler/MyClash
  * 脚本链接：https://raw.githubusercontent.com/AIsouler/MyClash/main/Script/mihomoScript.js
  * 用途：专门用于 Smart 内核的测试、验证与使用。
@@ -559,7 +559,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/github.mrs',
       },
     },
-    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/GitHub.svg',
+    icon: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Icons/svg/GitHub.svg',
     rules: ['RULE-SET,github,GitHub'],
   },
   {
