@@ -5,13 +5,17 @@
  * 做什么：用仓库 Test 同款的 vm 加载方式，实际运行三件套覆写脚本
  * （mihomoScriptGo / -smart / -combo）的 main()，从「生成出来的配置」里
  * 收集全部远程依赖 URL——rule-providers、geox-url 地理库、策略组图标——
- * 逐个探活。任一 URL 非 2xx/3xx 即以退出码 1 结束，供 GitHub Actions 报警。
+ * 逐个探活。任一 URL 最终不可达即以退出码 1 结束，供 GitHub Actions 报警。
  *
  * 为什么从生成配置取 URL：脚本里大量 URL 由基地址模板拼装，静态 grep
  * 拼不全；跑一遍生成逻辑拿到的才是运行时真实依赖，且脚本改了巡检自动跟随。
  *
+ * 为什么有复检：镜像站（jsdmirror 等）会出现分钟级抖动（实测同一文件
+ * 403 后数分钟恢复）。首轮失败的 URL 统一等待后复检一次，复检仍失败
+ * 才算真失败，避免抖动误报。
+ *
  * 本地运行：仓库根目录执行 `node tools/rules-canary/check-rules.mjs`
- * 可选参数：--timeout <毫秒>（默认 15000）
+ * 可选参数：--timeout <毫秒>（默认 15000）、--retry-delay <毫秒>（默认 30000）
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,10 +28,12 @@ const SCRIPTS = [
   'Script/mihomoScriptGo-smart.js',
   'Script/mihomoScriptGo-combo.js',
 ];
-const TIMEOUT_MS = (() => {
-  const i = process.argv.indexOf('--timeout');
-  return i >= 0 ? Number(process.argv[i + 1]) || 15000 : 15000;
-})();
+function argValue(name, fallback) {
+  const i = process.argv.indexOf(name);
+  return i >= 0 ? Number(process.argv[i + 1]) || fallback : fallback;
+}
+const TIMEOUT_MS = argValue('--timeout', 15000);
+const RETRY_DELAY_MS = argValue('--retry-delay', 30000);
 
 /** 与 Test/lib/loader.js 相同的加载方式：vm 沙箱执行脚本并导出 main */
 function loadMain(scriptRelPath) {
@@ -94,6 +100,23 @@ async function probe(url) {
   }
 }
 
+const isOk = (status) => typeof status === 'number' && status >= 200 && status < 400;
+
+async function probeAll(entries) {
+  const results = new Map();
+  let cursor = 0;
+  async function worker() {
+    while (cursor < entries.length) {
+      const [url, kind] = entries[cursor++];
+      const status = await probe(url);
+      results.set(url, { kind, status });
+      console.log(`${isOk(status) ? '✓' : '✗'} [${kind}] ${status}  ${url}`);
+    }
+  }
+  await Promise.all(Array.from({ length: 6 }, worker));
+  return results;
+}
+
 async function main() {
   const all = new Map();
   for (const rel of SCRIPTS) {
@@ -121,22 +144,20 @@ async function main() {
 
   const urls = [...all.entries()];
   console.log(`\n共收集到 ${urls.length} 个远程依赖 URL，开始探活（并发 6）…`);
-  const failures = [];
-  let cursor = 0;
-  async function worker() {
-    while (cursor < urls.length) {
-      const [url, kind] = urls[cursor++];
-      const status = await probe(url);
-      const ok = typeof status === 'number' && status >= 200 && status < 400;
-      console.log(`${ok ? '✓' : '✗'} [${kind}] ${status}  ${url}`);
-      if (!ok) failures.push({ url, kind, status });
-    }
-  }
-  await Promise.all(Array.from({ length: 6 }, worker));
+  const first = await probeAll(urls);
+  let failures = urls.filter(([url]) => !isOk(first.get(url).status));
 
   if (failures.length > 0) {
-    console.error(`\n巡检失败：${failures.length} 个 URL 不可达：`);
-    for (const f of failures) console.error(`  - [${f.kind}] ${f.status}  ${f.url}`);
+    console.log(`\n首轮 ${failures.length} 个 URL 失败，等待 ${RETRY_DELAY_MS / 1000}s 后复检（过滤镜像抖动）…`);
+    await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
+    const second = await probeAll(failures);
+    failures = failures.filter(([url]) => !isOk(second.get(url).status));
+    for (const [url] of failures) first.get(url).status = second.get(url).status;
+  }
+
+  if (failures.length > 0) {
+    console.error(`\n巡检失败：${failures.length} 个 URL 复检后仍不可达：`);
+    for (const [url, kind] of failures) console.error(`  - [${kind}] ${first.get(url).status}  ${url}`);
     process.exitCode = 1;
   } else {
     console.log(`\n巡检通过：${urls.length} 个 URL 全部存活。`);
