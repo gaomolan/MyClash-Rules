@@ -31,9 +31,9 @@ const ruleOptionsEnable = {
   FCM: true, // GoogleFCM服务
   YouTube: true, // YouTube视频平台
   Google: true, // Google服务
-  AI: true, // 国外AI服务
+  AI: true, // 国外AI服务（Claude 除外，见 Claude 组）
   GitHub: true, // GitHub代码托管平台
-  'Claude/OpenAI': true, // Claude 与 ChatGPT/OpenAI（从通用AI组拆分）
+  Claude: true, // Claude（Anthropic）独立分组，其余 AI 服务归 AI 组
   Microsoft: true, // Microsoft服务
   Apple: true, // Apple服务
   Telegram: true, // Telegram通讯软件
@@ -86,7 +86,7 @@ const ruleOptionsEnable = {
 const defaultSelectedMap = {
   FCM: '直连',
   AI: '美国',
-  'Claude/OpenAI': '美国',
+  Claude: '美国',
   TikTok: '日本',
   Financial: '日本', // 继承原 Crypto 默认（统一金融组）
 };
@@ -515,29 +515,38 @@ const serviceConfigs = [
   },
 
   {
-    // ---- Claude/OpenAI 组（Phase 3 新增：从通用AI组拆分） ----
-    // 手写规则更精准：Anthropic 域名 + ASN 399358 + OpenAI/ChatGPT 域名。
-    // 注：本组定义在通用AI组之前，规则优先命中；category-ai 规则集仍在通用AI组中覆盖其余 AI 服务。
-    name: 'Claude/OpenAI',
+    // ---- Claude 组（Anthropic 独立分组） ----
+    // 只收 Anthropic/Claude：手写核心域名 + anthropic 规则集（全量域名）+ ASN 399358 兜底。
+    // 注：本组定义在 AI 组之前，规则优先命中——category-ai-!cn 规则集同样含 Anthropic 域名，
+    // 靠顺序保证 Claude 流量不被 AI 组截走。其余 AI 服务（OpenAI/ChatGPT 等）统一归 AI 组。
+    name: 'Claude',
     baseOption: selectBaseOption,
-    defaultSelected: defaultSelectedMap['Claude/OpenAI'],
+    defaultSelected: defaultSelectedMap.Claude,
+    providers: {
+      anthropic: {
+        ...ruleProviderCommonDomain,
+        url: `${ruleSetBaseUrl}geosite/anthropic.mrs`,
+        path: './ruleset/anthropic.mrs',
+        'path-in-bundle': 'geo/geosite/anthropic.mrs',
+      },
+    },
     // ASN 兜底：IP-ASN 原生规则（需 geox-url.asn 数据库）。Anthropic 官网挂 CDN，域名规则为主。
     icon: `${iconBaseUrl}OpenAI.svg`,
     rules: [
-      // Claude / Anthropic
-      'DOMAIN-SUFFIX,anthropic.com,Claude/OpenAI',
-      'DOMAIN-SUFFIX,claude.ai,Claude/OpenAI',
-      'DOMAIN-SUFFIX,claude.com,Claude/OpenAI',
-      'IP-ASN,399358,Claude/OpenAI,no-resolve',
-      // ChatGPT / OpenAI（含静态资源与生成内容域名）
-      'DOMAIN-SUFFIX,openai.com,Claude/OpenAI',
-      'DOMAIN-SUFFIX,chatgpt.com,Claude/OpenAI',
-      'DOMAIN-SUFFIX,oaistatic.com,Claude/OpenAI',
-      'DOMAIN-SUFFIX,oaiusercontent.com,Claude/OpenAI',
+      'DOMAIN-SUFFIX,anthropic.com,Claude',
+      'DOMAIN-SUFFIX,claude.ai,Claude',
+      'DOMAIN-SUFFIX,claude.com,Claude',
+      'DOMAIN-SUFFIX,claudeusercontent.com,Claude',
+      'RULE-SET,anthropic,Claude',
+      'IP-ASN,399358,Claude,no-resolve',
     ],
   },
   {
-    // 通用AI组（显示名"AI"，category-ai 规则集覆盖全部 AI 服务；Claude/OpenAI 已拆分独立组）
+    // ---- AI 组（Claude 以外的全部 AI 服务） ----
+    // category-ai-!cn 规则集已覆盖：OpenAI/ChatGPT、Grok（x.ai/grok.com）、Gemini、Copilot、
+    // Perplexity、Mistral、Meta AI / Muse（muse.ai）、Dola（dola.com）、Kimi 国际版（kimi.ai）等。
+    // 下列手写规则只补规则集未收录的：Qwen 国际版、智谱国际版（z.ai）、英伟达 AI、OpenAI 登录用的 auth0。
+    // 注意只收国际版域名：国内版（通义/豆包/智谱国内站等）继续走国内直连，不进本组。
     name: 'AI',
     baseOption: selectBaseOption,
     defaultSelected: defaultSelectedMap.AI,
@@ -550,7 +559,21 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}OpenAI.svg`,
-    rules: ['RULE-SET,ai,AI'],
+    rules: [
+      // OpenAI 登录（Auth0 托管认证，规则集未收）
+      'DOMAIN-SUFFIX,auth0.com,AI',
+      // Qwen 国际版（chat.qwen.ai；API 走 dashscope 国际端点）
+      'DOMAIN-SUFFIX,qwen.ai,AI',
+      'DOMAIN,dashscope-intl.aliyuncs.com,AI',
+      // 智谱国际版（chat.z.ai / api.z.ai）
+      'DOMAIN-SUFFIX,z.ai,AI',
+      // 英伟达 AI（模型广场 build / NIM 接口 nvcf / 模型目录 ngc；官网与驱动下载不进本组）
+      'DOMAIN-SUFFIX,build.nvidia.com,AI',
+      'DOMAIN-SUFFIX,nvcf.nvidia.com,AI',
+      'DOMAIN-SUFFIX,ngc.nvidia.com,AI',
+      'DOMAIN,integrate.api.nvidia.com,AI',
+      'RULE-SET,ai,AI',
+    ],
   },
   {
     name: 'GitHub',
@@ -1891,7 +1914,7 @@ function main(config) {
   if (newConfig['geo-auto-update'] === undefined) newConfig['geo-auto-update'] = true;
   if (newConfig['geo-update-interval'] === undefined) newConfig['geo-update-interval'] = 168;
   if (newConfig['etag-support'] === undefined) newConfig['etag-support'] = true; // 规则集 ETag 去重下载
-  // ⚠️ ASN 数据库：IP-ASN 原生规则依赖此库（Claude/OpenAI、Financial 组的 ASN 兜底）。
+  // ⚠️ ASN 数据库：IP-ASN 原生规则依赖此库（Claude、Financial 组的 ASN 兜底）。
   //   不配则 IP-ASN 规则无效。URL 与 geoip/geosite 保持同一源（MetaCubeX 官方）。
   if (newConfig['geox-url'] === undefined) {
     newConfig['geox-url'] = {
