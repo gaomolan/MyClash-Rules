@@ -1221,7 +1221,7 @@ function createComboSparkRegionGroup(name, icon, proxies) {
 }
 
 /**
- * [组合脚本专属] 按保留地区构建 Spark 专属组，返回生成的组与手动组名（供 AI / Claude 组拼成员）。
+ * [组合脚本专属] 按保留地区构建 Spark 专属组，返回生成的组与手动组名（供 AI / Claude / Financial / Cloudflare 组拼成员）。
  */
 function buildComboSparkGroups(sparkProxies) {
   const groups = [];
@@ -1348,9 +1348,14 @@ function buildServiceGroups(ctx) {
           ];
     }
 
-    // [组合脚本专属] AI / Claude 组：Spark 专属组排到成员最前（默认选中保持不变，用户手动切）
-    if ((svc.name === 'AI' || svc.name === 'Claude') && ctx.comboSparkSelectNames?.length) {
+    // [组合脚本专属] AI / Claude / Financial 组：Spark 专属组排到成员最前（默认选中保持不变，用户手动切）
+    if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {
       groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];
+    }
+    // [组合脚本专属] Cloudflare 组（固定成员且无默认选中，默认落点是首位的手动选择）：
+    // Spark 专属组插在手动选择/默认代理之后，只多两个可选项，不改默认落点。
+    if (svc.name === 'Cloudflare' && ctx.comboSparkSelectNames?.length) {
+      groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];
     }
 
     functionalGroups.push({
@@ -1438,7 +1443,7 @@ function buildRuleProviders() {
  */
 function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customizeInfo) {
   const ctx = buildFunctionalContext(filteredProxies, generatedRegionGroups, customizeInfo);
-  // [组合脚本专属] Spark 专属组名透传给 buildServiceGroups（供 AI / Claude 组拼成员）
+  // [组合脚本专属] Spark 专属组名透传给 buildServiceGroups（供 AI / Claude / Financial / Cloudflare 组拼成员）
   ctx.comboSparkSelectNames = customizeInfo?.comboSparkSelectNames || [];
   // fixedMembers 过滤需要地区组名集合，补入上下文
   ctx.generatedRegionGroups = generatedRegionGroups;
