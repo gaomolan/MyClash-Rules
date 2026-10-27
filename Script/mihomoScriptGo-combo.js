@@ -1,7 +1,7 @@
 // ============================================================
 // Clash-rules-go · 专属全局 Mihomo 覆写脚本 v1.0.0-phase3【组合脚本 · 仅自用，不对外发布】
-// 脚本地址：https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-combo.js
-// 直连地址：https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-combo.js
+// 脚本地址：https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-combo.js
+// 直连地址：https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-combo.js
 // 本文件由 mihomoScriptGo.js 派生：通用逻辑与 Go 主版保持同步，个人定制只存在于
 // 标记为 [组合脚本专属] 的代码段（Spark 港/新专属分组 + 其余 Spark 节点剔除 + 全局可见性隔离）。
 // 更新规矩：底板永远是 Go 主版；Go 更新时把 [组合脚本专属] 段整体迁移到新底板，不在本文件上单独演进通用逻辑。
@@ -538,7 +538,7 @@ const serviceConfigs = [
       },
     },
     // ASN 兜底：IP-ASN 原生规则（需 geox-url.asn 数据库）。Anthropic 官网挂 CDN，域名规则为主。
-    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/Claude.svg',
+    icon: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Icons/svg/Claude.svg',
     rules: [
       'DOMAIN-SUFFIX,anthropic.com,Claude',
       'DOMAIN-SUFFIX,claude.ai,Claude',
@@ -593,7 +593,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geosite/github.mrs',
       },
     },
-    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/GitHub.svg',
+    icon: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Icons/svg/GitHub.svg',
     rules: ['RULE-SET,github,GitHub'],
   },
   {
@@ -872,7 +872,7 @@ const serviceConfigs = [
         'path-in-bundle': 'geo/geoip/cloudflare.mrs',
       },
     },
-    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/Cloudflare-v2.svg',
+    icon: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Icons/svg/Cloudflare-v2.svg',
     rules: [
       // cloudflare@cn → 直连：CF 中国节点（中国 IP）优先直连，不进 Cloudflare 组。
       // cn_ip 规则集已在 baseRuleProviders 定义，此处复用；放在 CF IP 规则之前。
