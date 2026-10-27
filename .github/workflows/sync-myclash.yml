@@ -105,7 +105,7 @@ jobs:
       - name: Generate custom script
         run: |
           {
-            printf '%s\n' '// 我的自定义脚本订阅地址：https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js'
+            printf '%s\n' '// 我的自定义脚本订阅地址：https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js'
             cat /tmp/mihomoScript.js Script/customPatch.js
           } > Script/mihomoScript-custom.js
 
