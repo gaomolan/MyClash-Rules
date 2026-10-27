@@ -531,7 +531,7 @@ const serviceConfigs = [
       },
     },
     // ASN 兜底：IP-ASN 原生规则（需 geox-url.asn 数据库）。Anthropic 官网挂 CDN，域名规则为主。
-    icon: `${iconBaseUrl}OpenAI.svg`,
+    icon: 'https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Icons/svg/Claude.svg',
     rules: [
       'DOMAIN-SUFFIX,anthropic.com,Claude',
       'DOMAIN-SUFFIX,claude.ai,Claude',
