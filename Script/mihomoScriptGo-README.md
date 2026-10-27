@@ -4,7 +4,7 @@ Forked from [AIsouler/MyClash](https://github.com/AIsouler/MyClash)
 
 一个Mihomo 覆写脚本，适用于 Bettbox / Clash Verge Rev / 支持 Mihomo Script 覆写的客户端。
 
-订阅地址：https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
+订阅地址：https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
 
 ---
 
