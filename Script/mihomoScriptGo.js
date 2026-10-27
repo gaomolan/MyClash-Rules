@@ -1,6 +1,7 @@
 // ============================================================
 // Clash-rules-go · 专属全局 Mihomo 覆写脚本 v1.0.0-phase3
 // 脚本地址：https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
+// 直连地址：https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
 // Forked from AIsouler/MyClash (https://github.com/AIsouler/MyClash)
 // ------------------------------------------------------------
 // 总原则：软件能管的让软件管，软件管不了的才让脚本管。
