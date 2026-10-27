@@ -1,0 +1,49 @@
+name: 规则存活巡检
+
+# 每天 UTC 05:17（北京时间 13:17）跑一次，避开整点拥堵；也可手动触发。
+# 探活逻辑在 tools/rules-canary/check-rules.mjs：实际运行三件套覆写脚本
+# 生成配置，提取全部 rule-providers / geox-url / 图标 URL 逐个探活，
+# 任一不可达即失败，并自动开 issue 报警（已有未关闭的同名 issue 不重复开）。
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: myclash-rules
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 探活全部远程依赖
+        run: node tools/rules-canary/check-rules.mjs 2>&1 | tee canary.log
+
+      - name: 失败时开 issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="🚨 规则存活巡检失败"
+          if gh issue list --state open --search "$title" --json title --jq '.[].title' | grep -Fxq "$title"; then
+            echo "已有未关闭的巡检 issue，跳过新建"
+            exit 0
+          fi
+          {
+            echo "巡检发现不可达的远程依赖，明细见本次运行日志："
+            echo "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo
+            echo '```'
+            grep '^✗' canary.log || true
+            echo '```'
+          } > issue-body.md
+          gh issue create --title "$title" --body-file issue-body.md
