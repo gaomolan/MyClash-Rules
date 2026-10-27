@@ -3,31 +3,31 @@
 追踪 MyClash 脚本订阅地址：
 
 ```text
-https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js
+https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js
 ```
 
 改动版 mihomoScriptGo 订阅地址（CDN，可能有缓存延迟）：
 
 ```text
-https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
+https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
 ```
 
 直连 GitHub（无 CDN 缓存，最新版本）：
 
 ```text
-https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
+https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
 ```
 
 Smart 内核版 mihomoScriptGo-smart 订阅地址（CDN）：
 
 ```text
-https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-smart.js
+https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-smart.js
 ```
 
 Smart 内核版直连 GitHub（无 CDN 缓存）：
 
 ```text
-https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-smart.js
+https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-smart.js
 ```
 
 ---
@@ -38,7 +38,7 @@ Forked from [AIsouler/MyClash](https://github.com/AIsouler/MyClash)
 
 一个Mihomo 覆写脚本，适用于 Bettbox / Clash Verge Rev / 支持 Mihomo Script 覆写的客户端。
 
-订阅地址：https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
+订阅地址：https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js
 
 ---
 
