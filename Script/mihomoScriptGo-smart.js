@@ -1,6 +1,7 @@
 // ============================================================
 // Clash-rules-go Smart 内核版 · 专属全局 Mihomo 覆写脚本 v1.0.0-phase3-smart
 // 脚本地址：https://cdn.jsdelivr.net/gh/ly6980/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-smart.js
+// 直连地址：https://raw.githubusercontent.com/ly6980/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-smart.js
 // 基于 mihomoScriptGo.js，Auto/Eco-Auto 组改用 Smart 内核原生 type:smart
 // Forked from AIsouler/MyClash (https://github.com/AIsouler/MyClash)
 // ------------------------------------------------------------
