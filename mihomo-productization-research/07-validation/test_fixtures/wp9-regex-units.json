@@ -1,0 +1,750 @@
+{
+  "rows": [
+    {
+      "target": "HK",
+      "name": "香港 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HK",
+      "name": "HKG 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HK",
+      "name": "hongkong-01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HK",
+      "name": "东京 01",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "HK",
+      "name": "伦敦 01",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "JP",
+      "name": "东京 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "JP",
+      "name": "JPN 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "JP",
+      "name": "japan 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "JP",
+      "name": "Tokyo 01",
+      "intent": true,
+      "type": "正例",
+      "note": "英文城市名不在正则内，预期漏识别",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "JP",
+      "name": "Osaka 01",
+      "intent": true,
+      "type": "正例",
+      "note": "英文城市名不在正则内，预期漏识别",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "US",
+      "name": "美国 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "US",
+      "name": "USA 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "US",
+      "name": "洛杉矶 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "US",
+      "name": "美國 01",
+      "intent": true,
+      "type": "正例",
+      "note": "繁体字形不在正则内，预期漏识别",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "US",
+      "name": "Los Angeles 01",
+      "intent": true,
+      "type": "正例",
+      "note": "英文城市名不在正则内，预期漏识别",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "US",
+      "name": "Russia 01",
+      "intent": false,
+      "type": "负例",
+      "note": "us 子串被字母边界后顾拦截",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "US",
+      "name": "圣地亚哥 01",
+      "intent": null,
+      "type": "争议例",
+      "note": "旧版名单内；Go 已主动移除（圣地亚哥亦为智利首都名）",
+      "go": false,
+      "old-smart": true,
+      "custom": false
+    },
+    {
+      "target": "SG",
+      "name": "新加坡 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "SG",
+      "name": "SGP 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "SG",
+      "name": "狮城 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "SG",
+      "name": "吉隆坡 01",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "TW",
+      "name": "台北 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "TW",
+      "name": "TWN 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "TW",
+      "name": "hinet 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "TW",
+      "name": "新北 01",
+      "intent": true,
+      "type": "正例",
+      "note": "旧版/上游名单无新北，预期仅 Go 命中",
+      "go": true,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "TW",
+      "name": "台灣 01",
+      "intent": true,
+      "type": "正例",
+      "note": "繁体字形不在正则内，预期漏识别",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "TW",
+      "name": "台中 01",
+      "intent": true,
+      "type": "正例",
+      "note": "城市名单外，预期漏识别",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 0.2x",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 0.5倍",
+      "intent": true,
+      "type": "正例",
+      "note": "0.5 为含边界",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 x0.2",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 低倍专线",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 免费节点",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 Free 01",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 下载专线",
+      "intent": true,
+      "type": "正例",
+      "note": "设计即如此：将下载类节点归入低倍率（语义借用）",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 0倍",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 0.6x",
+      "intent": false,
+      "type": "负例",
+      "note": "0.6-1.0 为标准倍率空档",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 1x",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 剩余0.5倍",
+      "intent": false,
+      "type": "负例",
+      "note": "负向前瞻（剩/期）守卫",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 客户端下载",
+      "intent": false,
+      "type": "负例",
+      "note": "负向前瞻（客户端/软件）守卫",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 Freedom 01",
+      "intent": false,
+      "type": "负例",
+      "note": "free 词边界",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 10.5x",
+      "intent": false,
+      "type": "负例",
+      "note": "小数点后顾防误吞 0.5",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 x86 优化",
+      "intent": false,
+      "type": "负例",
+      "note": "预期误判：x+两位数字被当作高倍率符号式，低倍率侧亦需确认不命中",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "LOW",
+      "name": "香港 v0.5 测试",
+      "intent": false,
+      "type": "负例",
+      "note": "预期误判：版本号 0.5 被当作低倍率",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "LOW",
+      "name": "香港 0.55x",
+      "intent": false,
+      "type": "负例",
+      "note": "预期边界误判：0.55>0.5 仍被前缀匹配 0.5",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 2x",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 2倍",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 ×3",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 1.5倍",
+      "intent": true,
+      "type": "正例",
+      "note": "预期分叉：Go 支持 1.x 小数倍率，上游系仅整数≥2",
+      "go": true,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 1.1x",
+      "intent": true,
+      "type": "正例",
+      "note": "预期分叉：同上",
+      "go": true,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 10.5x",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 20.5倍",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 1x",
+      "intent": false,
+      "type": "负例",
+      "note": "1.0 为标准倍率",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 1.0倍",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 0.5x",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 x86 优化",
+      "intent": false,
+      "type": "负例",
+      "note": "预期误判：架构标识 x86 被当作 ×86 倍率",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 到期2倍",
+      "intent": false,
+      "type": "负例",
+      "note": "预期误判：高倍率正则无信息词守卫",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "HIGH",
+      "name": "香港 v2 节点",
+      "intent": false,
+      "type": "负例",
+      "note": "数字后无倍率符号",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "剩余流量 100GB",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "官网地址 example",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "频道 t.me/+abc123",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "⚠️ 系统维护通知",
+      "intent": true,
+      "type": "正例",
+      "note": "",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "example.com 01",
+      "intent": true,
+      "type": "正例",
+      "note": ".com 命中",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "公益节点 01",
+      "intent": true,
+      "type": "正例",
+      "note": "按词表设计命中；语义上可能是真实节点，存在误删风险",
+      "go": true,
+      "old-smart": true,
+      "custom": true
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "香港 01",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "自建中转 01",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    },
+    {
+      "target": "EXCLUDE",
+      "name": "美国专线 01",
+      "intent": false,
+      "type": "负例",
+      "note": "",
+      "go": false,
+      "old-smart": false,
+      "custom": false
+    }
+  ],
+  "patterns": {
+    "go": {
+      "regions": [
+        {
+          "name": "中国香港",
+          "source": "🇭🇰|中国香港|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong"
+        },
+        {
+          "name": "日本",
+          "source": "🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan"
+        },
+        {
+          "name": "美国",
+          "source": "🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\\s*states"
+        },
+        {
+          "name": "新加坡",
+          "source": "🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore"
+        },
+        {
+          "name": "中国台湾",
+          "source": "🇹🇼|中国台湾|台湾|台北|高雄|新北|桃园|新竹|(?<![A-Za-z])TWN?(?![A-Za-z])|taipei|hinet|taiwan"
+        }
+      ],
+      "low": "^(?!.*(?:剩|期)).*(?:(?<![\\d.])0(\\.[0-5]|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])",
+      "high": "(?:[*×✕✖⨯⨉x](?:1\\.(?:[1-9]\\d*)|[2-9](?:\\.\\d+)?|[1-9]\\d+(?:\\.\\d+)?))|(?:(?<![\\d.])(?:1\\.(?:[1-9]\\d*)|[2-9](?:\\.\\d+)?|[1-9]\\d+(?:\\.\\d+)?)(?:倍|[*×✕✖⨯⨉x]))",
+      "exclude": "群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b",
+      "hasToMatchableName": true
+    },
+    "old-smart": {
+      "regions": [
+        {
+          "name": "香港",
+          "source": "🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong"
+        },
+        {
+          "name": "日本",
+          "source": "🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan"
+        },
+        {
+          "name": "美国",
+          "source": "🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|圣地亚哥|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\\s*states"
+        },
+        {
+          "name": "新加坡",
+          "source": "🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore"
+        },
+        {
+          "name": "台湾",
+          "source": "🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan"
+        }
+      ],
+      "low": "^(?!.*(?:剩|期)).*(?:(?<!\\d)0(\\.[0-5]|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])",
+      "high": "(?:[*×✕✖⨯⨉x](?:[2-9]\\d*|[1-9]\\d+)(?:\\.\\d+)?)|(?:(?<![\\d.])(?:[2-9]\\d*|[1-9]\\d+)(?:\\.\\d+)?(?:倍|[*×✕✖⨯⨉x]))",
+      "exclude": "群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b",
+      "hasToMatchableName": false
+    },
+    "custom": {
+      "regions": [
+        {
+          "name": "香港",
+          "source": "🇭🇰|香港|(?<![A-Za-z])HKG?(?![A-Za-z])|hong\\s*kong"
+        },
+        {
+          "name": "日本",
+          "source": "🇯🇵|日本|东京|大阪|京都|(?<![A-Za-z])JPN?(?![A-Za-z])|japan"
+        },
+        {
+          "name": "美国",
+          "source": "🇺🇸|美国|纽约|洛杉矶|旧金山|芝加哥|休斯顿|迈阿密|西雅图|波士顿|华盛顿|拉斯维加斯|圣何塞|(?<![A-Za-z])USA?(?![A-Za-z])|america|united\\s*states"
+        },
+        {
+          "name": "新加坡",
+          "source": "🇸🇬|新加坡|狮城|(?<![A-Za-z])SGP?(?![A-Za-z])|singapore"
+        },
+        {
+          "name": "台湾",
+          "source": "🇹🇼|台湾|台北|高雄|(?<![A-Za-z])TWN?(?![A-Za-z])|taiwan"
+        }
+      ],
+      "low": "^(?!.*(?:剩|期)).*(?:(?<![\\d.])0(\\.[0-5]|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])",
+      "high": "(?:[*×✕✖⨯⨉x](?:[2-9]\\d*|[1-9]\\d+)(?:\\.\\d+)?)|(?:(?<![\\d.])(?:[2-9]\\d*|[1-9]\\d+)(?:\\.\\d+)?(?:倍|[*×✕✖⨯⨉x]))",
+      "exclude": "群|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|电报|无法|说明|提示|访问|支持|教程|关注|更新|作者|加入|超时|收藏|优惠|福利|邀请|好友|失联|选择|剩余|公益|发布|DIZTNA|通路|登录|禁止|定时|渠道|牢记|永久|余额|阁下|本站|刷新|导航|建议|重置|以下|过滤|⚠️|@|t\\.me\\/\\+|\\bexpire\\b|\\bhttps?:\\/\\/|\\.com|\\btraffic\\b",
+      "hasToMatchableName": true
+    }
+  }
+}

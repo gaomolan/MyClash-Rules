@@ -1,0 +1,2245 @@
+{
+  "generatedAt": "2026-10-27T17:00:48.557Z",
+  "node": "v24.22.1",
+  "suites": [
+    {
+      "id": "S1",
+      "title": "地区识别基础（Go 主版，默认开关）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "🇭🇰 香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港02",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港02",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "Hong Kong 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 Hong Kong 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "hongkong-01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 hongkong-01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "HKG 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 HKG 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "HK-01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 HK-01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "东京 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 东京 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        },
+        {
+          "name": "Tokyo 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "Tokyo 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "Osaka 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "Osaka 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "JP 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 JP 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        },
+        {
+          "name": "大阪 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 大阪 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        },
+        {
+          "name": "新加坡 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇸🇬 新加坡 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "新加坡-Auto",
+              "新加坡"
+            ]
+          }
+        },
+        {
+          "name": "Singapore 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇸🇬 Singapore 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "新加坡-Auto",
+              "新加坡"
+            ]
+          }
+        },
+        {
+          "name": "SG-01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇸🇬 SG-01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "新加坡-Auto",
+              "新加坡"
+            ]
+          }
+        },
+        {
+          "name": "狮城 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇸🇬 狮城 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "新加坡-Auto",
+              "新加坡"
+            ]
+          }
+        },
+        {
+          "name": "台灣 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "台灣 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "美國 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "美國 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "美国 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 美国 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "USA 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 USA 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "US01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 US01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "洛杉矶 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 洛杉矶 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "Los Angeles 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "Los Angeles 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "Dallas 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "Dallas 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "圣地亚哥 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "圣地亚哥 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "台北 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇹🇼 台北 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国台湾-Auto",
+              "中国台湾"
+            ]
+          }
+        },
+        {
+          "name": "Taipei 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇹🇼 Taipei 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国台湾-Auto",
+              "中国台湾"
+            ]
+          }
+        },
+        {
+          "name": "台中 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "台中 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "高雄 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇹🇼 高雄 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国台湾-Auto",
+              "中国台湾"
+            ]
+          }
+        },
+        {
+          "name": "新北 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇹🇼 新北 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国台湾-Auto",
+              "中国台湾"
+            ]
+          }
+        },
+        {
+          "name": "Hinet 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇹🇼 Hinet 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国台湾-Auto",
+              "中国台湾"
+            ]
+          }
+        },
+        {
+          "name": "英国 伦敦 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "英国 伦敦 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "韩国 首尔 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "韩国 首尔 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "香港转美国 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港转美国 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "Russia 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "Russia 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "🇯🇵 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        },
+        {
+          "name": "🇺🇸 香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 香港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "US West 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 US West 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "hOnG kOnG 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 hOnG kOnG 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "日本JP 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 日本JP 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        },
+        {
+          "name": "德国 法兰克福 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "德国 法兰克福 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "新加坡SG 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇸🇬 新加坡SG 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "新加坡-Auto",
+              "新加坡"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S2",
+      "title": "倍率识别边界（Go 主版，默认开关）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "香港 0.1x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0.1x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 x0.2",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 x0.2",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 0.5倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0.5倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 0.55x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0.55x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 0.6x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0.6x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 1x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 1x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 1.0倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 1.0倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 1.1x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 1.1x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 1.5倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 1.5倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 2倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 2倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 2.5x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 2.5x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 ×3",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 ×3",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 10x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 10x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 低倍率专线",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 低倍率专线",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 免费节点",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 免费节点",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 Free 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 Free 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 Freedom 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 Freedom 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 下载专线",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 下载专线",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 客户端下载",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 客户端下载",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 剩余0.5倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 剩余0.5倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 到期2倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 到期2倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 10.5x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 10.5x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 x86 优化",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 x86 优化",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 v0.5 测试",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 v0.5 测试",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 0倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 ✕2",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 ✕2",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "日本 0.2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 日本 0.2x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Eco-Auto",
+              "日本-Auto",
+              "日本",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "美国 3x专线",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 美国 3x专线",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 20.5倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 20.5倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 100倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 100倍",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S3",
+      "title": "信息节点与非地区过滤（Go 主版，默认开关：过滤非地区节点=true）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "剩余流量 100GB",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "到期时间 2026-01-01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "官网地址 example.com",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "香港 剩余流量提示",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 剩余流量提示",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "自建中转 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "自建中转 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "频道 t.me/+abc123",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "联系邮箱 admin@example.com",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "⚠️ 系统维护通知",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "公益免费节点 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "国内中转 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "防失联发布页",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "日本 官网验证",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 日本 官网验证",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        },
+        {
+          "name": "剩余流量：100GB | 已用 50GB",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S4a",
+      "title": "开关变体：过滤低倍率节点=true（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "香港 0.2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 免费",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "香港 2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 2x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港",
+              "高倍率节点-Auto",
+              "高倍率节点"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S4b",
+      "title": "开关变体：过滤高倍率节点=true（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "香港 2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "香港 0.2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0.2x",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Eco-Auto",
+              "中国香港-Auto",
+              "中国香港",
+              "低倍率节点-Auto",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S4c",
+      "title": "开关变体：过滤非地区节点=false（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "剩余流量 100GB",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "剩余流量 100GB",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "官网地址 example.com",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "官网地址 example.com",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "其他节点-Auto",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S5",
+      "title": "零宽/不可见字符（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "香​港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香​港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "﻿香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港­ 02",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港­ 02",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港‮ 03",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港‮ 03",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 04",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 04",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香​港 04",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香​港 04",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S6",
+      "title": "重名、标准化碰撞与 dialer-proxy 引用修复（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "🇭🇰 香港 02",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 02",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 02",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "香港  03",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 03",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 03",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "美国 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 美国 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "美国 02",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 美国 02",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "剩余流量节点",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": false
+          }
+        },
+        {
+          "name": "美国 03",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 美国 03",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "美国-Auto",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "日本 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 日本 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S7",
+      "title": "字段保留与 ip-version 偏好覆盖（Go 主版，默认开关：代理IPV4优先=true）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "香港 自定义字段 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 自定义字段 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 无udp字段 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 无udp字段 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 显式udp 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 显式udp 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S7b",
+      "title": "ip-version 保留（Go 主版，代理IPV4优先=false 且 IPV6优先=false）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "香港 保持v6 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 保持v6 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 无偏好 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 无偏好 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "中国香港-Auto",
+              "中国香港"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S8a",
+      "title": "空节点列表（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "(suite) 应抛错",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "error": "配置文件中未找到任何代理节点，请使用机场提供的配置文件进行覆写"
+          }
+        }
+      ],
+      "suiteFailures": []
+    },
+    {
+      "id": "S8b",
+      "title": "仅信息节点（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "(suite) 应抛错",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "error": "配置文件中未找到任何代理节点，请使用机场提供的配置文件进行覆写"
+          }
+        }
+      ],
+      "suiteFailures": []
+    },
+    {
+      "id": "S8c",
+      "title": "仅 direct 类型节点（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "(suite) 应抛错",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "error": "配置文件中未找到任何代理节点，请使用机场提供的配置文件进行覆写"
+          }
+        }
+      ],
+      "suiteFailures": []
+    },
+    {
+      "id": "S8d",
+      "title": "config 缺失 proxies 键（Go 主版）",
+      "variant": "go",
+      "cases": [
+        {
+          "name": "(suite) 应抛错",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "error": "配置文件中未找到任何代理节点，请使用机场提供的配置文件进行覆写"
+          }
+        }
+      ],
+      "suiteFailures": []
+    },
+    {
+      "id": "S10a",
+      "title": "变体对照：地区识别（旧 Smart 版，组名为旧称）",
+      "variant": "old-smart",
+      "cases": [
+        {
+          "name": "香港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 01",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "香港-自动选择",
+              "香港"
+            ]
+          }
+        },
+        {
+          "name": "台北 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇹🇼 台北 01",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "台湾-自动选择",
+              "台湾"
+            ]
+          }
+        },
+        {
+          "name": "圣地亚哥 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇺🇸 圣地亚哥 01",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "美国-自动选择",
+              "美国"
+            ]
+          }
+        },
+        {
+          "name": "新北 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "新北 01",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "其他节点-自动选择",
+              "其他节点"
+            ]
+          }
+        },
+        {
+          "name": "Tokyo 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "Tokyo 01",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "其他节点-自动选择",
+              "其他节点"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S10b",
+      "title": "变体对照：倍率与零宽（旧 Smart 版）",
+      "variant": "old-smart",
+      "cases": [
+        {
+          "name": "香港 1.5倍",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 1.5倍",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "香港-自动选择",
+              "香港"
+            ]
+          }
+        },
+        {
+          "name": "香港 0.2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0.2x",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "香港-自动选择",
+              "香港",
+              "低倍率节点-自动选择",
+              "低倍率节点",
+              "香港-低倍率自动选择"
+            ]
+          }
+        },
+        {
+          "name": "香港 2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 2x",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "香港-自动选择",
+              "香港",
+              "高倍率节点-自动选择",
+              "高倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "香​港 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "香​港 01",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "其他节点-自动选择",
+              "其他节点"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S10c",
+      "title": "变体对照：custom 线低倍率组补丁（上游+customPatch）",
+      "variant": "custom",
+      "cases": [
+        {
+          "name": "香港 0.2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 香港 0.2x",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "香港-自动选择",
+              "香港",
+              "低倍率节点-自动选择",
+              "低倍率节点",
+              "香港-低倍率自动选择"
+            ]
+          }
+        },
+        {
+          "name": "台湾 0.2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇹🇼 台湾 0.2x",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "台湾-自动选择",
+              "台湾",
+              "低倍率节点-自动选择",
+              "低倍率节点"
+            ]
+          }
+        },
+        {
+          "name": "日本 0.2x",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 日本 0.2x",
+            "groups": [
+              "手动选择",
+              "自动选择",
+              "负载均衡",
+              "日本-自动选择",
+              "日本",
+              "低倍率节点-自动选择",
+              "低倍率节点",
+              "日本-低倍率自动选择"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    },
+    {
+      "id": "S11",
+      "title": "组合脚本 Spark 隔离冒烟（combo）",
+      "variant": "combo",
+      "cases": [
+        {
+          "name": "[Spark] 新加坡 专线 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇸🇬 [Spark] 新加坡 专线 01",
+            "groups": [
+              "Spark-新加坡-Auto",
+              "Spark-新加坡"
+            ]
+          }
+        },
+        {
+          "name": "[Spark] 香港 专线 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇭🇰 [Spark] 香港 专线 01",
+            "groups": [
+              "Spark-中国香港-Auto",
+              "Spark-中国香港"
+            ]
+          }
+        },
+        {
+          "name": "[吹雪] 日本 01",
+          "pass": true,
+          "failures": [],
+          "actual": {
+            "survives": true,
+            "outputName": "🇯🇵 [吹雪] 日本 01",
+            "groups": [
+              "手动选择",
+              "Auto",
+              "负载均衡",
+              "日本-Auto",
+              "日本"
+            ]
+          }
+        }
+      ],
+      "suiteFailures": [],
+      "pass": true
+    }
+  ],
+  "scale": [
+    {
+      "n": 200,
+      "ms": 3.2,
+      "outProxies": 205,
+      "groups": 43
+    },
+    {
+      "n": 2000,
+      "ms": 27.5,
+      "outProxies": 2005,
+      "groups": 43
+    }
+  ]
+}
