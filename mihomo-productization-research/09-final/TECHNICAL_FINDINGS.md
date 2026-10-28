@@ -53,7 +53,7 @@
 | 4.2 | 开关三联动：关组时组 + 其规则 + 其 providers 由同一开关在三个构建函数同步门控，实测无残留（S6：关 4 组连带 18 条规则、4 个 provider 同步消失） | E4 | 同上 |
 | 4.3 | **单地区 default-selected 静默失效**：仅香港节点时 Claude/AI 的默认选中（美国）、TikTok/Financial 的默认选中（日本）指向未生成的地区组，按 wiki 语义静默回退首个成员（默认代理），不报错但设计意图失效；三件套一致。研究建议：生成时校验 default-selected 成员资格（未实施） | E4 + E2 | group_reference_integrity.md §3.2 |
 | 4.4 | 空池 fail-fast：节点被过滤至空时 main() 在 filterAndNormalizeProxies 显式抛错、拒绝生成残缺配置（上游同源设计行为，非缺陷） | E4 | 同上（S3/S4；WP-14 复跑 PASS-EXPECTED-THROW） |
-| 4.5 | empty-fallback 在现行生成逻辑下为纯防御层：全部通过场景无空成员组生成；其值 REJECT 为官方合规值（仅支持 proxy 名）。注意与 R-010 的区别——冲突点在「填组名」的历史用法与官方 parser 的禁止，TC-K-02 将以官方内核实测裁决并锁死未来改型 | E4/E3 | group_reference_integrity.md §3.3；07-validation/test_strategy.md |
+| 4.5 | empty-fallback 在现行生成逻辑下为纯防御层：全部通过场景无空成员组生成；其值 REJECT 为官方合规值（仅支持 proxy 名）。注意与 R-010 的区别——冲突点在「填组名」的历史用法与官方 parser 的禁止，TC-K-02 已由结项后专项实测裁决（EXP-R010-01~03：官方与公开 smart 内核均拒绝组名回填），转为常设回归用例锁死未来改型（候选值仅 REJECT / 节点名 / COMPATIBLE） | E4/E3 | group_reference_integrity.md §3.3；07-validation/test_strategy.md |
 | 4.6 | 兜底段 3 条 IP 类 RULE-SET 未带 no-resolve，与全表其他 IP 规则写法不一致（风格项，无行为实锤） | E2 | rules_priority_and_providers.md |
 | 4.7 | 规则集可靠性分级（38 个 provider，全 mrs / 86400s）：A- bett-rules via raw（34 个，89%）；B AWAvenue via jsDelivr（bundle 路径不存在、冷启动无兜底；jsDelivr 有 50MB 包体拒仓先例）；B- Emby/emos via jsdmirror（403 抖动实测记录；bundle 兜底加载 meta-rules-dat 的 category-emby，与远端原文不等价——隐性语义替换）；C cn_additional via 353355.xyz（无仓库/版本锚点，但仅用于 QUIC 豁免、爆炸半径全表最小） | E4（分级与 bundle 实测）/ E1（即时探活） | rules_priority_and_providers.md §3 |
 | 4.8 | 冷启动 bundle 兜底实测：当前 BundleMRS.7z（84,596 条目）对 38 个 path-in-bundle 命中 33，缺失 5：fakeip_filter、microsoft_ip、apple_ip、tiktok_ip、avenue-ads | E4（EXP-WP8-02） | 同上 |
@@ -136,8 +136,12 @@
 
 - 顶层 ipv6 管流量面（默认 true）、dns.ipv6 管解析面（默认 false，AAAA 回空），两者独立；节点 udp 默认 false（direct/dns 等类型除外）；组级 disable-udp 可整体禁用。
 - 两个硬性启动错误：dns.enable 且 nameserver 空；respect-rules 且未配 proxy-server-nameserver。
-- 组健康检查 url 只测 proxies 成员、不测 provider 成员；empty-fallback 文档与源码一致仅支持 proxy 名（见 §4.5 与 R-010）。
+- 组健康检查 url 只测 proxies 成员、不测 provider 成员；empty-fallback 文档与源码一致仅支持 proxy 名；结项后双内核真二进制实测已证组名回填在官方与公开 smart 分叉均被拒绝（见 §4.5 与 R-010 裁决）。
 - 已移除而非弃用：组级 interface-name/routing-mark（解析器按已移除处理）；fallback-filter.geosite 已废弃、relay 组已弃用。
 - TUN stack 现行默认 mips；sniffer override-destination 默认 true（文档示例 false 为示例值）；dns.listen 为空时的行为、fake-ip-ttl 单位等查无依据项已逐条登记（原文 §H-5，归 GAP-09/U-DNS 系列）。
 
 *本汇编的运行时对应物——哪些发现在真实内核/客户端上已被证实——答案是：无一。本项目全部 E4 止步生成级，运行时验证路径见 07-validation/validation_gaps.md（GAP-01）与 NEXT_PHASE_BACKLOG.md 的 BL-108/109。*
+
+
+---
+**修订记录**：2026-10-28 结项后一致性修订（以仓库基线 2647da73 为准）——R-010 裁决、DC-01/DC-02 拍板进展、ISSUE-003 关闭与登记口径（来源 257 条 / 实验 27 条）已同步；原始研究结论与不利发现未改动。详见 09-final/CLOSURE_REVISION_REPORT.md。

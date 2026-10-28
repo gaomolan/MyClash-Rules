@@ -1,0 +1,27 @@
+[PASS] C1a 来源登记行数=唯一ID数 :: 行数 256，唯一 ID 256，末号 SRC-1406
+[FAIL] C1b 来源编号分段连续（按 WP 分配段） :: 段1401-1408缺[1407, 1408]
+[FAIL] C1c EXECUTIVE_DECISION_REPORT.md 来源口径=256 :: 文中总数表述 [198, 250]，不符 [198, 250]
+[FAIL] C1c STATUS_REPORT.md 来源口径=256 :: 文中总数表述 [250]，不符 [250]
+[PASS] C2a 实验日志行数 :: 实际 27 条（24 生成级 + EXP-R010 3 条）
+[PASS] C2b EXP-R010 三条齐备 :: 实有 ['EXP-R010-01', 'EXP-R010-02', 'EXP-R010-03']
+[PASS] C2c 裁决报告标注 R010 实验性质（内核加载实测） :: r010_adjudication.md 含 E4/内核加载表述
+[FAIL] C2d EXECUTIVE_DECISION_REPORT.md 无未限定「运行时实验 0 条」 :: 仍有未限定旧表述
+[FAIL] C2d STATUS_REPORT.md 无未限定「运行时实验 0 条」 :: 仍有未限定旧表述
+[PASS] C3a 风险登记 R-010 已裁决-关闭 :: 状态列=已裁决-关闭
+[FAIL] C3b EXECUTIVE_DECISION_REPORT.md 无 R-010 过时状态 :: 命中过时表述 ['语义冲突（未裁决）']
+[FAIL] C3b RISK_AND_OPEN_QUESTIONS.md 无 R-010 过时状态 :: 命中过时表述 ['R-010 的根源']
+[FAIL] C3b STATUS_REPORT.md 无 R-010 过时状态 :: 命中过时表述 ['R-010（严重未裁决）']
+[FAIL] C3c 拍板清单 DC-02 已标记拍板结论 :: 未标记
+[PASS] C3d 决策日志含 D-009（DC-01 暂缓）与 D-010（DC-02 拍板） :: 齐备
+[PASS] C4a 问题登记 ISSUE-003 已关闭 :: 状态=CLOSED-所有者决定终止
+[FAIL] C4b STATUS_REPORT.md 无「待点按后补采」过时指引 :: 仍有过时指引
+[FAIL] C4b EXECUTIVE_DECISION_REPORT.md 无「待点按后补采」过时指引 :: 干净
+[PASS] C5a A-02：台账 evidence_refs 无空缺 :: 18 行全有
+[PASS] C5b A-03：质量门禁无未勾选项 :: 已勾 20，未勾 0
+[PASS] C5c A-01：终局状态报告存在且标明最终状态 :: 含 COMPLETED_IN_DRIVE
+[FAIL] C6 关键文件存在性 :: 缺失 ['09-final/AUDIT_CLOSURE_ADDENDUM.md', '09-final/CLOSURE_REVISION_REPORT.md']
+[PASS] C7 Backlog BL-003 含状态注记「销账」 :: 已注记
+[FAIL] C7 Backlog BL-104 含状态注记「EXP-R010」 :: 未注记
+[FAIL] C7 Backlog BL-207 含状态注记「DC-02 已拍板」 :: 未注记
+
+总计 25 项：PASS 11，FAIL 14
