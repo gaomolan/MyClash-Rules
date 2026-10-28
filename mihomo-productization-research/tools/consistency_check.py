@@ -125,7 +125,7 @@ LINE_DOCS = RISK_DOCS[:4]
 for doc in RISK_DOCS:
     txt = read(doc)
     problems = []
-    if n_closed > 0:
+    if n_closed > 0 and doc in LINE_DOCS:  # 短语禁查仅限现行状态文档；历史记录类文件（含修订报告）必然引用旧表述，只查其数字口径
         for phrase in ['全部开放', '全数开放', '均开放', '全部为开放状态']:
             if phrase in txt: problems.append(f"含过时表述「{phrase}」")
     for m in re.finditer(r'开放[^，。；\n]{0,10}?(\d+)\s*[条项]', txt):
@@ -187,6 +187,21 @@ bl001 = [r for r in bl_rows[1:] if r[0] == 'BL-001']
 check('C9e', 'BL-001 已吸收 DC-02 已定状态', bool(bl001) and any('D-010' in f or '已拍板' in f for f in bl001[0]),
       'BL-001 含已决标记' if (bl001 and any('D-010' in f or '已拍板' in f for f in bl001[0])) else 'BL-001 仍按双待决书写')
 
+
+
+# ---- C9f 并列决策过期状态（DC-01/DC-02 被并列书写为均未决） ----
+JOINT_PENDING = ['不决', '未决', '待拍板', '先决', '均待']
+DIFFERENTIATED = ['已拍板', 'D-010', '暂缓', '已决']
+joint_problems = []
+for doc in ['09-final/NEXT_PHASE_BACKLOG.md', '08-roadmap/implementation_roadmap.md',
+            '09-final/EXECUTIVE_DECISION_REPORT.md', '00-management/STATUS_REPORT.md']:
+    for ln, line in enumerate(read(doc).split('\n'), 1):
+        for seg in re.split(r'[；。]', line):
+            joint = ('DC-01/DC-02' in seg) or ('DC-01' in seg and 'DC-02' in seg)
+            if joint and any(k in seg for k in JOINT_PENDING) and not any(k in seg for k in DIFFERENTIATED):
+                joint_problems.append(f"{os.path.basename(doc)} L{ln}：{seg.strip()[:44]}")
+check('C9f', '无并列决策（DC-01/DC-02）均未决的过期表述', not joint_problems,
+      '; '.join(joint_problems[:3]) if joint_problems else '并列引用均已区分状态（DC-02 已拍板 / DC-01 暂缓）')
 
 fails = [r for r in results if not r[2]]
 print(f"\n总计 {len(results)} 项：PASS {len(results)-len(fails)}，FAIL {len(fails)}")

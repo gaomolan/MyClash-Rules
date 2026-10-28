@@ -154,3 +154,35 @@
 
 - 基线提交：`1f688b2ea72f995977069404868183e1cdf73b6e`
 - 本轮修订提交：`accfa8ae4b095fa44ec20fff1086261b1bc22df6`（16 个文件；本行 SHA 由紧随其后的回填提交写入）
+
+---
+
+# 补充修订（2026-10-28，第三轮·并列决策口径）
+
+> 任务来源：所有者 2026-10-28 补充直派。基线：仓库 HEAD `809b9fdbba33e2aaf0bcfca1c9f44dba8a8a1579`（第二轮回填提交）。第一、二轮记录完整保留，本节只追加。
+
+## P-1 修复的旧句
+
+- **NEXT_PHASE_BACKLOG.md 阶段 0 说明**：「DC-01/DC-02 不决，阶段 1 的规格锁定无方向」——把已拍板的 DC-02 与暂缓的 DC-01 并列写成均未决。已改为区分状态：「DC-02 已拍板（D-010）；DC-01 未决（暂缓待命名，D-009），阶段 1 的规格锁定在此之前无方向」。
+- **同类句一并修复**：EXECUTIVE §8 阶段 0 行「拍板会先决 DC-01/DC-02 并记入决策日志」属同一模式，改为「拍板会审议拍板项并记入决策日志（DC-02 已拍板 D-010；DC-01 暂缓待命名 D-009）」。
+
+## P-2 检查扩展（C9f）
+
+tools/consistency_check.py 新增 **C9f 并列决策过期状态**（总检查数 38 → 39）：对四份状态文档（NEXT_PHASE_BACKLOG、implementation_roadmap、EXECUTIVE、STATUS_REPORT）逐行分句扫描——同一分句内并列引用 DC-01 与 DC-02（或写作「DC-01/DC-02」）、带未决语气（不决/未决/待拍板/先决/均待）、且未区分两者状态（无已拍板/D-010/暂缓/已决标记）即判失败。
+
+配套精修（G-05，如实披露）：C8b 的「全开放」短语禁查范围限定为现行状态文档——本报告第二轮章节在转述问题时引用了旧表述原文，属历史记录而非现行主张；其数字口径仍受 C8b 检查。此调整与既有的逐行扫描范围口径一致（LINE_DOCS）。
+
+## P-3 运行证据（实际执行）
+
+- 扩展后首跑（旧句未改的真实档案）：39 项 PASS 37 / FAIL 2——C9f 精确命中上述两句；另一项为 C8b 对本报告历史引文的误报，经 G-05 口径精修后消除。输出：`07-validation/consistency_check_round3_pre.txt`。
+- 修订后复跑：**39 项全部 PASS**。输出：`07-validation/consistency_check_round3_post.txt`。
+- 负向测试升级：构造器新增第三类注入 M3（把已区分状态的句子改回「DC-01/DC-02 不决」并列口径）。实际运行：退出码 1、FAIL 5 项，三类矛盾（风险 C8、决策依赖 C9d/C7、并列决策 C9f）全部命中。输出：`07-validation/consistency_check_negative_test_r2.txt`（第二轮负向输出原文保留未覆盖）。
+
+## P-4 本轮文件与提交
+
+**修改（7）**：09-final/NEXT_PHASE_BACKLOG.md、09-final/EXECUTIVE_DECISION_REPORT.md、09-final/CLOSURE_REVISION_REPORT.md（本节）、00-management/CHANGE_LOG.md、00-management/TASK_REGISTER.csv（POST-03 行）、tools/consistency_check.py、tools/make_negative_fixture.py
+**新增（3）**：07-validation/consistency_check_round3_pre.txt、07-validation/consistency_check_round3_post.txt、07-validation/consistency_check_negative_test_r2.txt
+
+- 基线提交：`809b9fdbba33e2aaf0bcfca1c9f44dba8a8a1579`
+- 本轮修订提交：`（推送后回填）`
+- 剩余问题：与前两轮相同（开放风险 11 条、DC-01 暂缓、未验证项保留），本轮无新增关闭项。

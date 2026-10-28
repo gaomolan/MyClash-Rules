@@ -26,6 +26,8 @@ mutate('09-final/EXECUTIVE_DECISION_REPORT.md', '## 4. 风险概览（登记 12 
 # M2 决策依赖矛盾：把 BL-207 的已定前置改回「等待 DC-02 拍板」
 mutate('08-roadmap/next_phase_backlog.csv', 'BL-104（事实面已裁决）、DC-02 已拍板（D-010）', 'BL-104、DC-02 拍板（BL-001）')
 mutate('08-roadmap/next_phase_backlog.csv', '按 DC-02 已拍板（D-010）改法实现', '按 DC-02 拍板后选定改法实现')
+# M3 并列决策过期状态：把已区分状态的句子改回「DC-01/DC-02 不决」的并列未决口径
+mutate('09-final/NEXT_PHASE_BACKLOG.md', 'DC-02 已拍板（D-010）；DC-01 未决（暂缓待命名，D-009），阶段 1 的规格锁定在此之前无方向', 'DC-01/DC-02 不决，阶段 1 的规格锁定无方向')
 
 print("\n--- 对负向样例运行一致性检查（预期失败） ---")
 r = subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'consistency_check.py'), fx],
@@ -33,10 +35,11 @@ r = subprocess.run([sys.executable, os.path.join(ROOT, 'tools', 'consistency_che
 print(r.stdout)
 fails = [l for l in r.stdout.splitlines() if l.startswith('[FAIL]')]
 hit_risk = any('C8' in l for l in fails)
-hit_dep = any('C9' in l for l in fails)
-print(f"--- 负向测试判定：退出码 {r.returncode}；FAIL {len(fails)} 项；命中风险类矛盾(C8)={hit_risk}，命中决策依赖矛盾(C9)={hit_dep}")
-verdict = (r.returncode != 0 and hit_risk and hit_dep)
-print("负向测试结论：", "通过（检查成功捕获两类注入矛盾）" if verdict else "失败（检查未能捕获注入矛盾！）")
+hit_dep = any('C9d' in l or 'C7' in l for l in fails)
+hit_joint = any('C9f' in l for l in fails)
+print(f"--- 负向测试判定：退出码 {r.returncode}；FAIL {len(fails)} 项；命中风险类矛盾(C8)={hit_risk}，决策依赖矛盾(C9d/C7)={hit_dep}，并列决策过期(C9f)={hit_joint}")
+verdict = (r.returncode != 0 and hit_risk and hit_dep and hit_joint)
+print("负向测试结论：", "通过（检查成功捕获三类注入矛盾）" if verdict else "失败（检查未能捕获注入矛盾！）")
 shutil.rmtree(fx)
 print("临时样例已删除，真实档案未被触碰。")
 sys.exit(0 if verdict else 1)
