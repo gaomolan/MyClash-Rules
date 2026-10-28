@@ -1,0 +1,19 @@
+client,client_version,kernel,js_engine,script_variant,verification_method,current_status,related_cases,gap_ref,notes
+Bettbox（官方 appshubcc）,v1.19.7 / HEAD 1fb8806,内置 vendored MetaCubeX/mihomo,QuickJS（rquickjs）,Go 主版,实机导入冒烟：GUI 开关回注核对+生成耗时抽测+empty-fallback 运行时观察,未验证（源码级已核：三段式流水线与字段接管面 E3）,TC-C-03;TC-C-01,GAP-03,用户主力机组合；发布前必做冒烟（strategy §6 门禁）
+Bettbox（官方）,v1.19.7,内置 vendored mihomo,QuickJS（rquickjs）,组合脚本 combo,实机导入冒烟,未验证（项目历史：2026-10-27 用户导入实测成功，E1 线索，不作本矩阵证据）,TC-C-03,GAP-03,combo 仅自用；冒烟可与 Go 主版同批
+Bettbox（官方）,v1.19.7,内置 vendored mihomo（无 smart 组）,QuickJS（rquickjs）,Go-smart,内核加载行为观察,预期失败待实测（官方内核无 smart 组，含 type:smart 的配置不可用）,TC-K-03,GAP-03,smart 版的投放面必须排除官方 Bettbox；发布说明须声明内核前提（R-009）
+Bettbox feat/smart-core 个人分支（KevinChen222）,公开不可达,smart 内核（来源未证）,QuickJS（rquickjs，推定）,Go-smart,实机冒烟：smart 组与 6 个 Smart GUI 开关核对,未验证-对象不可达,TC-C-05,GAP-04,用户测试机在用组合；分支来源与版本对应关系须先由用户确认（WP-10 否定性检索）
+Clash Verge Rev,v2.5.8,内置 Meta 内核,Boa,Go 主版,实机导入冒烟：changed_keys 与生效性探针（防静默跳过）,未验证（源码级已核：Boa/5s/失败 fail-open/小写键 E3）,TC-C-04;TC-C-01,GAP-03,Boa 引擎格在此行补齐（TC-C-01 的 Boa 列）；字段最终优先级细则未核（WP-10 未验证项 2）
+Clash Verge Rev,v2.5.8,内置 Meta 内核（无 smart 组）,Boa,Go-smart,内核加载行为观察,预期失败待实测（同官方内核 smart 缺位）,TC-K-03,GAP-03,
+Clash Verge Rev,v2.5.8,内置 Meta 内核,Boa,组合脚本 combo,实机导入冒烟,未验证,TC-C-04,GAP-03,combo 含个人逻辑，仅自用验证，不进公开发布面
+裸 mihomo（软路由/桌面直跑）,v1.19.33,本体,无 JS 层（脚本产物为 YAML 配置）,Go 主版输出,内核 -t 加载校验 + 运行时替身实验（DNS/规则故障组）,未验证,TC-K-01;TC-K-02;TC-DNS-08;TC-WP8-01~06,GAP-01,兼容性基线行：全部客户端差异最终都要落回本行 schema 被解析
+裸 mihomo,v1.19.33,本体,无 JS 层,Go-smart 输出,内核 -t 加载（预期失败形态记录）,预期失败待实测,TC-K-03,GAP-01,
+裸 mihomo,v1.19.33,本体,无 JS 层,组合脚本 combo 输出,内核 -t 加载校验,未验证,TC-K-01,GAP-01,
+裸 mihomo,v1.19.33,本体,无 JS 层,custom 线输出,内核 -t 加载校验,未验证,TC-K-01;TC-I-04,GAP-01,custom 线连接面为无条件赋值，加载校验可独立先行
+mihomo-smart（lux5am fork）,Prerelease-Alpha（2025-09-17）,本体（下游 fork）,无 JS 层,Go-smart 输出,内核 -t 加载 + smart 参数名对源码标签逐项核对,未验证,TC-K-04,GAP-01,唯一可公开取得的 smart 实现；供应链成熟度低（R-009）
+OpenClash,v0.48.002,路由器端 mihomo,无（INI/Shell/Ruby 覆写）,全部 JS 变体,不适用,不适用（范围边界）,TC-C-06,,桌面 main(config) 脚本迁入须转写，非验证问题（WP-10 §4）
+iOS 客户端（Loon/Stash/Egern）,—,私有内核,各自插件体系,全部,不适用,不适用（相邻生态）,,,不运行 mihomo、不消费 mihomo YAML（WP-10 §6）
+引擎格：Node（CI 基线）,v24.22.1,—,V8 13.6,全部,全量 CI 套件（L1-L4/L6）+ lookbehind 探针 + 全脚本哈希,已验证（生成级）,TC-C-01;TC-C-02,—,EXP-WP14-03：探针 6/6；全脚本输出 sha256=534724d7…
+引擎格：Bun（JSC 参照）,1.4.4,—,JavaScriptCore（近期 WebKit）,Go 主版,lookbehind 探针 + 全脚本哈希比对,已验证（生成级）,TC-C-01;TC-C-02,—,与 V8 输出逐字节一致（EXP-WP14-03）；JSC 版本远新于老旧设备，不外推旧 JSC（lookbehind 为 Safari 16.4 起）
+引擎格：QuickJS-NG（qjs 二进制）,待钉死版本,—,QuickJS,探针脚本,lookbehind 探针（引擎无关脚本直接运行）,未验证（探针已备，qjs 未进 CI）,TC-C-01,GAP-02,Bettbox 的 rquickjs 与 QuickJS-NG 同源系，此格是 R-012 的关键剩余格；全脚本格受 qjs 无 vm/fs 限制，须以探针+实机（TC-C-03）组合覆盖
+引擎格：Boa（CVR 内嵌）,随 CVR v2.5.8,—,Boa,探针等价物,无独立二进制：经 CVR 实机以最小探针脚本验证 lookbehind,未验证,TC-C-01;TC-C-04,GAP-02,Boa 的 RegExp 实现与 lookbehind 支持无公开结论，实机探针为唯一可靠路径
