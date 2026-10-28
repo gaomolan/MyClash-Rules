@@ -1,5 +1,5 @@
 task_id,title,stage,effort,priority,dependencies,acceptance_criteria,evidence_refs,needs_owner_approval,notes
-BL-001,所有者拍板会：审议拍板清单并先决 DC-01/DC-02,阶段0 决策与基线冻结,S,P0,无（研究交付即输入）,DECISION_LOG 新增条目记录 DC-01 结论（确认/否决）与 DC-02 处置方向；D-003/D-004 状态同步更新,decision_checklist.md DC-01/DC-02；DECISION_LOG D-003/D-004,是（启动前须所有者批准）,否决 DC-01 则路线图整体回炉，本项仍算完成
+BL-001,所有者拍板会：审议拍板清单（DC-02 已拍板，余 DC-01 待命名后审议）,阶段0 决策与基线冻结,S,P0,无（研究交付即输入）,DC-02 已拍板并记入决策日志（D-010）；本条剩余：新仓命名确定后审议 DC-01 并记录结论（确认/否决），D-003/D-004 状态同步更新,decision_checklist.md DC-01/DC-02；DECISION_LOG D-003/D-004/D-009/D-010,是（启动前须所有者批准）,否决 DC-01 则路线图整体回炉，本项仍算完成
 BL-002,基线冻结：五脚本与资产版本锚定快照,阶段0 决策与基线冻结,S,P0,无,五脚本（Go/Go-smart/combo/custom/旧smart）、规则集清单、Icons 以当前 commit 锚定，快照含 sha256 清单且可复现回读,WP-1 基线（目标仓 HEAD cc46de0、上游 071d4ec）,是（启动前须所有者批准）,作为 BL-103 golden 与 BL-208 对比的原点
 BL-003,论坛证据补采（ISSUE-003）,阶段0 决策与基线冻结,S,P2,（前置已消解：所有者决定终止补采）,已销账（2026-10-28）：所有者决定终止 linux.do 定向补采，替代 GitHub 实证 3 条已回填 community_issue_evidence.csv，ISSUE-003 已关闭,ISSUE_BLOCKER_LOG ISSUE-003；RISK_REGISTER R-007,是（启动前须所有者批准）,不阻塞其余阶段；仅需用户一次点按
 BL-004,Smart 测试机构建信息确认（GAP-04 解阻）,阶段0 决策与基线冻结,S,P1,所有者提供 feat/smart-core 构建来源/版本标识,构建来源、版本标识、与 lux5am fork 关系登记入 WP-10 矩阵补遗；TC-C-05 由阻塞转可执行,validation_gaps.md GAP-04；RISK_REGISTER R-009,是（启动前须所有者批准）,若为私有构建，以版本号+冒烟回收方式登记，不强求源码可达

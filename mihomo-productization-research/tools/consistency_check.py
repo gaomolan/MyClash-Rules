@@ -78,7 +78,7 @@ for doc in ['00-management/STATUS_REPORT.md', '09-final/EXECUTIVE_DECISION_REPOR
 trows = read_csv('00-management/TASK_REGISTER.csv')
 ei = trows[0].index('evidence_refs')
 empty_refs = [r[0] for r in trows[1:] if not r[ei]]
-check('C5a', 'A-02：台账 evidence_refs 无空缺', not empty_refs, f"空缺 {empty_refs}" if empty_refs else '18 行全有')
+check('C5a', 'A-02：台账 evidence_refs 无空缺', not empty_refs, f"空缺 {empty_refs}" if empty_refs else f'{len(trows)-1} 行全有')
 q = read('00-management/QUALITY_GATE_CHECKLIST.md')
 check('C5b', 'A-03：质量门禁无未勾选项', '- [ ]' not in q, f"已勾 {q.count('- [x]')}，未勾 {q.count('- [ ]')}")
 st = read('00-management/STATUS_REPORT.md')
@@ -101,6 +101,92 @@ for bid, kw in [('BL-003','已销账（2026-10-28'), ('BL-104','EXP-R010-01~03')
     row = [l for l in bl.splitlines() if l.startswith(bid+',')]
     ok = bool(row) and kw in row[0]
     check('C7', f'Backlog {bid} 含状态注记「{kw}」', ok, '已注记' if ok else '未注记')
+
+
+# ---- C8 风险状态语义（解析登记册状态字段，与报告汇总数字对账） ----
+rrows = read_csv('00-management/RISK_REGISTER.csv')
+rhdr = rrows[0]
+si_risk = rhdr.index('status')
+closed_ids, open_ids = [], []
+for r in rrows[1:]:
+    st = r[si_risk]
+    if ('关闭' in st) or ('已裁决' in st):
+        closed_ids.append(r[0])
+    elif '开放' in st:
+        open_ids.append(r[0])
+n_total, n_open, n_closed = len(rrows) - 1, len(open_ids), len(closed_ids)
+check('C8a', '风险登记册状态解析', n_total == n_open + n_closed and n_closed >= 1,
+      f"总数 {n_total}，开放 {n_open}，关闭 {n_closed}（{closed_ids}）")
+RISK_DOCS = ['09-final/EXECUTIVE_DECISION_REPORT.md', '09-final/RISK_AND_OPEN_QUESTIONS.md',
+             '09-final/FULL_RESEARCH_REPORT.md', '00-management/STATUS_REPORT.md',
+             '09-final/CLOSURE_REVISION_REPORT.md']
+# 逐行语境扫描仅适用于现行状态文档；修订报告等历史记录类文件必然引用旧表述，不纳入逐行扫描（数字口径仍查）
+LINE_DOCS = RISK_DOCS[:4]
+for doc in RISK_DOCS:
+    txt = read(doc)
+    problems = []
+    if n_closed > 0:
+        for phrase in ['全部开放', '全数开放', '均开放', '全部为开放状态']:
+            if phrase in txt: problems.append(f"含过时表述「{phrase}」")
+    for m in re.finditer(r'开放[^，。；\n]{0,10}?(\d+)\s*[条项]', txt):
+        if int(m.group(1)) != n_open: problems.append(f"开放计数 {m.group(1)} ≠ {n_open}")
+    for m in re.finditer(r'(\d+)\s*条[^，。；\n]{0,6}开放', txt):
+        if int(m.group(1)) != n_open: problems.append(f"开放计数 {m.group(1)} ≠ {n_open}")
+    for m in re.finditer(r'(?<!开放)风险 (\d+) 条', txt):
+        if int(m.group(1)) != n_total: problems.append(f"风险总数 {m.group(1)} ≠ {n_total}")
+    if doc in LINE_DOCS:
+        for cid in closed_ids:
+            for ln, line in enumerate(txt.split('\n'), 1):
+                if cid in line and '开放' in line and not any(k in line for k in ['已裁决', '已关闭', '关闭）', '关闭，', '关闭。']):
+                    problems.append(f"L{ln} 已关闭的 {cid} 出现在开放语境且无关闭标注")
+    check('C8b', f'{os.path.basename(doc)} 风险汇总与登记册一致', not problems, '; '.join(problems[:3]) if problems else f"开放 {n_open}/总 {n_total} 口径一致，已关闭项无混入")
+
+# ---- C9 决策依赖语义（解析决策日志/拍板清单状态，与路线图及 Backlog 前置对账） ----
+declog = read('00-management/DECISION_LOG.md')
+def dblock(tag):
+    m = re.search(rf'## {tag}\b', declog)
+    if not m: return ''
+    rest = declog[m.start():]
+    nxt = rest.find('\n## ', 3)
+    return rest if nxt < 0 else rest[:nxt]
+d9, d10 = dblock('D-009'), dblock('D-010')
+check('C9a', '决策日志 D-009=DC-01 暂缓 / D-010=DC-02 拍板', ('DC-01' in d9 and '暂缓' in d9) and ('DC-02' in d10 and ('拍板' in d10 or '选定' in d10)),
+      '两条决策语义在位' if (('DC-01' in d9 and '暂缓' in d9) and ('DC-02' in d10)) else '决策语义缺失')
+dc = read('08-roadmap/decision_checklist.md')
+secs = re.split(r'### (DC-\d+)', dc)
+secmap = {secs[i]: secs[i+1] for i in range(1, len(secs) - 1, 2)}
+s1 = secmap.get('DC-01', ''); s2 = secmap.get('DC-02', '')
+check('C9b', '拍板清单 DC-01=暂缓（非通过）/ DC-02=已拍板',
+      ('暂缓' in s1 and '已拍板' not in s1) and ('已拍板' in s2),
+      f"DC-01 段含暂缓={'暂缓' in s1}、误标已拍板={'已拍板' in s1}；DC-02 段含已拍板={'已拍板' in s2}")
+RESOLVED = ['已拍板', '已定', 'D-010', '已决', '已裁决', '已销账']
+PENDING = ['待', '先决', '未决']
+# C9c：状态性文档中 DC-01 不得被标为已通过（路线图阶段进入条件为条件句，不在此列）
+for doc in ['09-final/EXECUTIVE_DECISION_REPORT.md', '00-management/STATUS_REPORT.md', '08-roadmap/next_phase_backlog.csv']:
+    txt = read(doc)
+    bad = []
+    for m in re.finditer(r'DC-01[^。\n]{0,24}?(已拍板|已通过|已确认)', txt):
+        seg = txt[max(0, m.start()-6):m.end()]
+        if not any(k in seg for k in ['未', '暂缓', '不']):
+            bad.append(m.group(0)[:30])
+    check('C9c', f'{os.path.basename(doc)} 未把 DC-01 误标为已通过', not bad, f"命中 {bad}" if bad else '干净')
+# C9d：已完成决策（DC-02）不得仍被当作待决前置
+dep_problems = []
+bl_rows = read_csv('08-roadmap/next_phase_backlog.csv')
+for r in bl_rows[1:]:
+    for fld in [r[1], r[5], r[6]]:
+        if 'DC-02' in fld and not any(k in fld for k in RESOLVED) and any(k in fld for k in PENDING + ['拍板']):
+            dep_problems.append(f"{r[0]} 字段仍以待决口径引用 DC-02：{fld[:36]}")
+for doc in ['08-roadmap/implementation_roadmap.md', '09-final/NEXT_PHASE_BACKLOG.md']:
+    for ln, line in enumerate(read(doc).split('\n'), 1):
+        for seg in re.split(r'[；。]', line):
+            if 'DC-02' in seg and not any(k in seg for k in RESOLVED) and any(k in seg for k in PENDING + ['先决']):
+                dep_problems.append(f"{os.path.basename(doc)} L{ln} 仍以待决口径引用 DC-02：{seg[:36]}")
+check('C9d', '无任务/路线图条目仍把已拍板的 DC-02 当待决前置', not dep_problems, '; '.join(dep_problems[:3]) if dep_problems else '全部 DC-02 引用均带已决标记或不构成等待')
+bl001 = [r for r in bl_rows[1:] if r[0] == 'BL-001']
+check('C9e', 'BL-001 已吸收 DC-02 已定状态', bool(bl001) and any('D-010' in f or '已拍板' in f for f in bl001[0]),
+      'BL-001 含已决标记' if (bl001 and any('D-010' in f or '已拍板' in f for f in bl001[0])) else 'BL-001 仍按双待决书写')
+
 
 fails = [r for r in results if not r[2]]
 print(f"\n总计 {len(results)} 项：PASS {len(results)-len(fails)}，FAIL {len(fails)}")

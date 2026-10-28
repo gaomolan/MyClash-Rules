@@ -1,0 +1,51 @@
+负向样例目录（临时）：/tmp/neg_fixture_60lvl3b8
+注入矛盾 → 00-management/STATUS_REPORT.md：R-010，其余 12 条开放并有承接任务
+注入矛盾 → 09-final/EXECUTIVE_DECISION_REPORT.md：## 4. 风险概览（12 项，全部开放）
+注入矛盾 → 08-roadmap/next_phase_backlog.csv：BL-104、DC-02 拍板（BL-001）
+注入矛盾 → 08-roadmap/next_phase_backlog.csv：按 DC-02 拍板后选定改法实现
+
+--- 对负向样例运行一致性检查（预期失败） ---
+[PASS] C1a 来源登记行数=唯一ID数 :: 行数 257，唯一 ID 257，末号 SRC-1407
+[PASS] C1b 来源编号分段连续（按 WP 分配段） :: 全部分段连续
+[PASS] C1c EXECUTIVE_DECISION_REPORT.md 来源口径=257 :: 文中总数表述 [257, 257]，不符 []
+[PASS] C1c STATUS_REPORT.md 来源口径=257 :: 文中总数表述 [257]，不符 []
+[PASS] C2a 实验日志行数 :: 实际 27 条（24 生成级 + EXP-R010 3 条）
+[PASS] C2b EXP-R010 三条齐备 :: 实有 ['EXP-R010-01', 'EXP-R010-02', 'EXP-R010-03']
+[PASS] C2c 裁决报告标注 R010 实验性质（内核加载实测） :: r010_adjudication.md 含 E4/内核加载表述
+[PASS] C2d EXECUTIVE_DECISION_REPORT.md 运行时口径已限定 :: 限定表述在位且无未限定旧表述
+[PASS] C2d STATUS_REPORT.md 运行时口径已限定 :: 限定表述在位且无未限定旧表述
+[PASS] C3a 风险登记 R-010 已裁决-关闭 :: 状态列=已裁决-关闭
+[PASS] C3b EXECUTIVE_DECISION_REPORT.md 无 R-010 过时状态 :: 干净
+[PASS] C3b RISK_AND_OPEN_QUESTIONS.md 无 R-010 过时状态 :: 干净
+[PASS] C3b STATUS_REPORT.md 无 R-010 过时状态 :: 干净
+[PASS] C3c 拍板清单 DC-02 已标记拍板结论 :: 含已拍板标记
+[PASS] C3d 决策日志含 D-009（DC-01 暂缓）与 D-010（DC-02 拍板） :: 齐备
+[PASS] C4a 问题登记 ISSUE-003 已关闭 :: 状态=CLOSED-所有者决定终止
+[PASS] C4b STATUS_REPORT.md 无「待点按后补采」过时指引 :: 干净
+[PASS] C4b EXECUTIVE_DECISION_REPORT.md 无「待点按后补采」过时指引 :: 干净
+[PASS] C5a A-02：台账 evidence_refs 无空缺 :: 19 行全有
+[PASS] C5b A-03：质量门禁无未勾选项 :: 已勾 20，未勾 0
+[PASS] C5c A-01：终局状态报告存在且标明最终状态 :: 含 COMPLETED_IN_DRIVE
+[PASS] C6 关键文件存在性 :: 20 个关键文件齐备
+[PASS] C7 Backlog BL-003 含状态注记「已销账（2026-10-28」 :: 已注记
+[PASS] C7 Backlog BL-104 含状态注记「EXP-R010-01~03」 :: 已注记
+[FAIL] C7 Backlog BL-207 含状态注记「DC-02 已拍板（D-010）」 :: 未注记
+[PASS] C8a 风险登记册状态解析 :: 总数 12，开放 11，关闭 1（['R-010']）
+[FAIL] C8b EXECUTIVE_DECISION_REPORT.md 风险汇总与登记册一致 :: 含过时表述「全部开放」
+[PASS] C8b RISK_AND_OPEN_QUESTIONS.md 风险汇总与登记册一致 :: 开放 11/总 12 口径一致，已关闭项无混入
+[PASS] C8b FULL_RESEARCH_REPORT.md 风险汇总与登记册一致 :: 开放 11/总 12 口径一致，已关闭项无混入
+[FAIL] C8b STATUS_REPORT.md 风险汇总与登记册一致 :: 开放计数 12 ≠ 11
+[PASS] C8b CLOSURE_REVISION_REPORT.md 风险汇总与登记册一致 :: 开放 11/总 12 口径一致，已关闭项无混入
+[PASS] C9a 决策日志 D-009=DC-01 暂缓 / D-010=DC-02 拍板 :: 两条决策语义在位
+[PASS] C9b 拍板清单 DC-01=暂缓（非通过）/ DC-02=已拍板 :: DC-01 段含暂缓=True、误标已拍板=False；DC-02 段含已拍板=True
+[PASS] C9c EXECUTIVE_DECISION_REPORT.md 未把 DC-01 误标为已通过 :: 干净
+[PASS] C9c STATUS_REPORT.md 未把 DC-01 误标为已通过 :: 干净
+[PASS] C9c next_phase_backlog.csv 未把 DC-01 误标为已通过 :: 干净
+[FAIL] C9d 无任务/路线图条目仍把已拍板的 DC-02 当待决前置 :: BL-207 字段仍以待决口径引用 DC-02：BL-104、DC-02 拍板（BL-001）; BL-207 字段仍以待决口径引用 DC-02：按 DC-02 拍板后选定改法实现（兼容开关；组名回填无合法落点，「组为
+[PASS] C9e BL-001 已吸收 DC-02 已定状态 :: BL-001 含已决标记
+
+总计 38 项：PASS 34，FAIL 4
+
+--- 负向测试判定：退出码 1；FAIL 4 项；命中风险类矛盾(C8)=True，命中决策依赖矛盾(C9)=True
+负向测试结论： 通过（检查成功捕获两类注入矛盾）
+临时样例已删除，真实档案未被触碰。
