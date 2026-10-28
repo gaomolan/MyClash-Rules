@@ -184,5 +184,5 @@ tools/consistency_check.py 新增 **C9f 并列决策过期状态**（总检查�
 **新增（3）**：07-validation/consistency_check_round3_pre.txt、07-validation/consistency_check_round3_post.txt、07-validation/consistency_check_negative_test_r2.txt
 
 - 基线提交：`809b9fdbba33e2aaf0bcfca1c9f44dba8a8a1579`
-- 本轮修订提交：`（推送后回填）`
+- 本轮修订提交：`431adb407418620cf0eb96722e5b972dc0a729d0`（10 个文件；本行 SHA 由紧随其后的回填提交写入）
 - 剩余问题：与前两轮相同（开放风险 11 条、DC-01 暂缓、未验证项保留），本轮无新增关闭项。
