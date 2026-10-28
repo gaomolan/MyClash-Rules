@@ -1,0 +1,31 @@
+# community_issue_evidence.csv — WP-3 社区问题证据（归并样本，非统计普查）
+# 样本范围：2026-10-28 经 GitHub 只读 API 抽取各项目最近 open/closed issue（blackmatrix7 open 104 条中抽最近 15 条标题级、余项目抽 5-15 条）；HiClash 与 SukkaW/Surge 的 Issues 为空（未启用/维护者不用），COCR 当前 open 为 0，故这三家无 issue 样本。
+# 偏差说明：样本偏向近期与未关闭问题；维护者清零速度（MyClash 当日关）会系统性压低可见问题量；单条 issue 不代表用户群体统计，类别仅作定性归并。论坛（linux.do 等）样本按分工标为待协调者补采。
+project,category,sample_issue_url,sample_title,evidence_level,observation
+blackmatrix7/ios_rule_script,规则误杀-关键服务,https://github.com/blackmatrix7/ios_rule_script/issues/1340,trafficmanager.net 被屏蔽导致微软无法登录,E2,广告名单误含 Azure 基础域名导致 Microsoft 全系登录受损；说明大名单的误杀面与关键基础设施域名需白名单意识（事实：issue 原文含规则链接与抓包说明）
+blackmatrix7/ios_rule_script,规则归属争议-检测类域名,https://github.com/blackmatrix7/ios_rule_script/issues/1750,browserleaks.com 建议不要加入 ChinaMaxNoIP 中,E2,泄漏检测站被收进直连名单会使 WebRTC/DNS 检测失真；名单归属直接影响用户对隐私的判断（事实：issue 原文）
+blackmatrix7/ios_rule_script,规则时效-名单失效,https://github.com/blackmatrix7/ios_rule_script/issues/1749,ChinaMax：zi6.cc 疑似不适合直连，TLS 连接被提前关闭,E3,报告者以多运营商未复现的保留态度 + 客户端日志 + delay API 对照实测提报，并交叉核对 blackmatrix7 原始名单与 MetaCubeX 生成的 cn.list 均含该域名——证明两家名单交叉同源（事实+交叉印证）
+blackmatrix7/ios_rule_script,远程资源失效,https://github.com/blackmatrix7/ios_rule_script/issues/1748,rewrite 很久没有更新了，后续还会更新吗？,E1,AllInOne 中部分远程脚本 404；远程资源型功能存在静默腐烂风险（社区意见，样本单薄）
+MetaCubeX/meta-rules-dat,发布产物完整性,https://github.com/MetaCubeX/meta-rules-dat/issues/182,BundleMRS.7z 内含 10 个 0 字节 .mrs 规则集,E3,发布包中 10 个 .mrs 为 0 字节，引用方将静默加载空规则集；报告含 sha256 与可复现检查脚本——官方数据层亦需产物完整性巡检（事实，附复现）
+MetaCubeX/meta-rules-dat,规则误含,https://github.com/MetaCubeX/meta-rules-dat/issues/185,馒头PT域名：m-team.cc 被错误包含在了 cn 域名,E2,cn 分类误收 PT 站域名将导致其被直连（事实：issue 原文）
+MetaCubeX/meta-rules-dat,规则缺失-新服务,https://github.com/MetaCubeX/meta-rules-dat/issues/184,ai 大集中 openai 似乎遗漏了部分域名（opencode.ai 等）,E2,新 AI 工具域名未被 category 覆盖，命中默认组后触发地区限制；AI 分类时效是持续性缺口（事实+社区转述 TG 信息）
+MetaCubeX/meta-rules-dat,规则无效-系统服务,https://github.com/MetaCubeX/meta-rules-dat/issues/187,苹果 siri ai 的 apple-intelligence 规则无效,E1,apple-intelligence 规则被指无效并附第三方替代名单链接；与 Loyalsoldier #504 同题跨项目复现（单一样本为 E1，跨项目同题提升关注度）
+Loyalsoldier/v2ray-rules-dat,规则缺失-系统服务,https://github.com/Loyalsoldier/v2ray-rules-dat/issues/504,更新 Apple Intelligence 规则,E2,报告者亲测给出缺失域名清单且指出 geosite 分类名与实际不符；与 meta-rules-dat #187 同题（事实：issue 原文含实测清单）
+Loyalsoldier/v2ray-rules-dat,规则粒度争议,https://github.com/Loyalsoldier/v2ray-rules-dat/issues/518,请求将 .top 顶级域名从 direct-need-to-remove.txt 中移除,E2,整后缀一刀切的人工干预引发回国用户困扰；干预清单粒度需评审（事实：issue 原文含 commit 溯源）
+Loyalsoldier/v2ray-rules-dat,文档语义漂移,https://github.com/Loyalsoldier/v2ray-rules-dat/issues/503,简介中关于 @attribute 使用方式的举例有待商榷,E2,上游 v2fly 数据的 @cn 标注语义变化使 README 示例过时；依赖上游语义的文档会静默失效（事实：issue 原文）
+AIsouler/MyClash,分组归属争议,https://github.com/AIsouler/MyClash/issues/63,精简脚本下，Epic 商城会走直连，非常卡顿,E2,默认分流决策直接引发上游代码变更（2026-10-26 提交 feat: 移除 epicgames #63）；默认归属争议是脚本类项目的常态运营成本（事实：issue 与提交互证）
+AIsouler/MyClash,分组归属争议,https://github.com/AIsouler/MyClash/issues/52,建议将 Gemini 纳入 AI 分组（Gemini 在 Google 分组导致地区错误）,E2,服务归属组不同导致默认节点地区不适配；分组设计与地区策略耦合（事实：issue 原文）
+AIsouler/MyClash,分组归属争议,https://github.com/AIsouler/MyClash/issues/60,建议把 huggingface 移除 ai 分组,E1,大流量下载类服务与 AI 组（常用家宽/高倍率节点）的成本冲突（社区意见）
+AIsouler/MyClash,节点识别误判,https://github.com/AIsouler/MyClash/issues/58,低倍率的过滤失效了,E1,倍率过滤被报失效（附截图，正文信息少）；节点识别类故障在脚本项目中反复出现（见 #56）
+AIsouler/MyClash,节点识别误判,https://github.com/AIsouler/MyClash/issues/56,FlClash 使用精简脚本，赔钱机场会缺少部分节点（台湾节点）,E1,特定机场节点在精简版被漏识别；识别逻辑对机场命名多样性的鲁棒性问题（社区报告，未附完整复现）
+AIsouler/MyClash,启动/解析失败,https://github.com/AIsouler/MyClash/issues/65,解析错误：JS Script Error: invalid first character of private name,E2,导入即报脚本解析错误，属阻断型故障；与脚本运行环境（QuickJS 私有名语法）相关（事实：issue 原文含报错文本）
+AIsouler/MyClash,DNS 分流语义疑问,https://github.com/AIsouler/MyClash/issues/55,关于 rule-set:douyin 的 nameserver-policy 处理疑问,E1,用户对按规则集指定解析器的必要性存疑；DNS 分流设计的可解释性影响信任（社区讨论）
+AIsouler/MyClash,客户端兼容/使用求助,https://github.com/AIsouler/MyClash/issues/64,FlClash 怎么配置呀,E1,新客户端用户求助类 issue 占比不可忽视，反映文档/上手成本（社区样本）
+AIsouler/MyClash,功能请求,https://github.com/AIsouler/MyClash/issues/51,希望增加 Patreon 分组（已被封了好几个号）,E1,风控敏感服务的独立分组需求真实存在（与我方 Financial/风控判断同向）；功能请求是 issue 流的固定成分（另见 #61 端口直连规则请求）
+echs-top/proxy,规则命中错误,https://github.com/echs-top/proxy/issues/11,artificialanalysis.ai 命中规则错误,E1,个人自建名单项目同样出现 AI 域名命中错误；样本仅 1 条 open，代表性有限
+linux.do（论坛）,相邻服务-ECH DoH,https://linux.do/t/topic/2946664,励志成为L站最好的doh（1molchuan 自建 DoH 介绍帖）,E2,作者自述三档 ECH 补钥/优选 IP 池/plus 中继设计；关键机制经协调者实测印证（优选 IP 与官方答案不同、HTTPS 记录含 ECH 与优选 hint）；社区定位为墙内无代理场景工具，与本项目代理架构错位（全文由用户转贴，见 SRC-008）
+linux.do（论坛）,相邻服务-公共 DoH 适用性,https://linux.do/t/topic/2966159,FluxDo 内置 DoH 列表相关讨论,E1,帖内共识指向自建 DoH 优于公共 DoH（合规过滤属性）用于墙内无梯子场景；协调者于 2026-10-27 阅读并实测帖内所列解析器对 linux.do 的解析结果（见 SRC-008 关联记录）
+linux.do（论坛）,取证覆盖限制,（站内搜索需登录）,linux.do 脚本主题帖关键词采样经所有者决定终止（ISSUE-003 已关闭）,E0,linux.do 站内搜索强制登录，且 Discourse 回复为滚动懒加载、不滚动无法读全楼层；2026-10-28 晨所有者决定 linux.do 就此作罢，不再补采。替代路径已执行：经搜索引擎在其他公开站点补采 GitHub（clash-verge-rev）3 条（见下行）。当前社区证据覆盖：linux.do 2 帖（DoH 相邻议题）+ GitHub 3 条（覆写/DNS/过滤的用户侧实证）
+GitHub（clash-verge-rev）,客户端覆写交互-DNS 段静默剥除,https://github.com/clash-verge-rev/clash-verge-rev/issues/8122,[BUG] 订阅自带 dns 段时「DNS 覆写」被自动关闭后运行时 dns 只剩残桩，TUN 一开全机 DNS 瘫痪,E2,2026-09-29 报告（CVR v2.5.6、内核 v1.19.31、macOS）：订阅自带完整 dns 段时「DNS 覆写」闸门被设计性自动关闭，但关闭路径把订阅 dns 段静默剥成仅剩 enhanced-mode 的无 nameserver 残桩，叠加 TUN 默认 dns-hijack 后全机解析瘫痪；手动改回开启会在 App 启动时被再次改回，用户无自救路径；临时解法为把 dns 段写入 Global Merge。与 WP-10/R-008（客户端字段接管差异）互证，且显示 CVR 侧存在「静默剥除+状态自相矛盾」型接管，同源问题见 #7994/#7933。抓取仅见楼主报告与关联 issue，未见维护者结论
+GitHub（clash-verge-rev）,覆写心智模型-Merge 覆盖语义,https://github.com/clash-verge-rev/clash-verge-rev/discussions/6546,规则集合覆写配置只能覆盖不能插入吗？,E1,用户按「插入」心智编写 Merge（含 prepend-rules 与本地规则集）后发现原订阅配置被完全覆盖且全部代理失效，来论坛求解——用户对 Merge 的覆盖/前置/追加语义没有可预期的心智模型，是覆写类产品在文档与命名上必须直接回答的典型问题。抓取仅见楼主问题，未见回复结论
+GitHub（clash-verge-rev）,节点过滤-provider 与内联行为不一致,https://github.com/clash-verge-rev/clash-verge-rev/discussions/2204,clash配置文件中通过 proxy-providers 导入的 hysteria2 节点默认被过滤,E1,同一批节点经 proxies 内联配置正常、经 proxy-providers 以 use 引入时 hysteria2 节点被默认过滤，用户未设置任何 filter；该帖 0 回复、无结论。与 WP-9 节点识别/过滤专题同类：过滤行为因引入方式而异且无提示，是用户侧高困惑点
