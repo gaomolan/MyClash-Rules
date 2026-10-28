@@ -1,0 +1,123 @@
+path,type,size_bytes,ownership,note
+.github/workflows/format_and_test.yaml,.yaml,2002,上游继承-原样,与上游 main@071d4ec 同路径同内容
+.github/workflows/rules-canary.yml,.yml,1629,自有,规则存活巡检工作流（2026-10-27 新建）
+.github/workflows/sync-myclash.yml,.yml,5660,自有,同步上游并生成 custom.js 的工作流
+.gitignore,(无扩展名),23,上游继承-原样,与上游 main@071d4ec 同路径同内容
+.prettierrc.json,.json,374,上游继承-原样,与上游 main@071d4ec 同路径同内容
+AGENT.md,.md,159472,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Icons/png/AdBlock.png,.png,14638,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Airport.png,.png,10577,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/America.png,.png,12522,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Apple.png,.png,3988,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Auto.png,.png,7081,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Available.png,.png,7351,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Bitcoin.png,.png,9917,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Bypass.png,.png,10584,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/China.png,.png,11563,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/EHentai.png,.png,8176,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Emby.png,.png,5149,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Fcm.png,.png,4684,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Global.png,.png,13045,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Google.png,.png,35208,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/HongKong.png,.png,11854,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Japan.png,.png,8754,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Line.png,.png,11513,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Meta.png,.png,7598,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Microsoft.png,.png,1243,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Netflix.png,.png,3875,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/OpenAI.png,.png,20153,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Patreon.png,.png,2703,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/PayPal.png,.png,6713,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/PikPak.png,.png,8317,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Proxy.png,.png,12999,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/RoundRobin.png,.png,11505,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Server.png,.png,13779,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Singapore.png,.png,9416,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Spotify.png,.png,17767,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Stack.png,.png,9008,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Static.png,.png,10457,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Steam.png,.png,15992,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Taiwan.png,.png,10667,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Telegram.png,.png,7271,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/TikTok.png,.png,8365,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/Twitter.png,.png,10369,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/WorldMap.png,.png,9935,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/png/YouTube.png,.png,9092,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/AdBlock.svg,.svg,3125,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Airport.svg,.svg,1643,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/America.svg,.svg,2800,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Apple.svg,.svg,6583,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Auto.svg,.svg,1055,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Available.svg,.svg,2722,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Bitcoin.svg,.svg,1706,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Bypass.svg,.svg,1981,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/China.svg,.svg,1606,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Claude.svg,.svg,1936,自有,Simple Icons 官方图形自备（上游图标库无此图标）
+Icons/svg/Cloudflare-v2.svg,.svg,1193,自有,自备图标
+Icons/svg/Cloudflare.svg,.svg,1193,自有,自备图标（Go-combo 引用 1 处）
+Icons/svg/EHentai.svg,.svg,605,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Emby.svg,.svg,934,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Fcm.svg,.svg,3616,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/GitHub.svg,.svg,838,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Icons/svg/Global.svg,.svg,4670,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Google.svg,.svg,7487,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/HongKong.svg,.svg,3744,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Japan.svg,.svg,1199,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Line.svg,.svg,1425,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Meta.svg,.svg,2272,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Microsoft.svg,.svg,1222,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Netflix.svg,.svg,1492,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/OpenAI.svg,.svg,2185,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Patreon.svg,.svg,497,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/PayPal.svg,.svg,1396,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/PikPak.svg,.svg,2930,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Proxy.svg,.svg,2897,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/RoundRobin.svg,.svg,3608,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Server.svg,.svg,4473,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Singapore.svg,.svg,2518,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Spotify.svg,.svg,1201,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Stack.svg,.svg,2899,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Static.svg,.svg,2070,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Steam.svg,.svg,1694,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Taiwan.svg,.svg,1361,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Telegram.svg,.svg,1340,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/TikTok.svg,.svg,2168,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/Twitter.svg,.svg,1249,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/WorldMap.svg,.svg,3854,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Icons/svg/YouTube.svg,.svg,797,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_1.webp,.webp,49100,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_2.webp,.webp,45978,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_3.webp,.webp,49784,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_4.webp,.webp,51200,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_5.webp,.webp,64564,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_6.webp,.webp,71724,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_7.webp,.webp,42706,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/IMG_8.webp,.webp,55924,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Image/import.webp,.webp,193762,上游继承-原样,与上游 main@071d4ec 同路径同内容
+LICENSE,(无扩展名),1065,上游继承-原样,与上游 main@071d4ec 同路径同内容
+README.md,.md,3304,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Rules/DownloadApps.txt,.txt,884,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Script/customPatch.js,.js,2656,自有,custom 线补丁：地区低倍率自动选择组
+Script/mihomoScript-custom.js,.js,55773,生成产物,sync 工作流生成：首行注释+上游 mihomoScript.js+customPatch.js（字节级验证）
+Script/mihomoScript-smart.js,.js,65173,自有派生,旧 Smart 线：上游全量版骨架+Smart 组型/参数（测试机在用）
+Script/mihomoScriptGo-README.md,.md,2454,自有,Go 版说明文档
+Script/mihomoScriptGo-combo.js,.js,78440,自有,Go 派生：组合脚本，仅自用，含 [Spark] 专属逻辑
+Script/mihomoScriptGo-smart.js,.js,74075,自有,Go 派生：+5 个 Smart 开关，组型改 smart
+Script/mihomoScriptGo.js,.js,72297,自有,Go 主版（Clash-rules-go）
+Test/README.md,.md,4936,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Test/lib/es2020-check.js,.js,5030,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Test/lib/fixtures.js,.js,7298,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Test/lib/harness.js,.js,2545,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Test/lib/loader.js,.js,1855,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Test/lib/quickjs-check.js,.js,4922,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Test/lib/scripts.js,.js,782,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Test/package-lock.json,.json,4583,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Test/package.json,.json,458,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Test/run-tests.js,.js,3686,上游继承-原样,与上游 main@071d4ec 同路径同内容
+Test/suites/integration.js,.js,33584,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+Test/suites/unit.js,.js,14008,上游继承-已修改,同路径文件，内容与上游现行版不同（详见 upstream_diff_report.md）
+archive/Config/mihomoConfig.yaml,.yaml,28729,化石,上游 YAML 配置旧快照归档
+archive/Config/mihomoConfigLite.yaml,.yaml,18593,化石,上游 YAML 精简配置旧快照归档
+archive/Script.js,.js,40913,化石,上游精简版旧快照，2026-10-27 归档；与上游现行版差 273 行
+archive/mihomoScript.js,.js,51603,化石,上游全量版旧快照，2026-10-27 归档；与上游现行版差 288 行
+tools/rules-canary/check-rules.mjs,.mjs,6063,自有,规则存活巡检脚本
