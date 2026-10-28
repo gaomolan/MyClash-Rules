@@ -1,0 +1,11 @@
+variant,repo,path,lines,bytes,sha256,header_version,origin,source_note,target_client_kernel,switches_count,top_functions_count,run_groups,run_rules,run_providers
+上游全量版,upstream,Script/mihomoScript.js,1761,52977,55ae4b64b24f05568da69531dae20037092c3f9ca22dcbaedc6a203d00579e05,（文件头无版本号）,上游,AIsouler/MyClash 原版（全量版）,通用 Mihomo 客户端/Bettbox,36,18,41,58,46
+上游精简版,upstream,Script/Script.js,1400,42289,6f854481f7e29f3138980c06fcac1ac6278d6a6dafe53be8be8fca7152181fdd,（文件头无版本号）,上游,AIsouler/MyClash 原版（精简版，开关子集）,通用 Mihomo 客户端/Bettbox,18,18,23,22,20
+归档上游全量版旧快照,target,archive/mihomoScript.js,1675,51603,c1dd5e6c3c7f1005b77f744bbb3dd16fc5f1f2065074924cdf9719168e65f45a,（文件头无版本号）,上游旧版,上游全量版旧快照（缺 toMatchableName 世代）,—（已归档不用）,36,17,40,57,47
+归档上游精简版旧快照,target,archive/Script.js,1317,40913,50b4a59471f97f2fefc6073a4a4c6f01b460c7bcb6884128662b63b610a08c45,（文件头无版本号）,上游旧版,上游精简版旧快照,—（已归档不用）,19,17,,,
+生成产物：上游全量+customPatch,target,Script/mihomoScript-custom.js,1869,55773,f574ebce1aa3c9a48de4828a27829edbc54cc01a2a795fae84fd6249a2e45943,（文件头无版本号）,生成,生成产物：上游全量版@071d4ec + customPatch 拼接,Bettbox（主力机在用）,36,18,42,58,46
+旧 Smart 版,target,Script/mihomoScript-smart.js,1983,65173,b68d908ca127ad9c9f39d491b9bde3221fc542c6234fefac765caf30108d1464,（文件头无版本号）,派生,上游骨架派生 + Smart 参数/组型 + 低倍率补丁功能并入,Bettbox Smart 内核（测试机在用）,42,18,42,57,47
+Go 主版,target,Script/mihomoScriptGo.js,1988,72297,8a2cef4a788783505ce462ce8ded0d684e8b8c7a9c4b401c590c9f301f71b3b8,v1.0.0-phase3,自有,自有重构：上游函数骨架演进 + 分流/DNS 哲学重写,Bettbox/Clash Verge Rev/裸 Mihomo（通用）,36,22,37,96,38
+Go Smart 版,target,Script/mihomoScriptGo-smart.js,2024,74075,e445ca340700be7e0525dbd7bf02bb2928caf357e4e6fde999c80a456ea61736,v1.0.0-phase3-smart,自有派生,Go 主版派生（diff 58 行）,Bettbox Smart 内核,41,23,37,96,38
+组合脚本,target,Script/mihomoScriptGo-combo.js,2116,78440,e08eb2ae5dd849308d849d35fa8030e14aeb55089ebbe8811e148f59a3934a5f,v1.0.0-phase3,自有派生,Go 主版派生（diff 144 行），仅自用,Bettbox（自用双订阅）,36,25,39,96,38
+补丁（非独立脚本）,target,Script/customPatch.js,107,2656,735da7ca9a582cd14f2b15d98dc4dece68feeb184a33c505fdf11241bb4c53ac,（文件头无版本号）,自有,补丁片段：包装上游 main 追加低倍率组（非独立脚本）,随 custom.js 拼接生效,0,0,,,
