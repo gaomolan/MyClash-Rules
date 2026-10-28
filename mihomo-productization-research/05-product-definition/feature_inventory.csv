@@ -1,0 +1,37 @@
+feature_id,feature_switch,code_location_wp1,module,default,external_dependency,applies_to,notes
+F-01,手动选择,main L1818 顶层组装；buildFunctionalGroups L1327,基础策略组,true,无（本地组装）,全部,三大基础组之一；GLOBAL 之后的默认落点候选
+F-02,Auto（自动选择）,buildFunctionalGroups L1327；groupBaseOption L402（url-test 参数）,基础策略组,true,健康检查 URL apple.com（dependency_inventory 登记）,全部,由上游「自动选择」改名；empty-fallback REJECT 在 groupBaseOption 家族定义
+F-03,负载均衡,buildFunctionalGroups L1327；groupBaseOption L402,基础策略组,true,健康检查 URL apple.com,全部,v4 决策为开关默认关闭组保留的旧口径已过时——以行为目录 §3 为准：默认 true
+F-04,FCM,serviceConfigs L460；buildServiceGroups L1202 / buildServiceRules L1290 / buildRuleProviders L1307 三联动,服务分流,true,bett-rules 对应 .mrs（raw 单源分发）,全部,Android 推送专用组；桌面/iOS 场景无实际流量
+F-05,YouTube,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs,全部,
+F-06,Google,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs,全部,上游曾因 Gemini 归属 Google 组引发地区错误争议（MyClash #52，E2）
+F-07,AI,serviceConfigs L460；三联动同 F-04；category-ai-!cn 为底+手写补缺口行,服务分流,true,bett-rules category-ai-!cn.mrs + 手写域名清单（脚本内维护）,Go 三件套,AI 域名时效为持续缺口（官方源 #184 同题，E2）；手写补缺口是本项目差异化资产
+F-08,GitHub,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs；自有 GitHub.svg 图标（jsDelivr 自仓）,全部,
+F-09,Claude,serviceConfigs L460；buildServiceRules L1290（含 IP-ASN 399358 兜底行）,服务分流,true,bett-rules anthropic.mrs + IP-ASN 规则；自有 Claude.svg 图标（jsDelivr 自仓）,Go 三件套,与 AI 组独立；规则排 AI 之前防截胡；官方 geosite:anthropic 已吸收其大部（WP-3 SRC-419）
+F-10,Microsoft,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs,全部,广告名单误杀微软登录为生态实证风险（blackmatrix7 #1340，E2），与本组无关但与 F-20 共担支持面
+F-11,Apple,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs（@cn 直连子集）,全部,Apple Intelligence 规则在数据层两项目同题失效报告（E1/E2），分类时效风险
+F-12,Telegram,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs + geoip,全部,
+F-13,TikTok,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs,全部,nameserver-policy 曾被用户质疑必要性（MyClash #55 douyin，同型问题，E1）
+F-14,Twitter,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs,全部,
+F-15,Meta,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs,全部,
+F-16,Emby,serviceConfigs L460；三联动同 F-04,服务分流,true,666OS/rules Emby.mrs（jsdmirror）+ binaryu/emos-proxy-rule（jsdmirror）——双第三方个人源,全部,外部依赖为个人维护源且经国内镜像，抖动史见 dependency_inventory 注记
+F-17,PikPak,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs,全部,下载类服务，与 AI 组默认节点成本冲突的同型争议见 MyClash #60（E1）
+F-18,Financial,serviceConfigs L460；三联动同 F-04；sniffer 跳过名单与之联动（F-35）,服务分流,true,bett-rules 金融相关规则集,Go 三件套,Crypto 与传统金融合并组；风控敏感服务独立分组有 issue 佐证（MyClash #51 Patreon，E1）
+F-19,Cloudflare,serviceConfigs L460；三联动同 F-04,服务分流,true,bett-rules 对应 .mrs；自有 Cloudflare 图标（jsDelivr 自仓）,Go 三件套,面向开发者/自建服务场景
+F-20,AdBlock,serviceConfigs L460；三联动同 F-04,服务分流（规则型）,true,AWAvenue-Ads-Rule 完整版 .mrs（jsDelivr，TG-Twilight 维护）,Go 三件套,完整版含 unwelcome 类、拦截面最大；维护者 2026-10-17 按完整防护偏好选定（项目记录）；误杀面见 RISK 与生态证据
+F-21,显示低倍率节点,filterAndNormalizeProxies L965 + 倍率组生成段（buildRegionGroups L1096）,倍率体系,true,无,全部,仅控 hidden 显隐，组仍生成可用；与 F-26 过滤语义最易混淆
+F-22,显示高倍率节点,同 F-21,倍率体系,true,无,全部,同 F-21
+F-23,生成倍率组,buildRegionGroups L1096 / createRegionGroup L1045（!== false 判定）,倍率体系,true,无,全部,曾为死开关（2026-10-20 接通）；地区 Eco-Auto 与顶层倍率组共用此闸
+F-24,生成地区自动选择组,buildRegionGroups L1096,地区体系,true,无,全部,地区 Auto/Eco-Auto 生成总闸之一
+F-25,隐藏地区手动选择组,createRegionGroup L1045,地区体系,false,无,全部,默认关型开关，不纳入缺失=开语义（行为目录 §3）
+F-26,过滤低倍率节点,filterAndNormalizeProxies L965（rate 正则识别）,倍率体系,false,无,全部,过滤=从节点池删除；倍率识别误判有 issue 样本（MyClash #58，E1）；历史上出现过正则边界事故（项目记录）
+F-27,过滤高倍率节点,同 F-26,倍率体系,false,无,全部,同 F-26
+F-28,过滤非地区节点,filterAndNormalizeProxies L965（getMatchedRegions L893）,地区体系,true,无,全部,清理信息类节点（剩余流量/到期等）的关键开关；误删整区节点的同型故障见 MyClash #56（E1）
+F-29,分流组添加所有节点,buildFunctionalContext L1188 / buildServiceGroups L1202,组成员策略,false,无,全部,开启后服务组失去地区优选语义；与默认成员策略互斥
+F-30,屏蔽国外QUIC,buildRuleProviders L1307 门控（cn_additional）+ main 规则注入段,网络防护,true,cn-additional-list.mrs（static-file-global.353355.xyz，个人域名托管）,全部,同时门控一个规则集，开关语义与字面不完全对应（行为目录 §3 注明）
+F-31,代理IPV4优先,getIpVersionPreference L953（经 filterAndNormalizeProxies 调用）,协议偏好,true,无,Go 三件套,统一改写订阅节点 ip-version；与 F-32 同开互抵；两线默认值曾翻转（WP-1 §7）
+F-32,代理IPV6优先,同 F-31,协议偏好,false,无,Go 三件套,与 F-31 互抵逻辑对使用者不直观；未见使用证据
+F-33,IPv6总开关,buildDnsAndHostsConfig L1686（仅控 dns.ipv6，与 F-34 做与逻辑）,协议偏好/DNS,false,DNS 上游组（cloudflare-dns/dns.google/doh.pub/1.12.12.12）为背景依赖,全部,命名与实际控制面不符：不管顶层 ipv6（行为目录明示为已知缺口），是最易误解开关之一
+F-34,WebRTC走代理,main L1963 起（三件套逻辑：顶层 ipv6 条件置 false、dns.ipv6 与逻辑、缺省 udp 节点补 udp:true）,网络防护,true,无,Go 三件套,App 已设顶层 ipv6:true 时脚本关不掉（已知缺口）；显式 udp:false 保留
+F-35,启用Sniffer配置,main sniffer 段（条件全权写入，含金融 skip-domain 名单）,嗅探,false,无（名单内嵌脚本）,Go 三件套,Bettbox 开启 App 覆写时 sniffer 被 App 整体替换，本开关在该客户端下可能无感/无效（WP-10 E3）
+F-36,屏蔽STUN端口,main 规则注入段（prefixRules 之后，优先于 F-34）,网络防护,false,无,Go 三件套,非常用端口可漏网（注释明示）；与语音/会议/游戏的 UDP 冲突为机制推定，未见实证样本
