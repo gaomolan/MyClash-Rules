@@ -1385,14 +1385,26 @@ function buildServiceGroups(ctx) {
     hidden: hideManualSelectGroupEnabled,
   };
 
+  // GLOBAL 名单精简：全局模式下 GLOBAL 是「总出口候选名单」，只放顶层组与
+  // 地区组本体，不再平铺全部功能组与地区子组——
+  // · 服务组（AI / Financial 等）与漏网之鱼不进：全局选它们等于全流量走其当前
+  //   节点，而该节点经地区组 / 手动选择同样可选，属重复入口；
+  // · 地区组只取 select 本体（groupNamesOfSelect），-Auto / -Eco-Auto 等子组
+  //   不进：点进地区组本体照样可选，组本身不删，零功能损失；
+  // · [组合脚本专属] Spark 专属组同理只进手动组本体（comboSparkSelectNames）。
+  // 默认代理保持第一位：它同时是切到全局模式时的默认落点。
+  const globalBaseOrder = ['Auto', '负载均衡', '手动选择'];
   const globalGroup = {
     ...selectBaseOption,
     name: 'GLOBAL',
     proxies: [
-      ...functionalGroups.map((g) => g.name),
+      '默认代理',
+      ...globalBaseOrder.filter((n) => baseGroupNames.includes(n)),
+      ...baseGroupNames.filter((n) => !globalBaseOrder.includes(n)),
+      ...groupNamesOfSelect,
+      ...(ctx.comboSparkSelectNames || []),
       ...customGroupNames,
       directGroup.name,
-      ...ctx.generatedRegionGroups.map((g) => g.name),
     ],
     icon: `${iconBaseUrl}Global.svg`,
   };
