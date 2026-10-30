@@ -873,9 +873,10 @@ const serviceConfigs = [
       },
       adrules: {
         ...ruleProviderCommonDomain,
-        // AdRules 域名版（cats-team/AdRules 官方 mihomo 构建，约 20.5 万条）：防线主力，Disconnect 基准覆盖 53%。
+        // AdRules 域名版（Cats-Team/AdRules 官方 mihomo 构建，约 20.5 万条）：防线主力，Disconnect 基准覆盖 53%。
+        // ⚠️ jsDelivr 的 gh 路径大小写敏感：仓库名必须 Cats-Team、文件在仓库根目录，写错即 404（2026-10-30 实机教训）。
         // 「完整防线」关停时由 buildRuleProviders 剔除本 provider（轻量模式）。
-        url: 'https://cdn.jsdelivr.net/gh/cats-team/AdRules@main/mihomo/adrules-mihomo.mrs',
+        url: 'https://cdn.jsdelivr.net/gh/Cats-Team/AdRules@main/adrules-mihomo.mrs',
         path: './ruleset/adrules.mrs',
       },
       'native-vivo': {
@@ -901,8 +902,9 @@ const serviceConfigs = [
         format: 'text',
         interval: 86400,
         behavior: 'classical',
-        // BanProgramAD（tingxins 维护，约 990 条）：专打国产 App 统计/广告回传域名，外科手术式小表。
-        url: 'https://cdn.jsdelivr.net/gh/tingxins/BanProgramAD@master/BanProgramAD.list',
+        // BanProgramAD（约 990 条）：专打国产 App 统计/广告回传域名，外科手术式小表。
+        // 取自 ACL4SSR 仓库内置副本（原 tingxins 单仓已不可达）；内容与 2026-10-30 基准测试所用副本逐字一致。
+        url: 'https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanProgramAD.list',
         path: './ruleset/banprogramad.list',
       },
     },
