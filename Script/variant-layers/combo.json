@@ -32,7 +32,7 @@
     },
     {
       "find": "\n    // default-selected 指向地区组时校验该组已生成：单地区订阅下指向未生成的组\n",
-      "replace": "\n    // [组合脚本专属] AI / Claude / Financial 组：Spark 专属组排到成员最前（默认选中保持不变，用户手动切）\n    if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];\n    }\n    // [组合脚本专属] Cloudflare / Meta 组（固定成员且无默认选中，默认落点是首位）：\n    // Spark 专属组插在默认代理/手动选择之后，只多两个可选项，不改默认落点。\n    if ((svc.name === 'Cloudflare' || svc.name === 'Meta') && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];\n    }\n\n    // default-selected 指向地区组时校验该组已生成：单地区订阅下指向未生成的组\n"
+      "replace": "\n    // [组合脚本专属] AI / Claude / Financial 组：Spark 专属组排到成员最前（默认选中保持不变，用户手动切）\n    if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];\n    }\n    // [组合脚本专属] Cloudflare 组（固定成员且无默认选中，默认落点是首位的手动选择）：\n    // Spark 专属组插在手动选择/默认代理之后，只多两个可选项，不改默认落点。\n    if (svc.name === 'Cloudflare' && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];\n    }\n\n    // default-selected 指向地区组时校验该组已生成：单地区订阅下指向未生成的组\n"
     },
     {
       "find": "\n  const globalGroup = {\n",

@@ -40,11 +40,17 @@ function applyLayer(sourceText, layer) {
   return text;
 }
 
+// 两阶段：先把三件全部生成并校验完毕，再统一写盘——
+// 任一层中途失败都不会留下新旧混合的文件状态。
+const outputs = [];
 for (const t of targets) {
   const layer = JSON.parse(fs.readFileSync(path.join(scriptDir, 'variant-layers', `${t.layer}.json`), 'utf8'));
   const out = applyLayer(source, layer);
   new vm.Script(out, { filename: t.out }); // 语法校验，失败即抛错
-  fs.writeFileSync(path.join(scriptDir, t.out), out);
-  console.log(`已生成 ${t.out}（层 ${t.layer}，${layer.ops.length} 个操作）`);
+  outputs.push({ ...t, content: out, opCount: layer.ops.length });
+}
+for (const o of outputs) {
+  fs.writeFileSync(path.join(scriptDir, o.out), o.content);
+  console.log(`已生成 ${o.out}（层 ${o.layer}，${o.opCount} 个操作）`);
 }
 console.log('完成：三件套已由 mihomoScriptGo.js 重新生成。');

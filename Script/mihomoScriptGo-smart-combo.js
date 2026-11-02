@@ -484,7 +484,7 @@ function buildSmartBaseOption() {
   if (ruleOptionsEnable.Smart启用GBM模型) opt.uselightgbm = true;
   if (ruleOptionsEnable.Smart优先ASN) opt['prefer-asn'] = true;
   if (ruleOptionsEnable.Smart收集训练数据) opt.collectdata = true;
-  if (ruleOptionsEnable.Smart低倍率优先) opt['policy-priority'] = { 低倍率: 1.2 };
+  if (ruleOptionsEnable.Smart低倍率优先) opt['policy-priority'] = '低倍率:1.2'; // 内核要求字符串（名:倍率），写成对象整份配置会被拒
   return opt;
 }
 const smartBaseOption = buildSmartBaseOption();
@@ -1486,9 +1486,9 @@ function buildServiceGroups(ctx) {
     if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {
       groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];
     }
-    // [组合脚本专属] Cloudflare / Meta 组（固定成员且无默认选中，默认落点是首位）：
-    // Spark 专属组插在默认代理/手动选择之后，只多两个可选项，不改默认落点。
-    if ((svc.name === 'Cloudflare' || svc.name === 'Meta') && ctx.comboSparkSelectNames?.length) {
+    // [组合脚本专属] Cloudflare 组（固定成员且无默认选中，默认落点是首位的手动选择）：
+    // Spark 专属组插在手动选择/默认代理之后，只多两个可选项，不改默认落点。
+    if (svc.name === 'Cloudflare' && ctx.comboSparkSelectNames?.length) {
       groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];
     }
 
@@ -1627,12 +1627,15 @@ function buildRuleProviders() {
 
   // 规则集下载通道：bett-rules 系（raw 源）provider 统一经 GitHub 组下载，
   // 不依赖分流规则兜底——分流规则怎么改，都误伤不到规则集更新。
+  // GitHub 组被关时回落默认代理：引用不存在的组会让内核报 proxy not found、
+  // 规则集从此无法远程更新；默认代理恒存在，是安全落点。
+  const providerProxy = ruleOptionsEnable.GitHub === false ? '默认代理' : 'GitHub';
   for (const [name, provider] of Object.entries(finalRuleProviders)) {
     if (
       typeof provider?.url === 'string' &&
       (provider.url.startsWith(ruleSetBaseUrl) || provider.url.startsWith(asnBaseUrl))
     ) {
-      finalRuleProviders[name] = { ...provider, proxy: 'GitHub' };
+      finalRuleProviders[name] = { ...provider, proxy: providerProxy };
     }
   }
 

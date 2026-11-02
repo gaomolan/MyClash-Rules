@@ -20,7 +20,7 @@
     },
     {
       "find": "\n// 定义基础策略组\n",
-      "replace": "\n// ---- Smart 内核专用：Auto/Eco-Auto 组改用 type:smart ----\n// Smart 内核的原生智能选路，按目标统计选最优节点，可视为 url-test 的上位替代。\n// 验证是否生效：1. 配置能正常加载（官方内核会直接拒绝 type:smart）；\n// 2. 代理页点 smart 组内节点可手动固定；3. 日志搜 [Smart] 有 \"Connection Group\" / \"Updated weights\"。\nfunction buildSmartBaseOption() {\n  const opt = {\n    ...groupBaseOption,\n    type: 'smart',\n    tolerance: 50,\n    'exclude-type': 'DIRECT',\n    icon: `${iconBaseUrl}Auto.svg`,\n    hidden: true,\n  };\n  // GUI 开关映射\n  if (ruleOptionsEnable.Smart启用GBM模型) opt.uselightgbm = true;\n  if (ruleOptionsEnable.Smart优先ASN) opt['prefer-asn'] = true;\n  if (ruleOptionsEnable.Smart收集训练数据) opt.collectdata = true;\n  if (ruleOptionsEnable.Smart低倍率优先) opt['policy-priority'] = { 低倍率: 1.2 };\n  return opt;\n}\nconst smartBaseOption = buildSmartBaseOption();\n\n// 定义基础策略组\n"
+      "replace": "\n// ---- Smart 内核专用：Auto/Eco-Auto 组改用 type:smart ----\n// Smart 内核的原生智能选路，按目标统计选最优节点，可视为 url-test 的上位替代。\n// 验证是否生效：1. 配置能正常加载（官方内核会直接拒绝 type:smart）；\n// 2. 代理页点 smart 组内节点可手动固定；3. 日志搜 [Smart] 有 \"Connection Group\" / \"Updated weights\"。\nfunction buildSmartBaseOption() {\n  const opt = {\n    ...groupBaseOption,\n    type: 'smart',\n    tolerance: 50,\n    'exclude-type': 'DIRECT',\n    icon: `${iconBaseUrl}Auto.svg`,\n    hidden: true,\n  };\n  // GUI 开关映射\n  if (ruleOptionsEnable.Smart启用GBM模型) opt.uselightgbm = true;\n  if (ruleOptionsEnable.Smart优先ASN) opt['prefer-asn'] = true;\n  if (ruleOptionsEnable.Smart收集训练数据) opt.collectdata = true;\n  if (ruleOptionsEnable.Smart低倍率优先) opt['policy-priority'] = '低倍率:1.2'; // 内核要求字符串（名:倍率），写成对象整份配置会被拒\n  return opt;\n}\nconst smartBaseOption = buildSmartBaseOption();\n\n// 定义基础策略组\n"
     },
     {
       "find": "    baseOption: urlTestBaseOption,\n",
@@ -52,7 +52,7 @@
     },
     {
       "find": "\n    // default-selected 指向地区组时校验该组已生成：单地区订阅下指向未生成的组\n",
-      "replace": "\n    // [组合脚本专属] AI / Claude / Financial 组：Spark 专属组排到成员最前（默认选中保持不变，用户手动切）\n    if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];\n    }\n    // [组合脚本专属] Cloudflare / Meta 组（固定成员且无默认选中，默认落点是首位）：\n    // Spark 专属组插在默认代理/手动选择之后，只多两个可选项，不改默认落点。\n    if ((svc.name === 'Cloudflare' || svc.name === 'Meta') && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];\n    }\n\n    // default-selected 指向地区组时校验该组已生成：单地区订阅下指向未生成的组\n"
+      "replace": "\n    // [组合脚本专属] AI / Claude / Financial 组：Spark 专属组排到成员最前（默认选中保持不变，用户手动切）\n    if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];\n    }\n    // [组合脚本专属] Cloudflare 组（固定成员且无默认选中，默认落点是首位的手动选择）：\n    // Spark 专属组插在手动选择/默认代理之后，只多两个可选项，不改默认落点。\n    if (svc.name === 'Cloudflare' && ctx.comboSparkSelectNames?.length) {\n      groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];\n    }\n\n    // default-selected 指向地区组时校验该组已生成：单地区订阅下指向未生成的组\n"
     },
     {
       "find": "\n  const globalGroup = {\n",
