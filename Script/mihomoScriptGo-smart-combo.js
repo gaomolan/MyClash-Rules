@@ -1486,9 +1486,9 @@ function buildServiceGroups(ctx) {
     if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {
       groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];
     }
-    // [组合脚本专属] Cloudflare 组（固定成员且无默认选中，默认落点是首位的手动选择）：
-    // Spark 专属组插在手动选择/默认代理之后，只多两个可选项，不改默认落点。
-    if (svc.name === 'Cloudflare' && ctx.comboSparkSelectNames?.length) {
+    // [组合脚本专属] Cloudflare / Meta 组（固定成员且无默认选中，默认落点是首位）：
+    // Spark 专属组插在默认代理/手动选择之后，只多两个可选项，不改默认落点。
+    if ((svc.name === 'Cloudflare' || svc.name === 'Meta') && ctx.comboSparkSelectNames?.length) {
       groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];
     }
 
