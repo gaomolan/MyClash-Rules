@@ -1,0 +1,34 @@
+{
+  "variant": "smart",
+  "source": "mihomoScriptGo.js",
+  "ops": [
+    {
+      "find": "// Clash-rules-go · 专属全局 Mihomo 覆写脚本 v1.0.0-phase3\n// 脚本地址：https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo.js\n// 直连地址：https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js\n",
+      "replace": "// Clash-rules-go Smart 内核版 · 专属全局 Mihomo 覆写脚本 v1.0.0-phase3-smart\n// 脚本地址：https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-smart.js\n// 直连地址：https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-smart.js\n// 基于 mihomoScriptGo.js，Auto/Eco-Auto 组改用 Smart 内核原生 type:smart\n"
+    },
+    {
+      "find": "// 适用：Bettbox / Clash Verge Rev / 软路由裸 Mihomo / 任何支持 Mihomo Script 覆写的客户端\n",
+      "replace": "// 适用：Bettbox Smart 内核 / 支持 Mihomo Script 覆写 + Smart 内核的客户端\n"
+    },
+    {
+      "find": "  屏蔽STUN端口: false,\n};\n",
+      "replace": "  屏蔽STUN端口: false,\n\n  // ---- Smart 内核专用开关 ----\n  Smart启用GBM模型: false, // 用 LightGBM 模型预测权重（uselightgbm，无模型时自动下载，失败则回退统计选路）\n  Smart优先ASN: false, // smart 选路时优先按 ASN 判断（prefer-asn）\n  Smart收集训练数据: false, // 收集连接数据用于训练自己的模型（collectdata）\n  Smart低倍率优先: false, // 给低倍率节点加权（policy-priority）\n  日志级别调试: false, // 内核日志级别改为 debug（测试观察用）\n};\n"
+    },
+    {
+      "find": "\n// load-balance策略组通用配置\n",
+      "replace": "\n// ---- Smart 内核专用：Auto/Eco-Auto 组改用 type:smart ----\n// Smart 内核的原生智能选路，按目标统计选最优节点，可视为 url-test 的上位替代。\n// 验证是否生效：1. 配置能正常加载（官方内核会直接拒绝 type:smart）；\n// 2. 代理页点 smart 组内节点可手动固定；3. 日志搜 [Smart] 有 \"Connection Group\" / \"Updated weights\"。\nfunction buildSmartBaseOption() {\n  const opt = {\n    ...groupBaseOption,\n    type: 'smart',\n    tolerance: 50,\n    'exclude-type': 'DIRECT',\n    icon: `${iconBaseUrl}Auto.svg`,\n    hidden: true,\n  };\n  // GUI 开关映射\n  if (ruleOptionsEnable.Smart启用GBM模型) opt.uselightgbm = true;\n  if (ruleOptionsEnable.Smart优先ASN) opt['prefer-asn'] = true;\n  if (ruleOptionsEnable.Smart收集训练数据) opt.collectdata = true;\n  if (ruleOptionsEnable.Smart低倍率优先) opt['policy-priority'] = { 低倍率: 1.2 };\n  return opt;\n}\nconst smartBaseOption = buildSmartBaseOption();\n\n// load-balance策略组通用配置\n"
+    },
+    {
+      "find": "    baseOption: urlTestBaseOption,\n",
+      "replace": "    baseOption: smartBaseOption,\n"
+    },
+    {
+      "find": "        ...urlTestBaseOption,\n",
+      "replace": "        ...smartBaseOption,\n"
+    },
+    {
+      "find": "    groups.push({\n      ...urlTestBaseOption,\n      name: urlTestName,\n",
+      "replace": "    groups.push({\n      ...smartBaseOption,\n      name: urlTestName,\n"
+    }
+  ]
+}
