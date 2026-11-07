@@ -124,9 +124,8 @@ const snifferFinanceSkipDomains = [
 
 // 定义前置规则
 const prefixRules = [
-  // 镜像规则集下载域名直连，避免规则集尚未加载时出现循环依赖；
-  // raw.githubusercontent.com 的规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），此处不设规则
-  'DOMAIN,cdn.jsdmirror.com,直连',
+  // 规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），不依赖分流规则兜底，此处不设下载域名规则；
+  // 原 jsdmirror 镜像直连规则已随镜像依赖归零删除（2026-11-07）。
 
   // 私有网络直连
   'RULE-SET,private,直连',
@@ -173,7 +172,7 @@ const excludeFilter =
 
 // 屏蔽国外QUIC
 const blockForeignQuic = [
-  'AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,cn_additional),(RULE-SET,cn_ip,no-resolve)))))),REJECT',
+  'AND,((NETWORK,UDP),(DST-PORT,443),(NOT,((OR,((RULE-SET,cn),(RULE-SET,cn_ip,no-resolve)))))),REJECT',
 ];
 
 // ---- 常见 STUN/TURN 端口拦截（WebRTC 双开关之开关2「屏蔽STUN端口」） ----
@@ -226,7 +225,7 @@ const directProxies = [
 ];
 
 // 图标 URL 公共前缀
-const iconBaseUrl = 'https://cdn.jsdmirror.com/gh/AIsouler/MyClash@main/Icons/svg/';
+const iconBaseUrl = 'https://fastly.jsdelivr.net/gh/AIsouler/MyClash@main/Icons/svg/';
 
 // 规则集 URL 公共前缀
 const ruleSetBaseUrl = 'https://raw.githubusercontent.com/appshubcc/bett-rules/meta/geo/';
@@ -274,9 +273,11 @@ const highRateRegionName = '高倍率节点';
 
 const rateRegionDefinitions = [
   {
+    // 低倍率只认倍率证据（数字倍率/低倍/免费/free）：原「含下载即低倍率」的语义借用已删除（F-20，2026-11-07），
+    // 无倍率标记的下载类节点不再被借词归类，按其地区归属处理。
     name: lowRateRegionName,
     regex:
-      /^(?!.*(?:剩|期)).*(?:(?<![\d.A-Za-z])0(?:\.(?:[0-4]\d*|50*)(?![\d.])|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|^(?!.*(?:客户端|软件)).*下载|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])/i,
+      /^(?!.*(?:剩|期)).*(?:(?<![\d.A-Za-z])0(?:\.(?:[0-4]\d*|50*)(?![\d.])|[*×✕✖⨯⨉x倍]))|(?:[*×✕✖⨯⨉x]0)|低倍|免费|(?<![A-Za-z])free(?![A-Za-z])/i,
     icon: `${iconBaseUrl}Available.svg`,
   },
   {
@@ -387,12 +388,6 @@ const baseRuleProviders = {
     url: `${ruleSetBaseUrl}geosite/fakeip-filter.mrs`,
     path: './ruleset/fakeip-filter.mrs',
     'path-in-bundle': 'geo/geosite/fakeip-filter.mrs',
-  },
-  cn_additional: {
-    ...ruleProviderCommonDomain,
-    url: 'https://static-file-global.353355.xyz/rules/cn-additional-list.mrs',
-    path: './ruleset/cn-additional-list.mrs',
-    'path-in-bundle': 'geo/geosite/cn.mrs',
   },
   douyin: {
     ...ruleProviderCommonDomain,
@@ -511,7 +506,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Google.svg`,
-    rules: ['RULE-SET,google,Google', 'RULE-SET,google_ip,Google,no-resolve'],
+    rules: ['RULE-SET,google,Google'],
+    ipRules: ['RULE-SET,google_ip,Google'],
   },
 
   {
@@ -612,7 +608,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Microsoft.svg`,
-    rules: ['RULE-SET,microsoft,Microsoft', 'RULE-SET,microsoft_ip,Microsoft,no-resolve'],
+    rules: ['RULE-SET,microsoft,Microsoft'],
+    ipRules: ['RULE-SET,microsoft_ip,Microsoft'],
   },
   {
     name: 'Apple',
@@ -633,7 +630,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Apple.svg`,
-    rules: ['RULE-SET,apple,Apple', 'RULE-SET,apple_ip,Apple,no-resolve'],
+    rules: ['RULE-SET,apple,Apple'],
+    ipRules: ['RULE-SET,apple_ip,Apple'],
   },
   {
     name: 'Telegram',
@@ -653,7 +651,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Telegram.svg`,
-    rules: ['RULE-SET,telegram,Telegram', 'RULE-SET,telegram_ip,Telegram,no-resolve'],
+    rules: ['RULE-SET,telegram,Telegram'],
+    ipRules: ['RULE-SET,telegram_ip,Telegram'],
   },
   
   {
@@ -675,7 +674,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}TikTok.svg`,
-    rules: ['RULE-SET,tiktok,TikTok', 'RULE-SET,tiktok_ip,TikTok,no-resolve'],
+    rules: ['RULE-SET,tiktok,TikTok'],
+    ipRules: ['RULE-SET,tiktok_ip,TikTok'],
   },
   {
     name: 'Twitter',
@@ -695,7 +695,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Twitter.svg`,
-    rules: ['RULE-SET,twitter,Twitter', 'RULE-SET,twitter_ip,Twitter,no-resolve'],
+    rules: ['RULE-SET,twitter,Twitter'],
+    ipRules: ['RULE-SET,twitter_ip,Twitter'],
   },
   {
     name: 'Meta',
@@ -715,7 +716,8 @@ const serviceConfigs = [
       },
     },
     icon: `${iconBaseUrl}Meta.svg`,
-    rules: ['RULE-SET,meta,Meta', 'RULE-SET,facebook_ip,Meta,no-resolve'],
+    rules: ['RULE-SET,meta,Meta'],
+    ipRules: ['RULE-SET,facebook_ip,Meta'],
   },
   
   
@@ -724,33 +726,21 @@ const serviceConfigs = [
     baseOption: selectBaseOption,
     direct: true,
     providers: {
+      // 规则集改用 bett-rules（2026-11-07 借鉴上游 633f54ce）：raw 源自动走 provider 的 GitHub 下载通道；
+      // 原 666OS 镜像源与 emos 规则集已删除，Emby 分组只保留域名规则（进程规则为终端本地机制，不跨平台）。
       emby: {
         ...ruleProviderCommonDomain,
-        url: 'https://cdn.jsdmirror.com/gh/666OS/rules@release/mihomo/domain/Emby.mrs',
+        url: `${ruleSetBaseUrl}geosite/category-emby.mrs`,
         path: './ruleset/emby.mrs',
-        'path-in-bundle': 'geo/geosite/category-emby.mrs',
-      },
-      emos: {
-        ...ruleProviderCommonDomain,
-        url: 'https://cdn.jsdmirror.com/gh/binaryu/emos-proxy-rule@main/rules/emos-mihomo.mrs',
-        path: './ruleset/emos.mrs',
         'path-in-bundle': 'geo/geosite/category-emby.mrs',
       },
     },
     icon: `${iconBaseUrl}Emby.svg`,
     rules: [
       'RULE-SET,emby,Emby',
-      'RULE-SET,emos,Emby',
       'DOMAIN-SUFFIX,mb3admin.com,Emby',
       'DOMAIN-SUFFIX,nubebelle.com,Emby',
       'DOMAIN-KEYWORD,emby,Emby',
-      'PROCESS-NAME,com.mb.android,Emby',
-      'PROCESS-NAME,tv.emby.embyatv,Emby',
-      'PROCESS-NAME,com.hush.yamby,Emby',
-      'PROCESS-NAME,com.jellycine.app,Emby',
-      'PROCESS-NAME,com.mountains.hills,Emby',
-      'PROCESS-NAME,RodelPlayer.App.exe,Emby',
-      'PROCESS-NAME,com.feifeiduck.capyplayer,Emby',
     ],
   },
   {
@@ -1336,10 +1326,15 @@ function buildServiceGroups(ctx) {
 /**
  * 组装规则：按 serviceConfigs 定义顺序收集各服务组规则。
  * AdBlock 优先（广告规则先行），其余按定义顺序。
+ * 服务的 IP 规则集（svc.ipRules）单独收集为 functionalIpRules 通道：
+ * IP 匹配若排在域名规则之前，会抢走本应由后续域名规则认领的流量；
+ * 且 IP 规则不带 no-resolve——放在全部域名规则之后按解析结果兜底匹配
+ * （借鉴上游 6bc887c8，2026-11-07；直连向的 IP 规则不在此列，保留 no-resolve）。
  * 只负责 rules 数组，不管组与规则集。
  */
 function buildServiceRules() {
   const functionalRules = [];
+  const functionalIpRules = [];
   const orderedServiceConfigs = [
     ...serviceConfigs.filter((svc) => svc.name === 'AdBlock'),
     ...serviceConfigs.filter((svc) => svc.name !== 'AdBlock'),
@@ -1347,8 +1342,9 @@ function buildServiceRules() {
   for (const svc of orderedServiceConfigs) {
     if (ruleOptionsEnable[svc.name] === false) continue;
     functionalRules.push(...(svc.rules || []));
+    functionalIpRules.push(...(svc.ipRules || []));
   }
-  return functionalRules;
+  return { functionalRules, functionalIpRules };
 }
 
 /**
@@ -1356,12 +1352,7 @@ function buildServiceRules() {
  * 只负责 rule-providers，不管组与规则。
  */
 function buildRuleProviders() {
-  const blockForeignQuicEnabled = ruleOptionsEnable.屏蔽国外QUIC;
   const finalRuleProviders = { ...baseRuleProviders };
-
-  if (!blockForeignQuicEnabled) {
-    delete finalRuleProviders.cn_additional;
-  }
 
   for (const svc of serviceConfigs) {
     if (ruleOptionsEnable[svc.name] === false) continue;
@@ -1396,10 +1387,10 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
   ctx.generatedRegionGroupNames = new Set(generatedRegionGroups.map((g) => g.name));
 
   const { functionalGroups, directGroup, globalGroup } = buildServiceGroups(ctx);
-  const functionalRules = buildServiceRules();
+  const { functionalRules, functionalIpRules } = buildServiceRules();
   const finalRuleProviders = buildRuleProviders();
 
-  return { globalGroup, functionalGroups, functionalRules, finalRuleProviders, directGroup };
+  return { globalGroup, functionalGroups, functionalRules, functionalIpRules, finalRuleProviders, directGroup };
 }
 
 // ---dns和hosts相关处理---
@@ -1868,7 +1859,9 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
     'fake-ip-filter': [
       'rule-set:private',
       'rule-set:fakeip_filter',
-      'rule-set:geolocation-cn',
+      // 豁免集与 nameserver-policy 对齐用 cn（2026-11-07 借鉴上游 1aced699）：geolocation-cn 只是 cn 的子集，
+      // 用子集会让 cn 内、geolocation-cn 外的域名一边拿 fake IP、一边按 cn 绑国内 DNS，两边口径不齐。
+      'rule-set:cn',
       ...(ruleOptionsEnable['FCM'] ? ['rule-set:googlefcm'] : []),
       ...proxyFakeIpFilter,
     ],
@@ -1925,7 +1918,14 @@ function main(config) {
 
   const generatedRegionGroups = buildRegionGroups(filteredProxies, customProxies);
 
-  const { globalGroup, functionalGroups, functionalRules, finalRuleProviders, directGroup } = buildFunctionalGroups(
+  const {
+    globalGroup,
+    functionalGroups,
+    functionalRules,
+    functionalIpRules,
+    finalRuleProviders,
+    directGroup,
+  } = buildFunctionalGroups(
     filteredProxies,
     generatedRegionGroups,
     { customProxyNames, customGroup },
@@ -2074,6 +2074,10 @@ function main(config) {
     // 兜底规则
     'RULE-SET,cn,直连',
     'RULE-SET,geolocation-!cn,默认代理',
+
+    // 服务 IP 规则通道：全部域名规则之后、直连兜底 IP 段之前，按解析结果匹配（不带 no-resolve）
+    ...functionalIpRules,
+
     'RULE-SET,cn_ip,直连,no-resolve',
     'RULE-SET,private_ip,直连,no-resolve',
     'MATCH,漏网之鱼',
