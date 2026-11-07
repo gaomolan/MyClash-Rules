@@ -1,13 +1,11 @@
-# 四件套差异层（生成制）
+# 变体差异层（生成制）
 
-`mihomoScriptGo.js` 是唯一源文件。其余三件套由 `Script/build-variants.js`
+`mihomoScriptGo.js` 是唯一源文件。combo 变体由 `Script/build-variants.js`
 套用本目录下的差异层生成，**不要直接编辑生成物**：
 
 | 生成物 | 差异层 | 内容 |
 | --- | --- | --- |
-| mihomoScriptGo-smart.js | smart.json（7 个操作） | Smart 内核改造：Auto/Eco-Auto 组改 type:smart、buildSmartBaseOption、5 个 Smart 开关 |
 | mihomoScriptGo-combo.js | combo.json（21 个操作） | Spark 专属分组与隔离、完整防线（例外名单/AWAvenue/AdRules/厂商遥测/BanProgramAD/主防线段）、GLOBAL 精简 |
-| mihomoScriptGo-smart-combo.js | smart-combo.json（26 个操作） | 上两者的叠加（独立抽取，非手工拼接） |
 
 ## 维护约定
 
@@ -20,4 +18,5 @@
   清单）再推送。
 
 差异层于 2026-11-02 由四件套现行文件逐行 diff 机械抽取，生成器
-回代验证与现行文件逐字节一致。
+回代验证与现行文件逐字节一致。2026-11-07 Smart 线弃用：smart.json、
+smart-combo.json 两层及对应生成物已删除，生成器只产 combo 变体。

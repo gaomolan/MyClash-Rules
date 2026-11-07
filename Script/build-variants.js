@@ -1,6 +1,6 @@
 // ============================================================
-// 四件套生成器：以 mihomoScriptGo.js 为唯一源，套用 variant-layers
-// 中的差异层，生成其余三件套。请勿直接编辑生成物——改动应落在
+// 变体生成器：以 mihomoScriptGo.js 为唯一源，套用 variant-layers
+// 中的差异层，生成 combo 变体。请勿直接编辑生成物——改动应落在
 // Go 主版（共享改动）或对应差异层（变体专属改动）。
 //
 // 用法：在仓库根目录执行 `node Script/build-variants.js`
@@ -17,11 +17,7 @@ const scriptDir = __dirname;
 const sourceName = 'mihomoScriptGo.js';
 const source = fs.readFileSync(path.join(scriptDir, sourceName), 'utf8');
 
-const targets = [
-  { layer: 'smart', out: 'mihomoScriptGo-smart.js' },
-  { layer: 'combo', out: 'mihomoScriptGo-combo.js' },
-  { layer: 'smart-combo', out: 'mihomoScriptGo-smart-combo.js' },
-];
+const targets = [{ layer: 'combo', out: 'mihomoScriptGo-combo.js' }];
 
 function applyLayer(sourceText, layer) {
   let text = sourceText;
@@ -40,7 +36,7 @@ function applyLayer(sourceText, layer) {
   return text;
 }
 
-// 两阶段：先把三件全部生成并校验完毕，再统一写盘——
+// 两阶段：先把全部目标生成并校验完毕，再统一写盘——
 // 任一层中途失败都不会留下新旧混合的文件状态。
 const outputs = [];
 for (const t of targets) {
@@ -53,4 +49,4 @@ for (const o of outputs) {
   fs.writeFileSync(path.join(scriptDir, o.out), o.content);
   console.log(`已生成 ${o.out}（层 ${o.layer}，${o.opCount} 个操作）`);
 }
-console.log('完成：三件套已由 mihomoScriptGo.js 重新生成。');
+console.log('完成：变体已由 mihomoScriptGo.js 重新生成。');
