@@ -1,5 +1,8 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+
 const targets = [
   { file: 'Script/mihomoScriptGo.js', label: 'Go 主脚本', combo: false },
   { file: 'Script/mihomoScriptGo-combo.js', label: 'Combo 生成版', combo: true },
@@ -34,6 +37,27 @@ function indexOfRule(rules, prefix) {
 
 function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
   h.section('隐私防护回归 · 应用拦截与规则优先级');
+
+  h.test('Native Tracker：来源登记、快照条目数和域名格式有效', () => {
+    const root = path.resolve(__dirname, '..', '..', '..');
+    const manifest = JSON.parse(fs.readFileSync(path.join(root, 'ruleset/native-trackers.sources.json'), 'utf8'));
+    h.assert(manifest.sources.length === 11, 'Native Tracker 来源数量应为 11');
+    const domainPattern = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/;
+    for (const source of manifest.sources) {
+      h.assert(Boolean(source.option && source.provider && source.url && source.file),
+        `来源登记字段不完整：${source.vendor}`);
+      const content = fs.readFileSync(path.join(root, source.file), 'utf8');
+      const declared = Number((content.match(/^# Number of entries:\\s*(\\d+)/m) || [])[1] || 0);
+      const domains = content.split(/\\r?\\n/).map((line) => line.trim())
+        .filter((line) => line && !line.startsWith('#'));
+      h.assert(declared > 0 && declared === domains.length,
+        `${source.vendor} 条目数与上游元数据不一致`);
+      h.assert(domains.every((domain) => domainPattern.test(domain)),
+        `${source.vendor} 存在非纯域名条目`);
+      h.assert(declared >= source.minimum_expected_entries,
+        `${source.vendor} 条目数低于安全阈值`);
+    }
+  });
 
   for (const target of targets) {
     h.test(`${target.label}：SystemHelper 进程与域名拦截先于 private 直连`, () => {
