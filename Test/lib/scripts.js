@@ -1,22 +1,14 @@
 'use strict';
 
 /**
- * 待测试/验证的脚本及差异元信息（单一来源）。
- * run-tests.js（Node 测试）、es2020-check.js、quickjs-check.js 共用，
- * 避免脚本列表在多处重复维护导致不同步。
+ * 当前仓库中实际维护的通用脚本测试对象。
+ * Combo 是从 Go 主脚本生成的个人变体，使用专门的隐私防护回归套件验证，
+ * 不套用要求所有策略组都进入 GLOBAL 的通用集成断言。
  */
 const SCRIPTS = [
   {
-    file: 'Script/Script.js',
-    label: '精简版 Script.js',
-    meta: {
-      full: false,
-      regions: ['香港', '日本', '美国', '新加坡'],
-    },
-  },
-  {
-    file: 'Script/mihomoScript.js',
-    label: '全量版 mihomoScript.js',
+    file: 'Script/mihomoScriptGo.js',
+    label: 'Go 主脚本 mihomoScriptGo.js',
     meta: {
       full: true,
       regions: ['香港', '日本', '美国', '新加坡', '台湾省'],
