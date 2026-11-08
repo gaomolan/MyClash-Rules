@@ -1,0 +1,6 @@
+cn-zh-ort-stsdk.vivoglobal.com
+cn-zh-prt-stsdk.vivoglobal.com
+cn-zh-stsdk.vivoglobal.com
+eu-st-exappupgrade.vivoglobal.com
+in-analyzer-appstore.vivoglobal.com
+kz-album-api.vivoglobal.com
