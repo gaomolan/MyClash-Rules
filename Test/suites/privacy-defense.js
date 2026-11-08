@@ -20,18 +20,11 @@ function withOptions(api, patch, fn) {
 
 function loadWithOption(loadScript, file, key, value) {
   return loadScript(file, (source) => {
-    const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\function loadWithOption(loadScript, file, key, value) {
-  const anchor = `${key}: ${!value},`;
-  return loadScript(file, (source) => {
-    const count = source.split(anchor).length - 1;
-    if (count !== 1) throw new Error(`配置开关锚点不唯一或不存在：${key}`);
-    return source.replace(anchor, `${key}: ${value},`);
-  });
-}');
-    const pattern = new RegExp(`(^[ \\t]*${escaped}:[ \\t]*)(true|false)(,)`, 'gm');
+    // 开关名称均为仓库内固定中文/字母标识符，无正则元字符。
+    const pattern = new RegExp('(^[ \\t]*' + key + ':[ \\t]*)(true|false)(,)', 'gm');
     const matches = source.match(pattern) || [];
     if (matches.length !== 1) throw new Error(`配置开关锚点不唯一或不存在：${key}`);
-    return source.replace(pattern, `$1${value}$3`);
+    return source.replace(pattern, '$1' + value + '$3');
   });
 }
 
