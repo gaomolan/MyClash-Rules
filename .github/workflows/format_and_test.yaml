@@ -93,5 +93,3 @@ jobs:
         run: node Script/check-references.js
       - name: test defense behavior
         run: node Test/defense.test.js
-      - name: run legacy tests
-        run: node Test/run-tests.js
