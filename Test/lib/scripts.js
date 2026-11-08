@@ -1,30 +1,16 @@
 'use strict';
 
 /**
- * 待测试/验证的脚本及差异元信息（单一来源）。
- * run-tests.js（Node 测试）、es2020-check.js、quickjs-check.js 共用，
- * 避免脚本列表在多处重复维护导致不同步。
+ * 当前仓库的维护脚本清单。
+ * 旧通用 unit/integration 套件针对已删除的 Script.js / mihomoScript.js，
+ * 且部分断言与 Go/Combo 的策略设计不同，不应错误套用到新脚本。
+ * Go 与 Combo 由专门的隐私防护回归测试覆盖；两者均进入 ES2020 / QuickJS 检查。
  */
-const SCRIPTS = [
-  {
-    file: 'Script/Script.js',
-    label: '精简版 Script.js',
-    meta: {
-      full: false,
-      regions: ['香港', '日本', '美国', '新加坡'],
-    },
-  },
-  {
-    file: 'Script/mihomoScript.js',
-    label: '全量版 mihomoScript.js',
-    meta: {
-      full: true,
-      regions: ['香港', '日本', '美国', '新加坡', '台湾省'],
-    },
-  },
-];
+const SCRIPTS = [];
 
-/** 脚本文件路径列表（供兼容性检查模块使用） */
-const SCRIPT_FILES = SCRIPTS.map((s) => s.file);
+const SCRIPT_FILES = [
+  'Script/mihomoScriptGo.js',
+  'Script/mihomoScriptGo-combo.js',
+];
 
 module.exports = { SCRIPTS, SCRIPT_FILES };

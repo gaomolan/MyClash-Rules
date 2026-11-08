@@ -8,6 +8,7 @@ const { runIntegrationTests } = require('./suites/integration');
 const { runES2020Checks } = require('./lib/es2020-check');
 const { runQuickJSChecks } = require('./lib/quickjs-check');
 const { SCRIPTS } = require('./lib/scripts');
+const { runPrivacyDefenseTests } = require('./suites/privacy-defense');
 
 // 运行范围筛选：--node / --es2020 / --quickjs；不传参数则全部运行
 const ARGS = new Set(process.argv.slice(2));
@@ -58,6 +59,13 @@ async function main() {
       totalPassed += s.passed;
       totalFailed += s.failed;
     }
+
+    // 独立覆盖 Go 主脚本与 Combo 生成版的隐私防护规则；不把两者混入旧脚本的通用套件元数据。
+    const hPrivacy = new Harness('隐私防护回归');
+    runPrivacyDefenseTests({ harness: hPrivacy, loadScript, fixtures: fx });
+    const sp = hPrivacy.summary();
+    totalPassed += sp.passed;
+    totalFailed += sp.failed;
   }
 
   // ES2020 兼容性检查（语法 + 内置 API 静态扫描，未安装 espree 时自动跳过）

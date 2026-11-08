@@ -2,16 +2,19 @@ name: format_and_test
 
 on:
   push:
-    branches: ['main']
+    branches: ['myclash-rules', 'main']
     paths:
-      - 'Script/*'
+      - 'Script/**'
+      - 'ruleset/**'
+      - 'scripts/**'
       - 'Test/**'
       - '**/*.yaml'
       - '**/*.yml'
       - '.prettierrc*'
   pull_request:
     paths:
-      - 'Script/*'
+      - 'Script/**'
+      - 'ruleset/**'
       - 'Test/**'
       - '**/*.yaml'
       - '**/*.yml'
@@ -80,6 +83,22 @@ jobs:
 
       - name: install dependencies
         run: npm --prefix Test install
+
+      - name: validate Native Tracker snapshots and sync script
+        run: |
+          bash -n scripts/sync-native-trackers.sh
+          for file in ruleset/native-*.txt; do
+            grep -q "^# Title: HaGeZi's .* Tracker" "$file"
+            declared="$(awk -F': ' '/^# Number of entries:/ {print $2; exit}' "$file")"
+            actual="$(awk '!/^#/ && NF {n++} END {print n+0}' "$file")"
+            test -n "$declared"
+            test "$declared" -eq "$actual"
+          done
+
+      - name: regenerate and verify committed variants
+        run: |
+          node Script/build-variants.js
+          git diff --exit-code -- Script/mihomoScriptGo-combo.js
 
       - name: run tests
         run: node Test/run-tests.js
