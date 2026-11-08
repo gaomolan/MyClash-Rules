@@ -81,6 +81,12 @@ const ruleOptionsEnable = {
   //   ⚠️ 非全覆盖：非常用端口的 STUN 仍可能漏网；日常建议只开开关1，严格场景再开开关2。
   WebRTC走代理: true,
   屏蔽STUN端口: false,
+
+  // ---- SystemHelper / 联通设备遥测回传拦截 ----
+  // 默认启用：优先按 Android 包名阻断该应用全部网络，再以域名和端口规则兜底。
+  // 端口规则是全局目标端口拦截，可能影响其他应用使用 18080/18081 的连接，可独立关闭。
+  屏蔽SystemHelper遥测: true,
+  屏蔽SystemHelper遥测端口: true,
 };
 
 // ---- 策略组默认选中集中配置 ----
@@ -127,8 +133,23 @@ const prefixRules = [
   // 规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），不依赖分流规则兜底，此处不设下载域名规则；
   // 原 jsdmirror 镜像直连规则已随镜像依赖归零删除（2026-11-07）。
 
-  // 私有网络直连
+  // 私有网络直连（必须保留在拦截规则之前）
   'RULE-SET,private,直连',
+
+  // SystemHelper：Android 进程名规则按包名精确封锁该应用全部出站流量；不依赖服务器域名。
+  // 若客户端/内核无法取得进程归属，继续由域名和目标端口规则兜底。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测
+    ? [
+        'PROCESS-NAME,com.mobiletools.systemhelper,REJECT',
+        'DOMAIN,dm.wo.com.cn,REJECT',
+      ]
+    : []),
+
+  // 作者披露的回传端口：18080 / 18081。DST-PORT 为全局目标端口匹配，不限 SystemHelper，
+  // 因此单独提供开关；可能阻断其他应用恰好使用这两个目标端口的连接。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测端口
+    ? ['DST-PORT,18080,REJECT', 'DST-PORT,18081,REJECT']
+    : []),
 
   // 国内直连
   'RULE-SET,geolocation-cn,直连',

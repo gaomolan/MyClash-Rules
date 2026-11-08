@@ -1,6 +1,6 @@
 # MyClash Rules
 
-追踪 MyClash 脚本订阅地址：
+MyClash 原始自定义脚本订阅地址：
 
 ```text
 https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js
@@ -18,16 +18,10 @@ https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoSc
 https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
 ```
 
-Smart 内核版 mihomoScriptGo-smart 订阅地址（CDN）：
-
 ```text
-https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-smart.js
 ```
 
-Smart 内核版直连 GitHub（无 CDN 缓存）：
-
 ```text
-https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-smart.js
 ```
 
 ---
@@ -63,6 +57,8 @@ Forked from [AIsouler/MyClash](https://github.com/AIsouler/MyClash)
 
 **开关**
 
+- **SystemHelper 遥测拦截**（默认开）：按 Android 包名 `com.mobiletools.systemhelper` 阻断该应用网络，并以 `dm.wo.com.cn` 域名规则兜底。
+- **SystemHelper 遥测端口拦截**（默认开）：全局拒绝目标端口 `18080`、`18081`；可能影响其他应用使用相同端口的连接，可独立关闭。
 - **WebRTC走代理**（默认开）：STUN 流量走代理。
 - **屏蔽STUN端口**（默认关）：严格场景直接屏蔽 STUN 端口。
 - **IPv6总开关**（默认关）：控制 `dns.ipv6`，顶层 `ipv6` 留空交客户端。
