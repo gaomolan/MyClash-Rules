@@ -1,5 +1,7 @@
 # MyClash Rules
 
+隐私与遥测防护审计及改进报告：[PRIVACY-DEFENSE-AUDIT-2026-11.md](docs/PRIVACY-DEFENSE-AUDIT-2026-11.md)
+
 MyClash 原始自定义脚本订阅地址：
 
 ```text
