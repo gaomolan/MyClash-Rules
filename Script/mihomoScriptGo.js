@@ -83,9 +83,10 @@ const ruleOptionsEnable = {
   屏蔽STUN端口: false,
 
   // ---- SystemHelper / 联通设备遥测回传拦截 ----
-  // 默认启用：只阻断文章明确指出的遥测上报域名，不改 DNS、IPv6、UDP、TUN 或其他系统服务。
-  // 注意：规则只能阻断可识别到该域名的连接；直连 IP、其他域名或备用服务端不在覆盖范围。
+  // 默认启用：优先按 Android 包名阻断该应用全部网络，再以域名和端口规则兜底。
+  // 端口规则是全局目标端口拦截，可能影响其他应用使用 18080/18081 的连接，可独立关闭。
   屏蔽SystemHelper遥测: true,
+  屏蔽SystemHelper遥测端口: true,
 };
 
 // ---- 策略组默认选中集中配置 ----
@@ -135,9 +136,19 @@ const prefixRules = [
   // 私有网络直连（必须保留在拦截规则之前）
   'RULE-SET,private,直连',
 
-  // SystemHelper 文中披露的设备遥测上报域名：需置于国内直连规则之前，避免被 geolocation-cn 抢先直连。
+  // SystemHelper：Android 进程名规则按包名精确封锁该应用全部出站流量；不依赖服务器域名。
+  // 若客户端/内核无法取得进程归属，继续由域名和目标端口规则兜底。
   ...(ruleOptionsEnable.屏蔽SystemHelper遥测
-    ? ['DOMAIN,dm.wo.com.cn,REJECT']
+    ? [
+        'PROCESS-NAME,com.mobiletools.systemhelper,REJECT',
+        'DOMAIN,dm.wo.com.cn,REJECT',
+      ]
+    : []),
+
+  // 作者披露的回传端口：18080 / 18081。DST-PORT 为全局目标端口匹配，不限 SystemHelper，
+  // 因此单独提供开关；可能阻断其他应用恰好使用这两个目标端口的连接。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测端口
+    ? ['DST-PORT,18080,REJECT', 'DST-PORT,18081,REJECT']
     : []),
 
   // 国内直连
