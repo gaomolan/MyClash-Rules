@@ -19,11 +19,19 @@ function withOptions(api, patch, fn) {
 }
 
 function loadWithOption(loadScript, file, key, value) {
+  return loadScript(file, (source) => {
+    const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\function loadWithOption(loadScript, file, key, value) {
   const anchor = `${key}: ${!value},`;
   return loadScript(file, (source) => {
     const count = source.split(anchor).length - 1;
     if (count !== 1) throw new Error(`配置开关锚点不唯一或不存在：${key}`);
     return source.replace(anchor, `${key}: ${value},`);
+  });
+}');
+    const pattern = new RegExp(`(^[ \\t]*${escaped}:[ \\t]*)(true|false)(,)`, 'gm');
+    const matches = source.match(pattern) || [];
+    if (matches.length !== 1) throw new Error(`配置开关锚点不唯一或不存在：${key}`);
+    return source.replace(pattern, `$1${value}$3`);
   });
 }
 
@@ -71,6 +79,37 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
         '关闭全局端口规则不应关闭应用级拦截');
     });
 
+    h.test(`${target.label}：厂商 Native Tracker 开关同步控制规则与 provider`, () => {
+      const vendors = [
+        ['Vivo', '拦截Vivo原生追踪', 'native-vivo'],
+        ['Huawei', '拦截Huawei原生追踪', 'native-huawei'],
+        ['Xiaomi', '拦截Xiaomi原生追踪', 'native-xiaomi'],
+        ['OPPO/Realme', '拦截OppoRealme原生追踪', 'native-oppo-realme'],
+        ['Samsung', '拦截Samsung原生追踪', 'native-samsung'],
+        ['Apple', '拦截Apple原生追踪', 'native-apple'],
+        ['Microsoft', '拦截Microsoft原生追踪', 'native-winoffice'],
+        ['Amazon', '拦截Amazon原生追踪', 'native-amazon'],
+        ['TikTok', '拦截TikTok原生追踪', 'native-tiktok'],
+        ['LG webOS', '拦截LGwebOS原生追踪', 'native-lgwebos'],
+        ['Roku', '拦截Roku原生追踪', 'native-roku'],
+      ];
+      for (const [vendor, option, provider] of vendors) {
+        const enabledApi = loadWithOption(loadScript, target.file, option, true);
+        const enabled = enabledApi.main(fixtures.typicalSubscription());
+        h.assert(indexOfRule(enabled.rules, `RULE-SET,${provider},AdBlock`) >= 0,
+          `${vendor} 开关开启后缺少规则`);
+        h.assert(Object.prototype.hasOwnProperty.call(enabled['rule-providers'], provider),
+          `${vendor} 开关开启后缺少 provider`);
+
+        const disabledApi = loadWithOption(loadScript, target.file, option, false);
+        const disabled = disabledApi.main(fixtures.typicalSubscription());
+        h.assert(indexOfRule(disabled.rules, `RULE-SET,${provider},AdBlock`) < 0,
+          `${vendor} 开关关闭后仍有规则`);
+        h.assert(!Object.prototype.hasOwnProperty.call(disabled['rule-providers'], provider),
+          `${vendor} 开关关闭后仍注册 provider`);
+      }
+    });
+
     if (target.combo) {
       h.test('Combo：完整防线顺序正确，且例外名单不能绕过 SystemHelper 应用封锁', () => {
         const api = loadScript(target.file);
@@ -88,8 +127,8 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
         const domestic = at('RULE-SET,geolocation-cn,直连');
         h.assert(process < domain && domain < privateRule, '应用级规则顺序错误');
         h.assert(privateRule < exception, '例外名单应保留 private 之后');
-        h.assert(exception < avenue && avenue < adrules && adrules < vivo &&
-          vivo < huawei && huawei < ban && ban < domestic, '主防线组件顺序错误');
+        h.assert(exception < avenue && avenue < adrules && adrules < ban &&
+          ban < vivo && vivo < huawei && huawei < domestic, '主防线组件顺序错误');
         for (const name of ['native-vivo', 'native-huawei', 'adrules', 'banprogramad', 'defense-exceptions']) {
           h.assert(Object.prototype.hasOwnProperty.call(api.main(fixtures.typicalSubscription())['rule-providers'], name),
             `缺少规则集 provider：${name}`);
