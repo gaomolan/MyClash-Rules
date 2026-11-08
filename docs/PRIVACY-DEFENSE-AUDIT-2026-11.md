@@ -236,7 +236,7 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 
 ### GitHub Actions 实际执行结果
 
-<badge>CI 通过</badge>
+**CI 通过**
 
 PR 工作流 `format_and_test` 第 30 次运行（2026-11-08，Node.js 24）已成功完成：
 
