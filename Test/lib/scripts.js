@@ -1,22 +1,16 @@
 'use strict';
 
 /**
- * 当前仓库中实际维护的通用脚本测试对象。
- * Combo 是从 Go 主脚本生成的个人变体，使用专门的隐私防护回归套件验证，
- * 不套用要求所有策略组都进入 GLOBAL 的通用集成断言。
+ * 当前仓库的维护脚本清单。
+ * 旧通用 unit/integration 套件针对已删除的 Script.js / mihomoScript.js，
+ * 且部分断言与 Go/Combo 的策略设计不同，不应错误套用到新脚本。
+ * Go 与 Combo 由专门的隐私防护回归测试覆盖；两者均进入 ES2020 / QuickJS 检查。
  */
-const SCRIPTS = [
-  {
-    file: 'Script/mihomoScriptGo.js',
-    label: 'Go 主脚本 mihomoScriptGo.js',
-    meta: {
-      full: true,
-      regions: ['香港', '日本', '美国', '新加坡', '台湾省'],
-    },
-  },
-];
+const SCRIPTS = [];
 
-/** 脚本文件路径列表（供兼容性检查模块使用） */
-const SCRIPT_FILES = SCRIPTS.map((s) => s.file);
+const SCRIPT_FILES = [
+  'Script/mihomoScriptGo.js',
+  'Script/mihomoScriptGo-combo.js',
+];
 
 module.exports = { SCRIPTS, SCRIPT_FILES };
