@@ -57,7 +57,8 @@ Forked from [AIsouler/MyClash](https://github.com/AIsouler/MyClash)
 
 **开关**
 
-- **SystemHelper 遥测拦截**（默认开）：阻断文章披露的 `dm.wo.com.cn` 上报域名；仅覆盖该域名，不代表阻断其他备用地址或全部遥测流量。
+- **SystemHelper 遥测拦截**（默认开）：按 Android 包名 `com.mobiletools.systemhelper` 阻断该应用网络，并以 `dm.wo.com.cn` 域名规则兜底。
+- **SystemHelper 遥测端口拦截**（默认开）：全局拒绝目标端口 `18080`、`18081`；可能影响其他应用使用相同端口的连接，可独立关闭。
 - **WebRTC走代理**（默认开）：STUN 流量走代理。
 - **屏蔽STUN端口**（默认关）：严格场景直接屏蔽 STUN 端口。
 - **IPv6总开关**（默认关）：控制 `dns.ipv6`，顶层 `ipv6` 留空交客户端。
