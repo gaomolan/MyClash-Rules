@@ -133,17 +133,17 @@ const prefixRules = [
   // 规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），不依赖分流规则兜底，此处不设下载域名规则；
   // 原 jsdmirror 镜像直连规则已随镜像依赖归零删除（2026-11-07）。
 
-  // 私有网络直连（必须保留在拦截规则之前）
-  'RULE-SET,private,直连',
-
-  // SystemHelper：Android 进程名规则按包名精确封锁该应用全部出站流量；不依赖服务器域名。
-  // 若客户端/内核无法取得进程归属，继续由域名和目标端口规则兜底。
+  // SystemHelper 目标应用封锁必须先于 private 直连与通用例外，避免其流量被前序规则放行。
+  // PROCESS-NAME 在 Android 上按包名匹配；域名规则作为进程归属不可用时的兜底。
   ...(ruleOptionsEnable.屏蔽SystemHelper遥测
     ? [
         'PROCESS-NAME,com.mobiletools.systemhelper,REJECT',
         'DOMAIN,dm.wo.com.cn,REJECT',
       ]
     : []),
+
+  // 私有网络直连：放在应用级封锁之后，避免 SystemHelper 的局域网连接绕过应用封锁。
+  'RULE-SET,private,直连',
 
   // 作者披露的回传端口：18080 / 18081。DST-PORT 为全局目标端口匹配，不限 SystemHelper，
   // 因此单独提供开关；可能阻断其他应用恰好使用这两个目标端口的连接。
