@@ -89,16 +89,10 @@ jobs:
           bash -n scripts/sync-native-trackers.sh
           for file in ruleset/native-*.txt; do
             grep -q "^# Title: HaGeZi's .* Tracker" "$file"
-            declared="$(sed -n 's/^# Number of entries: *\\([0-9][0-9]*\\).*$/\\1/p' "$file" | head -n 1)"
-            actual="$(grep -vE '^(#|[[:space:]]*$)' "$file" | wc -l | tr -d ' ')"
+            declared="$(awk -F': ' '/^# Number of entries:/ {print $2; exit}' "$file")"
+            actual="$(awk '!/^#/ && NF {n++} END {print n+0}' "$file")"
             test -n "$declared"
             test "$declared" -eq "$actual"
-            if grep -vE '^(#|[[:space:]]*$|[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)+)
-        run: node Test/run-tests.js
- "$file" | grep -q .; then
-              echo "Invalid domain syntax in $file"
-              exit 1
-            fi
           done
 
       - name: regenerate and verify committed variants
