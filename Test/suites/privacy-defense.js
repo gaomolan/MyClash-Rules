@@ -42,13 +42,13 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
     const root = path.resolve(__dirname, '..', '..');
     const manifest = JSON.parse(fs.readFileSync(path.join(root, 'ruleset/native-trackers.sources.json'), 'utf8'));
     h.assert(manifest.sources.length === 11, 'Native Tracker 来源数量应为 11');
-    const domainPattern = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/;
+    const domainPattern = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/;
     for (const source of manifest.sources) {
       h.assert(Boolean(source.option && source.provider && source.url && source.file),
         `来源登记字段不完整：${source.vendor}`);
       const content = fs.readFileSync(path.join(root, source.file), 'utf8');
-      const declared = Number((content.match(/^# Number of entries:\\s*(\\d+)/m) || [])[1] || 0);
-      const domains = content.split(/\\r?\\n/).map((line) => line.trim())
+      const declared = Number((content.match(/^# Number of entries:\s*(\d+)/m) || [])[1] || 0);
+      const domains = content.split(/\r?\n/).map((line) => line.trim())
         .filter((line) => line && !line.startsWith('#'));
       h.assert(declared > 0 && declared === domains.length,
         `${source.vendor} 条目数与上游元数据不一致`);
