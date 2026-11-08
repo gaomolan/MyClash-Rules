@@ -18,6 +18,15 @@ function withOptions(api, patch, fn) {
   }
 }
 
+function loadWithOption(loadScript, file, key, value) {
+  const anchor = `${key}: ${!value},`;
+  return loadScript(file, (source) => {
+    const count = source.split(anchor).length - 1;
+    if (count !== 1) throw new Error(`配置开关锚点不唯一或不存在：${key}`);
+    return source.replace(anchor, `${key}: ${value},`);
+  });
+}
+
 function indexOfRule(rules, prefix) {
   return rules.findIndex((rule) => rule.startsWith(prefix));
 }
@@ -43,12 +52,10 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
     });
 
     h.test(`${target.label}：SystemHelper 开关关闭时移除进程和域名规则`, () => {
-      const api = loadScript(target.file);
-      withOptions(api, { 屏蔽SystemHelper遥测: false }, () => {
-        const out = api.main(fixtures.typicalSubscription());
-        h.assert(indexOfRule(out.rules, 'PROCESS-NAME,com.mobiletools.systemhelper,REJECT') < 0);
-        h.assert(indexOfRule(out.rules, 'DOMAIN,dm.wo.com.cn,REJECT') < 0);
-      });
+      const api = loadWithOption(loadScript, target.file, '屏蔽SystemHelper遥测', false);
+      const out = api.main(fixtures.typicalSubscription());
+      h.assert(indexOfRule(out.rules, 'PROCESS-NAME,com.mobiletools.systemhelper,REJECT') < 0);
+      h.assert(indexOfRule(out.rules, 'DOMAIN,dm.wo.com.cn,REJECT') < 0);
     });
 
     h.test(`${target.label}：端口拦截开关独立生效`, () => {
@@ -56,13 +63,12 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
       const enabled = api.main(fixtures.typicalSubscription()).rules;
       h.assert(indexOfRule(enabled, 'DST-PORT,18080,REJECT') >= 0, '缺少 18080 拦截');
       h.assert(indexOfRule(enabled, 'DST-PORT,18081,REJECT') >= 0, '缺少 18081 拦截');
-      withOptions(api, { 屏蔽SystemHelper遥测端口: false }, () => {
-        const disabled = api.main(fixtures.typicalSubscription()).rules;
-        h.assert(indexOfRule(disabled, 'DST-PORT,18080,REJECT') < 0);
-        h.assert(indexOfRule(disabled, 'DST-PORT,18081,REJECT') < 0);
-        h.assert(indexOfRule(disabled, 'PROCESS-NAME,com.mobiletools.systemhelper,REJECT') >= 0,
-          '关闭全局端口规则不应关闭应用级拦截');
-      });
+      const disabledApi = loadWithOption(loadScript, target.file, '屏蔽SystemHelper遥测端口', false);
+      const disabled = disabledApi.main(fixtures.typicalSubscription()).rules;
+      h.assert(indexOfRule(disabled, 'DST-PORT,18080,REJECT') < 0);
+      h.assert(indexOfRule(disabled, 'DST-PORT,18081,REJECT') < 0);
+      h.assert(indexOfRule(disabled, 'PROCESS-NAME,com.mobiletools.systemhelper,REJECT') >= 0,
+        '关闭全局端口规则不应关闭应用级拦截');
     });
 
     if (target.combo) {
