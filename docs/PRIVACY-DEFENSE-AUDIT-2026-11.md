@@ -145,8 +145,10 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 1. `PROCESS-NAME,com.mobiletools.systemhelper,REJECT`
 2. `DOMAIN,dm.wo.com.cn,REJECT`
 3. `RULE-SET,private,直连`
-4. 独立端口兜底规则
-5. 国内直连规则
+4. `RULE-SET,defense-exceptions,直连`（统一误杀恢复入口）
+5. 已启用的 Native Tracker 品牌规则
+6. 独立端口兜底规则
+7. 国内直连规则
 
 这样目标应用的进程封锁不会被普通 private 直连提前接管。域名兜底也先于 private。全局端口规则仍保留独立开关，并保留其可能误伤其他应用的说明。
 
@@ -211,6 +213,7 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 - Go 主脚本新增 11 个品牌独立开关，全部默认关闭；只启用实际使用的设备品牌/平台，避免跨品牌误伤。
 - Combo 保留此前已经启用的 Vivo / Huawei 行为；其余新增品牌默认关闭。
 - 关闭某品牌时，同时移除对应规则引用和 provider，不仅仅是隐藏策略组。
+- 将 `defense-exceptions.list` 提升为 Go / Combo 共用的误杀恢复入口，位置固定在 private 直连之后、所有广告与 Native Tracker 拦截之前；AdBlock 关闭时不注册该 provider。
 
 **自动更新：**
 - 新增 `scripts/sync-native-trackers.sh` 与 `.github/workflows/sync-native-trackers.yml`。
