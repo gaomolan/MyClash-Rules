@@ -81,6 +81,11 @@ const ruleOptionsEnable = {
   //   ⚠️ 非全覆盖：非常用端口的 STUN 仍可能漏网；日常建议只开开关1，严格场景再开开关2。
   WebRTC走代理: true,
   屏蔽STUN端口: false,
+
+  // ---- SystemHelper / 联通设备遥测回传拦截 ----
+  // 默认启用：只阻断文章明确指出的遥测上报域名，不改 DNS、IPv6、UDP、TUN 或其他系统服务。
+  // 注意：规则只能阻断可识别到该域名的连接；直连 IP、其他域名或备用服务端不在覆盖范围。
+  屏蔽SystemHelper遥测: true,
 };
 
 // ---- 策略组默认选中集中配置 ----
@@ -127,8 +132,13 @@ const prefixRules = [
   // 规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），不依赖分流规则兜底，此处不设下载域名规则；
   // 原 jsdmirror 镜像直连规则已随镜像依赖归零删除（2026-11-07）。
 
-  // 私有网络直连
+  // 私有网络直连（必须保留在拦截规则之前）
   'RULE-SET,private,直连',
+
+  // SystemHelper 文中披露的设备遥测上报域名：需置于国内直连规则之前，避免被 geolocation-cn 抢先直连。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测
+    ? ['DOMAIN,dm.wo.com.cn,REJECT']
+    : []),
 
   // 国内直连
   'RULE-SET,geolocation-cn,直连',
