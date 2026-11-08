@@ -18,10 +18,8 @@ https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoSc
 https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
 ```
 
-Smart 内核版 mihomoScriptGo-smart 订阅地址（CDN）：
 
 ```text
-https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-smart.js
 ```
 
 Smart 内核版直连 GitHub（无 CDN 缓存）：
@@ -63,6 +61,7 @@ Forked from [AIsouler/MyClash](https://github.com/AIsouler/MyClash)
 
 **开关**
 
+- **SystemHelper 遥测拦截**（默认开）：阻断文章披露的 `dm.wo.com.cn` 上报域名；仅覆盖该域名，不代表阻断其他备用地址或全部遥测流量。
 - **WebRTC走代理**（默认开）：STUN 流量走代理。
 - **屏蔽STUN端口**（默认关）：严格场景直接屏蔽 STUN 端口。
 - **IPv6总开关**（默认关）：控制 `dns.ipv6`，顶层 `ipv6` 留空交客户端。
