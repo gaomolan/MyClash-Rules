@@ -192,7 +192,7 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 已调整：
 
 - push 监控分支包含默认分支 `myclash-rules`，同时保留 `main`。
-- PR 与 push 的路径覆盖改为 `Script/**`、`ruleset/**)、`Test/**)，避免漏掉嵌套差异层和规则集。
+- PR 与 push 的路径覆盖改为 `Script/**`、`ruleset/**`、`Test/**`，避免漏掉嵌套差异层和规则集。
 - 测试前先运行 `node Script/build-variants.js`。
 - 使用 `git diff --exit-code -- Script/mihomoScriptGo-combo.js` 检查提交的生成产物是否与源文件和差异层一致。
 - 再执行现有完整测试。
