@@ -51,7 +51,7 @@
 
 ## 三、验证状态与边界
 
-本次已完成仓库文件审计、HaGeZi 上游名单条目比对、变体生成算法重放和静态核对。PR CI 已执行变体生成、生成物一致性、配置引用检查和防护专项测试。旧通用测试入口已确认失效，本 PR 不把它列为通过项。
+本次已完成仓库文件审计、HaGeZi 上游名单条目比对、变体生成算法重放和静态核对。PR CI 第 22 次运行已通过：Native 上游同步校验、名单差异检查、Combo 重新生成与产物一致性、配置引用检查、防护专项测试均为 success。旧通用测试入口已确认失效，本 PR 不把它列为通过项。
 
 以下尚未完成，不能声称已验证：
 - 当前 Bettbox/Mihomo 二进制的 `mihomo -t`。
@@ -66,7 +66,7 @@
 1. `node Script/build-variants.js` 成功，且生成产物无未提交差异。
 2. `node Script/check-references.js` 的 Go/Combo rich/minimal 夹具通过。
 3. `node Test/defense.test.js` 的顺序、开关和 provider 测试通过。
-4. `node Test/run-tests.js` 既有测试通过。
+4. 旧 `node Test/run-tests.js` 测试清单仍指向已不存在的旧版脚本，不属于本 PR 的通过项，需另行重构。
 5. 使用真实 Mihomo 二进制和 Android 真机验证后，才可宣布运行时防护测试完成。
 
 **结论：** 本次重点是统一防护源、修复规则优先级、避免变体失步、限制例外放行范围，并建立规则更新与回归门禁，而不是无差别堆叠名单。
