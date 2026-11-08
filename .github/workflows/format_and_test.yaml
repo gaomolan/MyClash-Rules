@@ -2,17 +2,21 @@ name: format_and_test
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'myclash-rules']
     paths:
-      - 'Script/*'
+      - 'Script/**'
       - 'Test/**'
+      - 'ruleset/**'
+      - 'tools/defense-sync/**'
       - '**/*.yaml'
       - '**/*.yml'
       - '.prettierrc*'
   pull_request:
     paths:
-      - 'Script/*'
+      - 'Script/**'
       - 'Test/**'
+      - 'ruleset/**'
+      - 'tools/defense-sync/**'
       - '**/*.yaml'
       - '**/*.yml'
       - '.prettierrc*'
@@ -81,5 +85,13 @@ jobs:
       - name: install dependencies
         run: npm --prefix Test install
 
-      - name: run tests
+      - name: regenerate combo variant
+        run: node Script/build-variants.js
+      - name: verify generated combo is committed
+        run: git diff --exit-code -- Script/mihomoScriptGo-combo.js
+      - name: validate generated configs and references
+        run: node Script/check-references.js
+      - name: test defense behavior
+        run: node Test/defense.test.js
+      - name: run legacy tests
         run: node Test/run-tests.js

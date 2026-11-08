@@ -94,12 +94,19 @@ const ruleOptionsEnable = {
   WebRTC走代理: true,
   屏蔽STUN端口: false,
 
-  // ---- 主防线开关（2026-10-30 新增，仅组合脚本先行试运行）----
-  // 防线段位于规则链最前（private 之后、geolocation-cn 之前），组成与命中实测见仓库外存档 PLAN-B。
-  // true=完整防线：例外名单 + AWAvenue + AdRules + 厂商遥测（vivo/华为）+ BanProgramAD + 定点段，约 20.7 万域名；
-  // false=轻量防线：仅去掉 AdRules，其余不变（约 2.3k 域名），低配设备或排查问题时用。
-  // 整体回滚：与本开关无关，把 AdBlock 组切到 PASS 即全部放行；关停 AdBlock 组则整段跳过。
+  // ---- SystemHelper / 联通设备遥测回传拦截 ----
+  // 默认启用：优先按 Android 包名阻断该应用全部网络，再以域名和端口规则兜底。
+  // 端口规则是全局目标端口拦截，可能影响其他应用使用 18080/18081 的连接，可独立关闭。
+  屏蔽SystemHelper遥测: true,
+  屏蔽SystemHelper遥测端口: true,
+  // 厂商原生遥测名单按设备品牌启用，默认关闭以避免影响非对应品牌设备。
+  屏蔽Vivo原生遥测: true,
+  屏蔽Huawei原生遥测: true,
+  屏蔽Vivo历史补充名单: false,
+  // 国产应用广告/统计名单，可能影响部分应用功能。
+  屏蔽BanProgramAD: true,
   完整防线: true,
+  启用定点防线: true,
 };
 
 // ---- 策略组默认选中集中配置 ----
@@ -146,8 +153,22 @@ const prefixRules = [
   // 规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），不依赖分流规则兜底，此处不设下载域名规则；
   // 原 jsdmirror 镜像直连规则已随镜像依赖归零删除（2026-11-07）。
 
-  // 私有网络直连
+  // SystemHelper 应用级封锁必须早于 private / 国内直连 / 防线例外名单，避免被提前放行。
+  // PROCESS-NAME 在 Android 上按包名匹配；域名规则是进程归属不可用时的兜底。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测
+    ? [
+        'PROCESS-NAME,com.mobiletools.systemhelper,REJECT',
+        'DOMAIN,dm.wo.com.cn,REJECT',
+      ]
+    : []),
+
+  // 私有网络直连：保留局域网通信；因此全局端口封锁排在 private 之后。
   'RULE-SET,private,直连',
+
+  // 端口规则是全局目标端口匹配，不限应用；private 例外先行，减少内网误伤。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测端口
+    ? ['DST-PORT,18080,REJECT', 'DST-PORT,18081,REJECT']
+    : []),
 
   // 国内直连
   'RULE-SET,geolocation-cn,直连',
@@ -857,56 +878,38 @@ const serviceConfigs = [
         path: './ruleset/avenue-ads.mrs',
         'path-in-bundle': 'geo/geosite/avenue-ads.mrs',
       },
-      // ---- 主防线其余组件（2026-10-30 新增）----
-      // 规则不在本组 rules 里声明：统一由 main() 的主防线段前置到规则链最前，见 buildDefensePrefixRules。
       'defense-exceptions': {
-        type: 'http',
-        format: 'text',
-        interval: 86400,
-        behavior: 'classical',
-        // 主防线例外名单（自有仓库 ruleset/，初始为空）：误杀域名在此加一行 DOMAIN-SUFFIX,域名 即放行。
+        type: 'http', format: 'text', interval: 86400, behavior: 'classical',
         url: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/defense-exceptions.list',
         path: './ruleset/defense-exceptions.list',
       },
       adrules: {
         ...ruleProviderCommonDomain,
-        // AdRules 域名版（Cats-Team/AdRules 官方 mihomo 构建，约 20.5 万条）：防线主力，Disconnect 基准覆盖 53%。
-        // ⚠️ jsDelivr 的 gh 路径大小写敏感：仓库名必须 Cats-Team、文件在仓库根目录，写错即 404（2026-10-30 实机教训）。
-        // 「完整防线」关停时由 buildRuleProviders 剔除本 provider（轻量模式）。
         url: 'https://cdn.jsdelivr.net/gh/Cats-Team/AdRules@main/adrules-mihomo.mrs',
         path: './ruleset/adrules.mrs',
       },
       'native-vivo': {
-        type: 'http',
-        format: 'text',
-        interval: 86400,
-        behavior: 'domain',
-        // HaGeZi Native·vivo 厂商遥测（自产：本仓库 Actions 每日从官方名单抽域名存 ruleset/*.txt，不经第三方转换仓）。
+        type: 'http', format: 'text', interval: 86400, behavior: 'domain',
         url: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/native-vivo.txt',
         path: './ruleset/native-vivo.txt',
       },
+      'native-vivo-extra': {
+        type: 'http', format: 'text', interval: 86400, behavior: 'domain',
+        url: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/native-vivo-extra.txt',
+        path: './ruleset/native-vivo-extra.txt',
+      },
       'native-huawei': {
-        type: 'http',
-        format: 'text',
-        interval: 86400,
-        behavior: 'domain',
-        // HaGeZi Native·华为厂商遥测（自产，同上）。
+        type: 'http', format: 'text', interval: 86400, behavior: 'domain',
         url: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/native-huawei.txt',
         path: './ruleset/native-huawei.txt',
       },
       banprogramad: {
-        type: 'http',
-        format: 'text',
-        interval: 86400,
-        behavior: 'classical',
-        // BanProgramAD（约 990 条）：专打国产 App 统计/广告回传域名，外科手术式小表。
-        // 取自 ACL4SSR 仓库内置副本（原 tingxins 单仓已不可达）；内容与 2026-10-30 基准测试所用副本逐字一致。
+        type: 'http', format: 'text', interval: 86400, behavior: 'classical',
         url: 'https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanProgramAD.list',
         path: './ruleset/banprogramad.list',
       },
     },
     icon: `${iconBaseUrl}AdBlock.svg`,
-    // 本组规则由 main() 主防线段统一前置，此处留空（avenue 亦在防线段内，不再走功能规则区）。
     rules: [],
   },
   // ---- Phase 2 新增：Cloudflare 策略组 ----
@@ -1509,40 +1512,6 @@ function buildServiceGroups(ctx) {
   return { functionalGroups, directGroup, globalGroup };
 }
 
-// ---- 主防线定点段（2026-10-30）----
-// 离线全集比对确认的主流名单均未覆盖、且确属广告/统计回传的域名，手写定点拦截。
-// 只用 DOMAIN-SUFFIX 精确到回传域，不碰厂商主服务域（如个推主通道 sdk.open.talk.getui.net 是推送传输、禁拦）。
-const DEFENSE_SPOT_RULES = [
-  'DOMAIN-SUFFIX,pangle.cn,AdBlock', // 穿山甲广告主域
-  'DOMAIN-SUFFIX,sensorsdata.cn,AdBlock', // 神策数据回传
-  'DOMAIN-SUFFIX,ulog.sv.qq.com,AdBlock', // 腾讯灯塔统计回传（子域级，不碰 qq.com 主域面）
-];
-
-/**
- * 主防线段：把防线规则插进 prefixRules 的 private 之后、geolocation-cn 之前返回。
- * 为什么必须在 geolocation-cn 之前：prefixRules 里的国内分流名单（geolocation-cn / games_cn 等
- *   DIRECT 规则）会抢先认领被 SDK 污染的 .cn 域名，防线排在功能规则区时拦不住它们（2026-10-30 审计 F1）。
- * 段内顺序即优先级：例外名单（直连，先行放行）→ avenue → AdRules（仅完整防线）→ 厂商遥测 → BanProgramAD → 定点段。
- * AdBlock 组关停时整段不插入（providers 亦由 buildRuleProviders 同步跳过）。
- * ⚠️ AdRules 含 HTTPDNS 域名（33 个 + dns.weixin.qq.com.cn）：拦截后 App 回落系统 DNS，
- *   与本脚本「DNS 归脚本」一致；微信/B站/美团出现解析异常时，先把对应域名加进例外名单。
- */
-function buildDefensePrefixRules() {
-  if (ruleOptionsEnable.AdBlock === false) return [...prefixRules];
-  const defense = [
-    'RULE-SET,defense-exceptions,直连',
-    'RULE-SET,avenue-ads,AdBlock',
-    ...(ruleOptionsEnable.完整防线 !== false ? ['RULE-SET,adrules,AdBlock'] : []),
-    'RULE-SET,native-vivo,AdBlock',
-    'RULE-SET,native-huawei,AdBlock',
-    'RULE-SET,banprogramad,AdBlock',
-    ...DEFENSE_SPOT_RULES,
-  ];
-  const idx = prefixRules.indexOf('RULE-SET,private,直连');
-  if (idx === -1) return [...defense, ...prefixRules];
-  return [...prefixRules.slice(0, idx + 1), ...defense, ...prefixRules.slice(idx + 1)];
-}
-
 /**
  * 组装规则：按 serviceConfigs 定义顺序收集各服务组规则。
  * AdBlock 优先（广告规则先行），其余按定义顺序。
@@ -1579,10 +1548,11 @@ function buildRuleProviders() {
     Object.assign(finalRuleProviders, svc.providers || {});
   }
 
-  // 主防线轻量模式：「完整防线」关停时剔除 AdRules provider，其余防线组件保留。
-  if (ruleOptionsEnable.完整防线 === false) {
-    delete finalRuleProviders.adrules;
-  }
+  if (ruleOptionsEnable.完整防线 === false) delete finalRuleProviders.adrules;
+  if (ruleOptionsEnable.屏蔽Vivo原生遥测 !== true) delete finalRuleProviders['native-vivo'];
+  if (ruleOptionsEnable.屏蔽Vivo历史补充名单 !== true) delete finalRuleProviders['native-vivo-extra'];
+  if (ruleOptionsEnable.屏蔽Huawei原生遥测 !== true) delete finalRuleProviders['native-huawei'];
+  if (ruleOptionsEnable.屏蔽BanProgramAD === false) delete finalRuleProviders.banprogramad;
 
   // 规则集下载通道：bett-rules 系（raw 源）provider 统一经 GitHub 组下载，
   // 不依赖分流规则兜底——分流规则怎么改，都误伤不到规则集更新。
@@ -1618,6 +1588,31 @@ function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customize
   const finalRuleProviders = buildRuleProviders();
 
   return { globalGroup, functionalGroups, functionalRules, functionalIpRules, finalRuleProviders, directGroup };
+}
+
+// ---- 主防线定点段：只匹配已确认的广告/统计回传域名，不碰厂商主服务域 ----
+const DEFENSE_SPOT_RULES = [
+  'DOMAIN-SUFFIX,pangle.cn,AdBlock',
+  'DOMAIN-SUFFIX,sensorsdata.cn,AdBlock',
+  'DOMAIN-SUFFIX,ulog.sv.qq.com,AdBlock',
+];
+
+function buildDefensePrefixRules() {
+  if (ruleOptionsEnable.AdBlock === false) return [...prefixRules];
+  const defenseRules = [
+    'RULE-SET,defense-exceptions,直连',
+    'RULE-SET,avenue-ads,AdBlock',
+    ...(ruleOptionsEnable.完整防线 !== false ? ['RULE-SET,adrules,AdBlock'] : []),
+    ...(ruleOptionsEnable.屏蔽Vivo原生遥测 === true ? ['RULE-SET,native-vivo,AdBlock'] : []),
+    ...(ruleOptionsEnable.屏蔽Vivo历史补充名单 === true ? ['RULE-SET,native-vivo-extra,AdBlock'] : []),
+    ...(ruleOptionsEnable.屏蔽Huawei原生遥测 === true ? ['RULE-SET,native-huawei,AdBlock'] : []),
+    ...(ruleOptionsEnable.屏蔽BanProgramAD !== false ? ['RULE-SET,banprogramad,AdBlock'] : []),
+    ...(ruleOptionsEnable.启用定点防线 !== false ? DEFENSE_SPOT_RULES : []),
+  ];
+  const anchor = ruleOptionsEnable.屏蔽SystemHelper遥测端口 ? 'DST-PORT,18081,REJECT' : 'RULE-SET,private,直连';
+  const index = prefixRules.indexOf(anchor);
+  if (index === -1) throw new Error('主防线插入锚点缺失：' + anchor + '；拒绝生成不确定顺序的防护规则');
+  return [...prefixRules.slice(0, index + 1), ...defenseRules, ...prefixRules.slice(index + 1)];
 }
 
 // ---dns和hosts相关处理---
@@ -2300,7 +2295,6 @@ function main(config) {
   newConfig['rule-providers'] = finalRuleProviders;
 
   newConfig['rules'] = [
-    // 主防线段已并入此前缀（private 之后、geolocation-cn 之前），见 buildDefensePrefixRules。
     ...buildDefensePrefixRules(),
     // 开关2「屏蔽STUN端口」：直接拦截常见 STUN/TURN 端口，优先级高于开关1；位置在 QUIC 屏蔽之前。
     ...(ruleOptionsEnable.屏蔽STUN端口 ? [...privateStunDirectRules, ...blockStunPorts] : []),
