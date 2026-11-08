@@ -184,6 +184,9 @@ const prefixRules = [
   // 私有网络直连：放在应用级封锁之后，避免 SystemHelper 的局域网连接绕过应用封锁。
   'RULE-SET,private,直连',
 
+  // 统一例外入口：允许用户恢复误拦域名，且先于所有广告/厂商追踪名单。
+  ...(ruleOptionsEnable.AdBlock === false ? [] : ['RULE-SET,defense-exceptions,直连']),
+
   // 厂商 Native Tracker：只按用户启用的品牌插入；位于 private 之后、国内直连之前。
   ...(
     ruleOptionsEnable.AdBlock === false
@@ -392,6 +395,15 @@ const nativeTrackerProviderConfigs = nativeTrackerSources.reduce((providers, sou
 
 const baseRuleProviders = {
   ...nativeTrackerProviderConfigs,
+  // 通用防护例外名单：误杀恢复入口，先于广告/遥测拦截执行。
+  'defense-exceptions': {
+    type: 'http',
+    format: 'text',
+    interval: 86400,
+    behavior: 'classical',
+    url: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/defense-exceptions.list',
+    path: './ruleset/defense-exceptions.list',
+  },
   // --- 直连规则集 ---
 
   private: {
@@ -1588,8 +1600,7 @@ const DEFENSE_SPOT_RULES = [
  * 主防线段：把防线规则插进 prefixRules 的 private 之后、geolocation-cn 之前返回。
  * 为什么必须在 geolocation-cn 之前：prefixRules 里的国内分流名单（geolocation-cn / games_cn 等
  *   DIRECT 规则）会抢先认领被 SDK 污染的 .cn 域名，防线排在功能规则区时拦不住它们（2026-10-30 审计 F1）。
- * 段内顺序即优先级：例外名单（直连，先行放行）→ avenue → AdRules（仅完整防线）→ BanProgramAD → 定点段。
- * 各厂商 Native Tracker 规则由 Go 底板按品牌开关放在 private 之后，紧接本段之后执行。
+ * 例外名单由 Go 底板放在 private 之后；本段随后加入广告/统计名单，Native Tracker 再按品牌开关执行。
  * AdBlock 组关停时整段不插入（providers 亦由 buildRuleProviders 同步跳过）。
  * ⚠️ AdRules 含 HTTPDNS 域名（33 个 + dns.weixin.qq.com.cn）：拦截后 App 回落系统 DNS，
  *   与本脚本「DNS 归脚本」一致；微信/B站/美团出现解析异常时，先把对应域名加进例外名单。
@@ -1597,13 +1608,14 @@ const DEFENSE_SPOT_RULES = [
 function buildDefensePrefixRules() {
   if (ruleOptionsEnable.AdBlock === false) return [...prefixRules];
   const defense = [
-    'RULE-SET,defense-exceptions,直连',
     'RULE-SET,avenue-ads,AdBlock',
     ...(ruleOptionsEnable.完整防线 !== false ? ['RULE-SET,adrules,AdBlock'] : []),
     'RULE-SET,banprogramad,AdBlock',
     ...DEFENSE_SPOT_RULES,
   ];
-  const idx = prefixRules.indexOf('RULE-SET,private,直连');
+  const exceptionIndex = prefixRules.indexOf('RULE-SET,defense-exceptions,直连');
+  const privateIndex = prefixRules.indexOf('RULE-SET,private,直连');
+  const idx = exceptionIndex >= 0 ? exceptionIndex : privateIndex;
   if (idx === -1) return [...defense, ...prefixRules];
   return [...prefixRules.slice(0, idx + 1), ...defense, ...prefixRules.slice(idx + 1)];
 }
@@ -1645,6 +1657,8 @@ function buildRuleProviders() {
   }
 
   // Native Tracker provider 与规则引用必须同步：关闭品牌开关时不下载、不注册该 provider。
+  if (ruleOptionsEnable.AdBlock === false) delete finalRuleProviders['defense-exceptions'];
+
   for (const source of nativeTrackerSources) {
     if (ruleOptionsEnable.AdBlock === false || ruleOptionsEnable[source.option] !== true) {
       delete finalRuleProviders[source.provider];
