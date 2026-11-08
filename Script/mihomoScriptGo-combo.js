@@ -93,6 +93,8 @@ const ruleOptionsEnable = {
   //   ⚠️ 非全覆盖：非常用端口的 STUN 仍可能漏网；日常建议只开开关1，严格场景再开开关2。
   WebRTC走代理: true,
   屏蔽STUN端口: false,
+  屏蔽SystemHelper遥测: true,
+  屏蔽SystemHelper遥测端口: true,
 
   // ---- 主防线开关（2026-10-30 新增，仅组合脚本先行试运行）----
   // 防线段位于规则链最前（private 之后、geolocation-cn 之前），组成与命中实测见仓库外存档 PLAN-B。
@@ -100,6 +102,10 @@ const ruleOptionsEnable = {
   // false=轻量防线：仅去掉 AdRules，其余不变（约 2.3k 域名），低配设备或排查问题时用。
   // 整体回滚：与本开关无关，把 AdBlock 组切到 PASS 即全部放行；关停 AdBlock 组则整段跳过。
   完整防线: true,
+
+  // ---- SystemHelper / 联通设备遥测回传拦截 ----
+  // 默认启用：优先按 Android 包名阻断该应用全部网络，再以域名和端口规则兜底。
+  // 端口规则是全局目标端口拦截，可能影响其他应用使用 18080/18081 的连接，可独立关闭。
 };
 
 // ---- 策略组默认选中集中配置 ----
@@ -146,8 +152,23 @@ const prefixRules = [
   // 规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），不依赖分流规则兜底，此处不设下载域名规则；
   // 原 jsdmirror 镜像直连规则已随镜像依赖归零删除（2026-11-07）。
 
-  // 私有网络直连
+  // SystemHelper 目标应用封锁必须先于 private 直连与通用例外，避免其流量被前序规则放行。
+  // PROCESS-NAME 在 Android 上按包名匹配；域名规则作为进程归属不可用时的兜底。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测
+    ? [
+        'PROCESS-NAME,com.mobiletools.systemhelper,REJECT',
+        'DOMAIN,dm.wo.com.cn,REJECT',
+      ]
+    : []),
+
+  // 私有网络直连：放在应用级封锁之后，避免 SystemHelper 的局域网连接绕过应用封锁。
   'RULE-SET,private,直连',
+
+  // 作者披露的回传端口：18080 / 18081。DST-PORT 为全局目标端口匹配，不限 SystemHelper，
+  // 因此单独提供开关；可能阻断其他应用恰好使用这两个目标端口的连接。
+  ...(ruleOptionsEnable.屏蔽SystemHelper遥测端口
+    ? ['DST-PORT,18080,REJECT', 'DST-PORT,18081,REJECT']
+    : []),
 
   // 国内直连
   'RULE-SET,geolocation-cn,直连',
