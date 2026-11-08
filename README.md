@@ -18,14 +18,10 @@ https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoSc
 https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo.js
 ```
 
-
 ```text
 ```
 
-Smart 内核版直连 GitHub（无 CDN 缓存）：
-
 ```text
-https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-smart.js
 ```
 
 ---
