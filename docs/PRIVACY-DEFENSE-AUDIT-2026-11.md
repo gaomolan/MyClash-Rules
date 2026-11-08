@@ -277,22 +277,22 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 
 ### GitHub Actions 实际执行结果
 
-上一轮 CI Run #30 已通过原有 18 项测试。本轮增加了 11 个品牌开关、来源快照检查和同步工作流后，新的 CI 结果尚待本轮提交触发，不沿用上一轮通过结论。
+**最新 CI 通过：Run #65，21 项通过、0 项失败。**
 
-**上一轮 CI 通过**
+PR 工作流 `format_and_test` 已在 2026-11-08（Node.js 24）完成以下检查：
 
-PR 工作流 `format_and_test` 第 30 次运行（2026-11-08，Node.js 24）已成功完成：
+- Native Tracker 快照校验：11 份文件的上游元数据、实际条目数和域名格式检查通过。
+- `bash -n scripts/sync-native-trackers.sh`：同步脚本语法检查通过。
+- `node Script/build-variants.js`：21 个差异操作成功生成 Combo。
+- `git diff --exit-code -- Script/mihomoScriptGo-combo.js`：生成物与提交文件一致。
+- `node Test/run-tests.js`：21 项通过、0 项失败。
+  - 隐私防护专项：11 项通过（包含 11 个厂商开关与规则/provider 同步检查）。
+  - ES2020 兼容性：4 项通过。
+  - QuickJS：6 项通过。
 
-- `node Script/build-variants.js`：成功，Combo 变体由 21 个差异操作重新生成。
-- `git diff --exit-code -- Script/mihomoScriptGo-combo.js`：成功，生成物与提交文件一致。
-- `node Test/run-tests.js`：成功，18 项通过、0 项失败。
-  - 隐私防护专项：8 项通过。
-  - ES2020 兼容性：4 项通过（Go / Combo 各两项）。
-  - QuickJS：6 项通过（Go / Combo 顶层执行、main 调用和 Node 输出结构对照）。
+工作流记录：https://github.com/gaomolan/MyClash-Rules/actions/runs/42504753436
 
-上一轮工作流链接：https://github.com/gaomolan/MyClash-Rules/actions/runs/42503120389
-
-这验证了脚本生成链路、JavaScript 语法/引擎兼容性和本次新增规则回归；它仍不等同于 Bettbox 所用 Mihomo 二进制内核的配置解析，也不等同于 Android 真机流量测试。
+这验证了 Native Tracker 快照质量、脚本生成链路、JavaScript 语法/引擎兼容性和本次新增规则回归；它仍不等同于 Bettbox 所用 Mihomo 二进制内核的配置解析，也不等同于 Android 真机流量测试。
 
 ### 真机验收
 
@@ -305,4 +305,4 @@ PR 工作流 `format_and_test` 第 30 次运行（2026-11-08，Node.js 24）已�
 5. Android Private DNS 开关对 DNS 过滤的影响。
 6. VPN 断开或 TUN 不接管时是否存在流量绕过。
 
-**验收结论：本次完成了高置信度代码修复、生成链路修复和测试/CI 补强；在 GitHub Actions 与 Android 真机结果出来之前，不把本次工作标记为完整防护验收通过。**
+**验收结论：本次完成了高置信度代码修复、11 类厂商名单接入、自动更新校验、生成链路修复和 CI 回归；Mihomo 二进制内核配置解析及 Android 真机流量测试仍未完成，因此不把本次工作标记为完整设备端防护验收通过。**
