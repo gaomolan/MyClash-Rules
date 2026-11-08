@@ -96,16 +96,22 @@ const ruleOptionsEnable = {
   屏蔽SystemHelper遥测: true,
   屏蔽SystemHelper遥测端口: true,
 
-  // ---- 主防线开关（2026-10-30 新增，仅组合脚本先行试运行）----
-  // 防线段位于规则链最前（private 之后、geolocation-cn 之前），组成与命中实测见仓库外存档 PLAN-B。
-  // true=完整防线：例外名单 + AWAvenue + AdRules + 厂商遥测（vivo/华为）+ BanProgramAD + 定点段，约 20.7 万域名；
-  // false=轻量防线：仅去掉 AdRules，其余不变（约 2.3k 域名），低配设备或排查问题时用。
-  // 整体回滚：与本开关无关，把 AdBlock 组切到 PASS 即全部放行；关停 AdBlock 组则整段跳过。
-  完整防线: true,
+  // ---- 厂商 Native Tracker：Combo 保留既有 Vivo/Huawei 防线，其余按需开启 ----
+  拦截Vivo原生追踪: true,
+  拦截Huawei原生追踪: true,
+  拦截Xiaomi原生追踪: false,
+  拦截OppoRealme原生追踪: false,
+  拦截Samsung原生追踪: false,
+  拦截Apple原生追踪: false,
+  拦截Microsoft原生追踪: false,
+  拦截Amazon原生追踪: false,
+  拦截TikTok原生追踪: false,
+  拦截LGwebOS原生追踪: false,
+  拦截Roku原生追踪: false,
 
-  // ---- SystemHelper / 联通设备遥测回传拦截 ----
-  // 默认启用：优先按 Android 包名阻断该应用全部网络，再以域名和端口规则兜底。
-  // 端口规则是全局目标端口拦截，可能影响其他应用使用 18080/18081 的连接，可独立关闭。
+  // ---- 主防线开关（2026-10-30 新增，仅组合脚本先行试运行）----
+  // true=完整防线；false=轻量防线（仅去掉 AdRules）。厂商 Native Tracker 由上方品牌开关单独控制。
+  完整防线: true,
 };
 
 // ---- 策略组默认选中集中配置 ----
@@ -163,6 +169,15 @@ const prefixRules = [
 
   // 私有网络直连：放在应用级封锁之后，避免 SystemHelper 的局域网连接绕过应用封锁。
   'RULE-SET,private,直连',
+
+  // 厂商 Native Tracker：只按用户启用的品牌插入；位于 private 之后、国内直连之前。
+  ...(
+    ruleOptionsEnable.AdBlock === false
+      ? []
+      : nativeTrackerSources
+          .filter((source) => ruleOptionsEnable[source.option] === true)
+          .map((source) => `RULE-SET,${source.provider},AdBlock`)
+  ),
 
   // 作者披露的回传端口：18080 / 18081。DST-PORT 为全局目标端口匹配，不限 SystemHelper，
   // 因此单独提供开关；可能阻断其他应用恰好使用这两个目标端口的连接。
@@ -346,7 +361,35 @@ const ruleProviderCommonIpcidr = {
 };
 
 // 定义基础 Rule Providers
+// HaGeZi Native Tracker 来源登记：各厂商独立开关，默认关闭；列表由独立工作流校验同步。
+const nativeTrackerSources = [
+  { vendor: 'Vivo', provider: 'native-vivo', option: '拦截Vivo原生追踪', file: 'native-vivo.txt' },
+  { vendor: 'Huawei', provider: 'native-huawei', option: '拦截Huawei原生追踪', file: 'native-huawei.txt' },
+  { vendor: 'Xiaomi', provider: 'native-xiaomi', option: '拦截Xiaomi原生追踪', file: 'native-xiaomi.txt' },
+  { vendor: 'OPPO/Realme', provider: 'native-oppo-realme', option: '拦截OppoRealme原生追踪', file: 'native-oppo-realme.txt' },
+  { vendor: 'Samsung', provider: 'native-samsung', option: '拦截Samsung原生追踪', file: 'native-samsung.txt' },
+  { vendor: 'Apple', provider: 'native-apple', option: '拦截Apple原生追踪', file: 'native-apple.txt' },
+  { vendor: 'Microsoft', provider: 'native-winoffice', option: '拦截Microsoft原生追踪', file: 'native-winoffice.txt' },
+  { vendor: 'Amazon', provider: 'native-amazon', option: '拦截Amazon原生追踪', file: 'native-amazon.txt' },
+  { vendor: 'TikTok', provider: 'native-tiktok', option: '拦截TikTok原生追踪', file: 'native-tiktok.txt' },
+  { vendor: 'LG webOS', provider: 'native-lgwebos', option: '拦截LGwebOS原生追踪', file: 'native-lgwebos.txt' },
+  { vendor: 'Roku', provider: 'native-roku', option: '拦截Roku原生追踪', file: 'native-roku.txt' },
+];
+
+const nativeTrackerProviderConfigs = nativeTrackerSources.reduce((providers, source) => {
+  providers[source.provider] = {
+    type: 'http',
+    format: 'text',
+    interval: 86400,
+    behavior: 'domain',
+    url: `https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/${source.file}`,
+    path: `./ruleset/${source.file}`,
+  };
+  return providers;
+}, {});
+
 const baseRuleProviders = {
+  ...nativeTrackerProviderConfigs,
   // --- 直连规则集 ---
 
   private: {
@@ -1543,7 +1586,8 @@ const DEFENSE_SPOT_RULES = [
  * 主防线段：把防线规则插进 prefixRules 的 private 之后、geolocation-cn 之前返回。
  * 为什么必须在 geolocation-cn 之前：prefixRules 里的国内分流名单（geolocation-cn / games_cn 等
  *   DIRECT 规则）会抢先认领被 SDK 污染的 .cn 域名，防线排在功能规则区时拦不住它们（2026-10-30 审计 F1）。
- * 段内顺序即优先级：例外名单（直连，先行放行）→ avenue → AdRules（仅完整防线）→ 厂商遥测 → BanProgramAD → 定点段。
+ * 段内顺序即优先级：例外名单（直连，先行放行）→ avenue → AdRules（仅完整防线）→ BanProgramAD → 定点段。
+ * 各厂商 Native Tracker 规则由 Go 底板按品牌开关放在 private 之后，紧接本段之后执行。
  * AdBlock 组关停时整段不插入（providers 亦由 buildRuleProviders 同步跳过）。
  * ⚠️ AdRules 含 HTTPDNS 域名（33 个 + dns.weixin.qq.com.cn）：拦截后 App 回落系统 DNS，
  *   与本脚本「DNS 归脚本」一致；微信/B站/美团出现解析异常时，先把对应域名加进例外名单。
@@ -1554,8 +1598,6 @@ function buildDefensePrefixRules() {
     'RULE-SET,defense-exceptions,直连',
     'RULE-SET,avenue-ads,AdBlock',
     ...(ruleOptionsEnable.完整防线 !== false ? ['RULE-SET,adrules,AdBlock'] : []),
-    'RULE-SET,native-vivo,AdBlock',
-    'RULE-SET,native-huawei,AdBlock',
     'RULE-SET,banprogramad,AdBlock',
     ...DEFENSE_SPOT_RULES,
   ];
@@ -1600,9 +1642,23 @@ function buildRuleProviders() {
     Object.assign(finalRuleProviders, svc.providers || {});
   }
 
+  // Native Tracker provider 与规则引用必须同步：关闭品牌开关时不下载、不注册该 provider。
+  for (const source of nativeTrackerSources) {
+    if (ruleOptionsEnable.AdBlock === false || ruleOptionsEnable[source.option] !== true) {
+      delete finalRuleProviders[source.provider];
+    }
+  }
+
   // 主防线轻量模式：「完整防线」关停时剔除 AdRules provider，其余防线组件保留。
   if (ruleOptionsEnable.完整防线 === false) {
     delete finalRuleProviders.adrules;
+  }
+
+  // 厂商 Native Tracker provider 与规则引用同步：未启用的品牌不下载、不注册。
+  for (const source of nativeTrackerSources) {
+    if (ruleOptionsEnable.AdBlock === false || ruleOptionsEnable[source.option] !== true) {
+      delete finalRuleProviders[source.provider];
+    }
   }
 
   // 规则集下载通道：bett-rules 系（raw 源）provider 统一经 GitHub 组下载，
