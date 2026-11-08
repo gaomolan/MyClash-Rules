@@ -1,0 +1,46 @@
+name: 同步 HaGeZi 厂商 Native Tracker 名单
+
+on:
+  schedule:
+    - cron: '37 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - myclash-rules
+    paths:
+      - 'ruleset/native-trackers.sources.json'
+      - 'scripts/sync-native-trackers.sh'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: native-tracker-sync-myclash-rules
+  cancel-in-progress: false
+
+jobs:
+  sync-native-trackers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout maintained branch
+        uses: actions/checkout@v4
+        with:
+          ref: myclash-rules
+          fetch-depth: 1
+
+      - name: Validate and sync upstream Native Tracker snapshots
+        run: bash scripts/sync-native-trackers.sh
+
+      - name: Commit updated snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ruleset/native-*.txt
+
+          if git diff --cached --quiet; then
+            echo "All Native Tracker snapshots are current."
+            exit 0
+          fi
+
+          git commit -m "规则：同步 HaGeZi 厂商 Native Tracker 名单"
+          git push origin HEAD:myclash-rules
