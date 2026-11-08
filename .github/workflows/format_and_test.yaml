@@ -12,7 +12,8 @@ on:
       - '.prettierrc*'
   pull_request:
     paths:
-      - 'Script/*'
+      - 'Script/**'
+      - 'ruleset/**'
       - 'Test/**'
       - '**/*.yaml'
       - '**/*.yml'
