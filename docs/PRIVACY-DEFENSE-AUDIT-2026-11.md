@@ -234,14 +234,22 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 - 新增测试覆盖 Go 与 Combo 两个输出目标。
 - CI 已增加生成产物一致性检查和嵌套目录触发路径。
 
-### 等待 GitHub Actions 实际执行
+### GitHub Actions 实际执行结果
 
-以下必须以 PR 工作流结果为准，本地工具未执行 Node.js 测试运行时，因此此处不宣称通过：
+<badge>CI 通过</badge>
 
-- `node Script/build-variants.js` 的真实 CI 执行结果。
-- 生成物与提交文件的 diff 检查。
-- `node Test/run-tests.js` 的实际断言结果。
-- Mihomo 内核对最终配置的解析结果。
+PR 工作流 `format_and_test` 第 30 次运行（2026-11-08，Node.js 24）已成功完成：
+
+- `node Script/build-variants.js`：成功，Combo 变体由 21 个差异操作重新生成。
+- `git diff --exit-code -- Script/mihomoScriptGo-combo.js`：成功，生成物与提交文件一致。
+- `node Test/run-tests.js`：成功，18 项通过、0 项失败。
+  - 隐私防护专项：8 项通过。
+  - ES2020 兼容性：4 项通过（Go / Combo 各两项）。
+  - QuickJS：6 项通过（Go / Combo 顶层执行、main 调用和 Node 输出结构对照）。
+
+工作流链接：https://github.com/gaomolan/MyClash-Rules/actions/runs/42503120389
+
+这验证了脚本生成链路、JavaScript 语法/引擎兼容性和本次新增规则回归；它仍不等同于 Bettbox 所用 Mihomo 二进制内核的配置解析，也不等同于 Android 真机流量测试。
 
 ### 真机验收
 
