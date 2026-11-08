@@ -67,12 +67,14 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
       const process = indexOfRule(rules, 'PROCESS-NAME,com.mobiletools.systemhelper,REJECT');
       const domain = indexOfRule(rules, 'DOMAIN,dm.wo.com.cn,REJECT');
       const privateRule = indexOfRule(rules, 'RULE-SET,private,直连');
+      const exception = indexOfRule(rules, 'RULE-SET,defense-exceptions,直连');
       const domestic = indexOfRule(rules, 'RULE-SET,geolocation-cn,直连');
       h.assert(process >= 0, '缺少 SystemHelper 包名规则');
       h.assert(domain >= 0, '缺少 SystemHelper 域名兜底');
       h.assert(privateRule >= 0, '缺少 private 规则');
+      h.assert(exception > privateRule, '防护例外名单必须位于 private 直连之后');
       h.assert(process < domain && domain < privateRule, '应用与域名封锁必须先于 private 直连');
-      h.assert(privateRule < domestic, 'private 例外必须先于国内直连');
+      h.assert(privateRule < exception && exception < domestic, '例外名单必须位于 private 与国内直连之间');
       h.assert(process < domestic, 'SystemHelper 不得被国内直连提前放行');
     });
 
@@ -113,8 +115,12 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
       for (const [vendor, option, provider] of vendors) {
         const enabledApi = loadWithOption(loadScript, target.file, option, true);
         const enabled = enabledApi.main(fixtures.typicalSubscription());
-        h.assert(indexOfRule(enabled.rules, `RULE-SET,${provider},AdBlock`) >= 0,
+        const exceptionIndex = indexOfRule(enabled.rules, 'RULE-SET,defense-exceptions,直连');
+        const vendorRuleIndex = indexOfRule(enabled.rules, `RULE-SET,${provider},AdBlock`);
+        h.assert(vendorRuleIndex >= 0,
           `${vendor} 开关开启后缺少规则`);
+        h.assert(exceptionIndex >= 0 && exceptionIndex < vendorRuleIndex,
+          `${vendor} 例外名单必须先于品牌拦截`);
         h.assert(Object.prototype.hasOwnProperty.call(enabled['rule-providers'], provider),
           `${vendor} 开关开启后缺少 provider`);
 
