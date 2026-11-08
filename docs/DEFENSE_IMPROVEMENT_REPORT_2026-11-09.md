@@ -12,7 +12,7 @@
 | `Script/variant-layers/combo.json` | 额外包含 AdRules、Native Vivo/Huawei、BanProgramAD、例外名单和定点规则 | 通用防护逻辑仅在 Combo，版本能力分叉 |
 | `Script/mihomoScriptGo-combo.js` | 生成物未包含 Go 主脚本中的 SystemHelper 规则 | 已提交产物与源代码脱节 |
 | `Script/build-variants.js` | 精确锚点失效会停止生成 | 设计正确，但 Combo 层旧开关锚点已过期 |
-| `Test/lib/scripts.js` | 只登记旧版 Script.js 与 mihomoScript.js | Go / Combo 缺少专项测试 |
+| `Test/lib/scripts.js` | 仍登记已不存在的 `Script.js` 与 `mihomoScript.js` | 旧通用测试入口本身已失效，不能作为当前 Go/Combo 的验收依据 |
 | `Script/check-references.js` | 已有引用检查 | CI 未执行 |
 | `.github/workflows/format_and_test.yaml` | 只运行旧测试，无 Combo 生成/引用检查；push 仅匹配 main | 默认分支与变体一致性未覆盖 |
 | Vivo Native | 本地 244 条，上游 243 条 | 5 条上游条目缺失，另有 6 条本地独有条目 |
@@ -27,7 +27,7 @@
 
 **P1 — Go 主脚本广告防线太靠后。** 国内直连规则先于 AWAvenue，可能抢先认领广告/统计域名。Combo 有防线前移设计，但没有回迁主脚本。
 
-**P1 — CI 未覆盖关键防护。** 未运行 Combo 生成、生成文件差异检查、引用完整性检查，也没有专项测试规则顺序与开关组合。
+**P1 — CI 未覆盖关键防护。** 原 CI 只运行旧测试；旧测试清单指向当前仓库不存在的 `Script/Script.js`，因此在读取测试对象时就失败。即使临时改指向 Go/Combo，旧通用测试也有一批针对旧版脚本行为的断言不适用。需要独立的 Go/Combo 防护专项测试，而不是把旧测试硬套到新脚本。
 
 **P1 — 名单缺少来源与风险治理。** Native 名单有版本差异；设备厂商名单不适合无条件对所有设备启用；本地独有条目应单独保留、待验证。
 
@@ -51,7 +51,7 @@
 
 ## 三、验证状态与边界
 
-本次已完成仓库文件审计、HaGeZi 上游名单条目比对、变体生成算法重放和静态核对。PR CI 将执行 Node 测试。
+本次已完成仓库文件审计、HaGeZi 上游名单条目比对、变体生成算法重放和静态核对。PR CI 已执行变体生成、生成物一致性、配置引用检查和防护专项测试。旧通用测试入口已确认失效，本 PR 不把它列为通过项。
 
 以下尚未完成，不能声称已验证：
 - 当前 Bettbox/Mihomo 二进制的 `mihomo -t`。
