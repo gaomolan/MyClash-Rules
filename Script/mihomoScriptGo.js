@@ -142,6 +142,20 @@ const snifferFinanceSkipDomains = [
 ];
 
 // 定义前置规则
+const nativeTrackerSources = [
+  { vendor: 'Vivo', provider: 'native-vivo', option: '拦截Vivo原生追踪', file: 'native-vivo.txt' },
+  { vendor: 'Huawei', provider: 'native-huawei', option: '拦截Huawei原生追踪', file: 'native-huawei.txt' },
+  { vendor: 'Xiaomi', provider: 'native-xiaomi', option: '拦截Xiaomi原生追踪', file: 'native-xiaomi.txt' },
+  { vendor: 'OPPO/Realme', provider: 'native-oppo-realme', option: '拦截OppoRealme原生追踪', file: 'native-oppo-realme.txt' },
+  { vendor: 'Samsung', provider: 'native-samsung', option: '拦截Samsung原生追踪', file: 'native-samsung.txt' },
+  { vendor: 'Apple', provider: 'native-apple', option: '拦截Apple原生追踪', file: 'native-apple.txt' },
+  { vendor: 'Microsoft', provider: 'native-winoffice', option: '拦截Microsoft原生追踪', file: 'native-winoffice.txt' },
+  { vendor: 'Amazon', provider: 'native-amazon', option: '拦截Amazon原生追踪', file: 'native-amazon.txt' },
+  { vendor: 'TikTok', provider: 'native-tiktok', option: '拦截TikTok原生追踪', file: 'native-tiktok.txt' },
+  { vendor: 'LG webOS', provider: 'native-lgwebos', option: '拦截LGwebOS原生追踪', file: 'native-lgwebos.txt' },
+  { vendor: 'Roku', provider: 'native-roku', option: '拦截Roku原生追踪', file: 'native-roku.txt' },
+];
+
 const prefixRules = [
   // 规则集下载走 provider 自有 proxy 通道（见 buildRuleProviders），不依赖分流规则兜底，此处不设下载域名规则；
   // 原 jsdmirror 镜像直连规则已随镜像依赖归零删除（2026-11-07）。
@@ -350,19 +364,7 @@ const ruleProviderCommonIpcidr = {
 
 // 定义基础 Rule Providers
 // HaGeZi Native Tracker 来源登记：各厂商独立开关，默认关闭；列表由独立工作流校验同步。
-const nativeTrackerSources = [
-  { vendor: 'Vivo', provider: 'native-vivo', option: '拦截Vivo原生追踪', file: 'native-vivo.txt' },
-  { vendor: 'Huawei', provider: 'native-huawei', option: '拦截Huawei原生追踪', file: 'native-huawei.txt' },
-  { vendor: 'Xiaomi', provider: 'native-xiaomi', option: '拦截Xiaomi原生追踪', file: 'native-xiaomi.txt' },
-  { vendor: 'OPPO/Realme', provider: 'native-oppo-realme', option: '拦截OppoRealme原生追踪', file: 'native-oppo-realme.txt' },
-  { vendor: 'Samsung', provider: 'native-samsung', option: '拦截Samsung原生追踪', file: 'native-samsung.txt' },
-  { vendor: 'Apple', provider: 'native-apple', option: '拦截Apple原生追踪', file: 'native-apple.txt' },
-  { vendor: 'Microsoft', provider: 'native-winoffice', option: '拦截Microsoft原生追踪', file: 'native-winoffice.txt' },
-  { vendor: 'Amazon', provider: 'native-amazon', option: '拦截Amazon原生追踪', file: 'native-amazon.txt' },
-  { vendor: 'TikTok', provider: 'native-tiktok', option: '拦截TikTok原生追踪', file: 'native-tiktok.txt' },
-  { vendor: 'LG webOS', provider: 'native-lgwebos', option: '拦截LGwebOS原生追踪', file: 'native-lgwebos.txt' },
-  { vendor: 'Roku', provider: 'native-roku', option: '拦截Roku原生追踪', file: 'native-roku.txt' },
-];
+
 
 const nativeTrackerProviderConfigs = nativeTrackerSources.reduce((providers, source) => {
   providers[source.provider] = {
