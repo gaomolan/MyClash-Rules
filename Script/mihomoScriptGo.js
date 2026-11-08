@@ -172,6 +172,9 @@ const prefixRules = [
   // 私有网络直连：放在应用级封锁之后，避免 SystemHelper 的局域网连接绕过应用封锁。
   'RULE-SET,private,直连',
 
+  // 统一例外入口：允许用户恢复误拦域名，且先于所有广告/厂商追踪名单。
+  ...(ruleOptionsEnable.AdBlock === false ? [] : ['RULE-SET,defense-exceptions,直连']),
+
   // 厂商 Native Tracker：只按用户启用的品牌插入；位于 private 之后、国内直连之前。
   ...(
     ruleOptionsEnable.AdBlock === false
@@ -380,6 +383,15 @@ const nativeTrackerProviderConfigs = nativeTrackerSources.reduce((providers, sou
 
 const baseRuleProviders = {
   ...nativeTrackerProviderConfigs,
+  // 通用防护例外名单：误杀恢复入口，先于广告/遥测拦截执行。
+  'defense-exceptions': {
+    type: 'http',
+    format: 'text',
+    interval: 86400,
+    behavior: 'classical',
+    url: 'https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/defense-exceptions.list',
+    path: './ruleset/defense-exceptions.list',
+  },
   // --- 直连规则集 ---
 
   private: {
@@ -1433,6 +1445,8 @@ function buildRuleProviders() {
   }
 
   // Native Tracker provider 与规则引用必须同步：关闭品牌开关时不下载、不注册该 provider。
+  if (ruleOptionsEnable.AdBlock === false) delete finalRuleProviders['defense-exceptions'];
+
   for (const source of nativeTrackerSources) {
     if (ruleOptionsEnable.AdBlock === false || ruleOptionsEnable[source.option] !== true) {
       delete finalRuleProviders[source.provider];
