@@ -87,6 +87,19 @@ const ruleOptionsEnable = {
   // 端口规则是全局目标端口拦截，可能影响其他应用使用 18080/18081 的连接，可独立关闭。
   屏蔽SystemHelper遥测: true,
   屏蔽SystemHelper遥测端口: true,
+
+  // ---- 厂商 Native Tracker：按设备品牌独立启用，默认关闭，避免跨品牌误伤 ----
+  拦截Vivo原生追踪: false,
+  拦截Huawei原生追踪: false,
+  拦截Xiaomi原生追踪: false,
+  拦截OppoRealme原生追踪: false,
+  拦截Samsung原生追踪: false,
+  拦截Apple原生追踪: false,
+  拦截Microsoft原生追踪: false,
+  拦截Amazon原生追踪: false,
+  拦截TikTok原生追踪: false,
+  拦截LGwebOS原生追踪: false,
+  拦截Roku原生追踪: false,
 };
 
 // ---- 策略组默认选中集中配置 ----
@@ -144,6 +157,15 @@ const prefixRules = [
 
   // 私有网络直连：放在应用级封锁之后，避免 SystemHelper 的局域网连接绕过应用封锁。
   'RULE-SET,private,直连',
+
+  // 厂商 Native Tracker：只按用户启用的品牌插入；位于 private 之后、国内直连之前。
+  ...(
+    ruleOptionsEnable.AdBlock === false
+      ? []
+      : nativeTrackerSources
+          .filter((source) => ruleOptionsEnable[source.option] === true)
+          .map((source) => `RULE-SET,${source.provider},AdBlock`)
+  ),
 
   // 作者披露的回传端口：18080 / 18081。DST-PORT 为全局目标端口匹配，不限 SystemHelper，
   // 因此单独提供开关；可能阻断其他应用恰好使用这两个目标端口的连接。
@@ -327,7 +349,35 @@ const ruleProviderCommonIpcidr = {
 };
 
 // 定义基础 Rule Providers
+// HaGeZi Native Tracker 来源登记：各厂商独立开关，默认关闭；列表由独立工作流校验同步。
+const nativeTrackerSources = [
+  { vendor: 'Vivo', provider: 'native-vivo', option: '拦截Vivo原生追踪', file: 'native-vivo.txt' },
+  { vendor: 'Huawei', provider: 'native-huawei', option: '拦截Huawei原生追踪', file: 'native-huawei.txt' },
+  { vendor: 'Xiaomi', provider: 'native-xiaomi', option: '拦截Xiaomi原生追踪', file: 'native-xiaomi.txt' },
+  { vendor: 'OPPO/Realme', provider: 'native-oppo-realme', option: '拦截OppoRealme原生追踪', file: 'native-oppo-realme.txt' },
+  { vendor: 'Samsung', provider: 'native-samsung', option: '拦截Samsung原生追踪', file: 'native-samsung.txt' },
+  { vendor: 'Apple', provider: 'native-apple', option: '拦截Apple原生追踪', file: 'native-apple.txt' },
+  { vendor: 'Microsoft', provider: 'native-winoffice', option: '拦截Microsoft原生追踪', file: 'native-winoffice.txt' },
+  { vendor: 'Amazon', provider: 'native-amazon', option: '拦截Amazon原生追踪', file: 'native-amazon.txt' },
+  { vendor: 'TikTok', provider: 'native-tiktok', option: '拦截TikTok原生追踪', file: 'native-tiktok.txt' },
+  { vendor: 'LG webOS', provider: 'native-lgwebos', option: '拦截LGwebOS原生追踪', file: 'native-lgwebos.txt' },
+  { vendor: 'Roku', provider: 'native-roku', option: '拦截Roku原生追踪', file: 'native-roku.txt' },
+];
+
+const nativeTrackerProviderConfigs = nativeTrackerSources.reduce((providers, source) => {
+  providers[source.provider] = {
+    type: 'http',
+    format: 'text',
+    interval: 86400,
+    behavior: 'domain',
+    url: `https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/ruleset/${source.file}`,
+    path: `./ruleset/${source.file}`,
+  };
+  return providers;
+}, {});
+
 const baseRuleProviders = {
+  ...nativeTrackerProviderConfigs,
   // --- 直连规则集 ---
 
   private: {
@@ -1378,6 +1428,13 @@ function buildRuleProviders() {
   for (const svc of serviceConfigs) {
     if (ruleOptionsEnable[svc.name] === false) continue;
     Object.assign(finalRuleProviders, svc.providers || {});
+  }
+
+  // Native Tracker provider 与规则引用必须同步：关闭品牌开关时不下载、不注册该 provider。
+  for (const source of nativeTrackerSources) {
+    if (ruleOptionsEnable.AdBlock === false || ruleOptionsEnable[source.option] !== true) {
+      delete finalRuleProviders[source.provider];
+    }
   }
 
   // 规则集下载通道：bett-rules 系（raw 源）provider 统一经 GitHub 组下载，
