@@ -2,6 +2,8 @@
 
 隐私与遥测防护审计及改进报告：[PRIVACY-DEFENSE-AUDIT-2026-11.md](docs/PRIVACY-DEFENSE-AUDIT-2026-11.md)
 
+厂商 Native Tracker 名单（HaGeZi 上游 11 类独立名单）由仓库工作流定期校验同步；各品牌可独立启用，详见审计报告。
+
 MyClash 原始自定义脚本订阅地址：
 
 ```text
