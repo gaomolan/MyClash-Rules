@@ -39,7 +39,7 @@ function runPrivacyDefenseTests({ harness: h, loadScript, fixtures }) {
   h.section('隐私防护回归 · 应用拦截与规则优先级');
 
   h.test('Native Tracker：来源登记、快照条目数和域名格式有效', () => {
-    const root = path.resolve(__dirname, '..', '..', '..');
+    const root = path.resolve(__dirname, '..', '..');
     const manifest = JSON.parse(fs.readFileSync(path.join(root, 'ruleset/native-trackers.sources.json'), 'utf8'));
     h.assert(manifest.sources.length === 11, 'Native Tracker 来源数量应为 11');
     const domainPattern = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)+$/;
