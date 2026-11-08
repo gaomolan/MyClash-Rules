@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "upstream": "https://github.com/hagezi/dns-blocklists",
+  "license": "https://github.com/hagezi/dns-blocklists/blob/main/LICENSE",
+  "format": "wildcard/*-onlydomains.txt (plain domains, no subdomains)",
+  "update_policy": "daily; validate upstream metadata, declared count, domain syntax and large count swings before replacing local snapshots",
+  "default_policy": "all vendor-specific switches default off in the generic Go script; Combo preserves its previous Vivo/Huawei behavior",
+  "sources": [
+    {
+      "vendor": "vivo",
+      "provider": "native-vivo",
+      "file": "ruleset/native-vivo.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.vivo-onlydomains.txt",
+      "current_upstream_entries": 243,
+      "minimum_expected_entries": 150,
+      "default_enabled": false
+    },
+    {
+      "vendor": "huawei",
+      "provider": "native-huawei",
+      "file": "ruleset/native-huawei.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.huawei-onlydomains.txt",
+      "current_upstream_entries": 135,
+      "minimum_expected_entries": 80,
+      "default_enabled": false
+    },
+    {
+      "vendor": "amazon",
+      "provider": "native-amazon",
+      "file": "ruleset/native-amazon.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.amazon-onlydomains.txt",
+      "current_upstream_entries": 373,
+      "minimum_expected_entries": 200,
+      "default_enabled": false
+    },
+    {
+      "vendor": "apple",
+      "provider": "native-apple",
+      "file": "ruleset/native-apple.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.apple-onlydomains.txt",
+      "current_upstream_entries": 104,
+      "minimum_expected_entries": 50,
+      "default_enabled": false
+    },
+    {
+      "vendor": "samsung",
+      "provider": "native-samsung",
+      "file": "ruleset/native-samsung.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.samsung-onlydomains.txt",
+      "current_upstream_entries": 201,
+      "minimum_expected_entries": 100,
+      "default_enabled": false
+    },
+    {
+      "vendor": "tiktok",
+      "provider": "native-tiktok",
+      "file": "ruleset/native-tiktok.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.tiktok-onlydomains.txt",
+      "current_upstream_entries": 545,
+      "minimum_expected_entries": 200,
+      "default_enabled": false
+    },
+    {
+      "vendor": "lgwebos",
+      "provider": "native-lgwebos",
+      "file": "ruleset/native-lgwebos.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.lgwebos-onlydomains.txt",
+      "current_upstream_entries": 315,
+      "minimum_expected_entries": 100,
+      "default_enabled": false
+    },
+    {
+      "vendor": "roku",
+      "provider": "native-roku",
+      "file": "ruleset/native-roku.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.roku-onlydomains.txt",
+      "current_upstream_entries": 57,
+      "minimum_expected_entries": 20,
+      "default_enabled": false
+    },
+    {
+      "vendor": "oppo-realme",
+      "provider": "native-oppo-realme",
+      "file": "ruleset/native-oppo-realme.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.oppo-realme-onlydomains.txt",
+      "current_upstream_entries": 496,
+      "minimum_expected_entries": 200,
+      "default_enabled": false
+    },
+    {
+      "vendor": "xiaomi",
+      "provider": "native-xiaomi",
+      "file": "ruleset/native-xiaomi.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.xiaomi-onlydomains.txt",
+      "current_upstream_entries": 349,
+      "minimum_expected_entries": 150,
+      "default_enabled": false
+    },
+    {
+      "vendor": "winoffice",
+      "provider": "native-winoffice",
+      "file": "ruleset/native-winoffice.txt",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/native.winoffice-onlydomains.txt",
+      "current_upstream_entries": 365,
+      "minimum_expected_entries": 150,
+      "default_enabled": false
+    }
+  ]
+}
