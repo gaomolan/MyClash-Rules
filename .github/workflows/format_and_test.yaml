@@ -2,9 +2,10 @@ name: format_and_test
 
 on:
   push:
-    branches: ['main']
+    branches: ['myclash-rules', 'main']
     paths:
-      - 'Script/*'
+      - 'Script/**'
+      - 'ruleset/**'
       - 'Test/**'
       - '**/*.yaml'
       - '**/*.yml'
@@ -80,6 +81,11 @@ jobs:
 
       - name: install dependencies
         run: npm --prefix Test install
+
+      - name: regenerate and verify committed variants
+        run: |
+          node Script/build-variants.js
+          git diff --exit-code -- Script/mihomoScriptGo-combo.js
 
       - name: run tests
         run: node Test/run-tests.js
