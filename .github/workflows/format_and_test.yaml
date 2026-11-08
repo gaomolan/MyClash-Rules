@@ -85,6 +85,10 @@ jobs:
       - name: install dependencies
         run: npm --prefix Test install
 
+      - name: validate upstream Native lists
+        run: node tools/defense-sync/sync-native-trackers.mjs
+      - name: verify Native lists are committed and current
+        run: git diff --exit-code -- ruleset/native-vivo.txt ruleset/native-huawei.txt
       - name: regenerate combo variant
         run: node Script/build-variants.js
       - name: verify generated combo is committed
