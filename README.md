@@ -1,6 +1,6 @@
 # MyClash Rules
 
-追踪 MyClash 脚本订阅地址：
+MyClash 原始自定义脚本订阅地址：
 
 ```text
 https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScript-custom.js
