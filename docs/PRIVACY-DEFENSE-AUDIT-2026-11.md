@@ -185,6 +185,42 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 
 已在 `Test/run-tests.js` 中接入该测试套件。旧通用测试清单已移除失效的旧文件引用；Go 与 Combo 改由隐私防护专项测试覆盖，并继续进入 ES2020 / QuickJS 兼容性检查。
 
+### F. 扩展并建立自动更新的厂商 Native Tracker 库
+
+新增来源登记：`ruleset/native-trackers.sources.json`。
+
+当前接入 HaGeZi 官方 `wildcard/*-onlydomains.txt` 来源，共 11 个厂商/平台列表，快照合计 3,183 条（按各源声明计数，跨源可能重复，不代表 3,183 个唯一域名）：
+
+| 厂商/平台 | 上游条目数 | 开关默认值（Go 主脚本） |
+|---|---:|---|
+| Vivo | 243 | 关闭 |
+| Huawei | 135 | 关闭 |
+| Xiaomi | 349 | 关闭 |
+| OPPO / Realme | 496 | 关闭 |
+| Samsung | 201 | 关闭 |
+| Apple | 104 | 关闭 |
+| Microsoft / Windows / Office | 365 | 关闭 |
+| Amazon | 373 | 关闭 |
+| TikTok | 545 | 关闭 |
+| LG webOS | 315 | 关闭 |
+| Roku | 57 | 关闭 |
+
+新增文件：`ruleset/native-*.txt`。所有名单均保留 HaGeZi 上游元数据、许可证链接、版本和条目数量。
+
+**启用策略：**
+- Go 主脚本新增 11 个品牌独立开关，全部默认关闭；只启用实际使用的设备品牌/平台，避免跨品牌误伤。
+- Combo 保留此前已经启用的 Vivo / Huawei 行为；其余新增品牌默认关闭。
+- 关闭某品牌时，同时移除对应规则引用和 provider，不仅仅是隐藏策略组。
+
+**自动更新：**
+- 新增 `scripts/sync-native-trackers.sh` 与 `.github/workflows/sync-native-trackers.yml`。
+- 每 6 小时同步一次 HaGeZi 官方源，也支持手动触发。
+- 更新前校验上游标题、许可证、格式声明、条目数元数据、实际行数、纯域名语法和最低条目阈值。
+- 相比上一版若条目数量缩减到一半以下或增长超过两倍，则停止更新并要求人工审查，防止空文件、截断或异常源覆盖可用名单。
+- 同步失败不会覆盖现有快照。
+
+这次接入的是 HaGeZi 每个厂商的完整独立名单，不是“零误伤基础名单”。因此所有新品牌在通用 Go 主脚本默认关闭；厂商名单可能影响设备功能，启用前应按实际品牌测试。
+
 ### E. 强化 GitHub Actions
 
 文件：`.github/workflows/format_and_test.yaml`
@@ -230,13 +266,17 @@ Go 主脚本在输入配置缺少对应字段时，会补充：
 ### 本次已完成的静态验证
 
 - Combo 差异层 21 个操作已按生成器规则成功应用。
+- 11 个 HaGeZi Native Tracker 源已抓取并核对上游声明条目数，共 3,183 条（跨源可能重复）。
+- Native Tracker 来源登记、域名快照、品牌开关、provider 与规则引用已建立一一对应。
 - 新生成 Combo 文件已确认包含 SystemHelper 包名拦截规则。
 - 新增测试覆盖 Go 与 Combo 两个输出目标。
 - CI 已增加生成产物一致性检查和嵌套目录触发路径。
 
 ### GitHub Actions 实际执行结果
 
-**CI 通过**
+上一轮 CI Run #30 已通过原有 18 项测试。本轮增加了 11 个品牌开关、来源快照检查和同步工作流后，新的 CI 结果尚待本轮提交触发，不沿用上一轮通过结论。
+
+**上一轮 CI 通过**
 
 PR 工作流 `format_and_test` 第 30 次运行（2026-11-08，Node.js 24）已成功完成：
 
@@ -247,7 +287,7 @@ PR 工作流 `format_and_test` 第 30 次运行（2026-11-08，Node.js 24）已�
   - ES2020 兼容性：4 项通过（Go / Combo 各两项）。
   - QuickJS：6 项通过（Go / Combo 顶层执行、main 调用和 Node 输出结构对照）。
 
-工作流链接：https://github.com/gaomolan/MyClash-Rules/actions/runs/42503120389
+上一轮工作流链接：https://github.com/gaomolan/MyClash-Rules/actions/runs/42503120389
 
 这验证了脚本生成链路、JavaScript 语法/引擎兼容性和本次新增规则回归；它仍不等同于 Bettbox 所用 Mihomo 二进制内核的配置解析，也不等同于 Android 真机流量测试。
 
