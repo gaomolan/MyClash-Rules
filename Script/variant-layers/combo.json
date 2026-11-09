@@ -11,7 +11,7 @@
       "replace": "// ============================================================\n\n// ===== [组合脚本专属] Spark 组合池配置 =====\n// 识别合并订阅里带 [Spark] 前缀的节点：\n//   · 中国香港 / 新加坡的 Spark 节点 → 只进 Spark 专属组（见 buildComboSparkGroups）；\n//   · 其他地区的 Spark 节点 → 直接从最终配置中剔除；\n//   · 非 Spark 节点（含无前缀的普通订阅）→ 行为与 Go 主版完全一致。\nconst COMBO_SPARK_TAG = '[Spark]';\nconst COMBO_SPARK_KEEP_REGIONS = ['中国香港', '新加坡'];\n\n"
     },
     {
-      "find": "  屏蔽STUN端口: false,\n};\n",
+      "find": "  屏蔽STUN端口: false,\n\n  // ---- SystemHelper / 联通设备遥测回传拦截 ----\n  // 默认启用：优先按 Android 包名阻断该应用全部网络，再以域名和端口规则兜底。\n  // 端口规则是全局目标端口拦截，可能影响其他应用使用 18080/18081 的连接，可独立关闭。\n  屏蔽SystemHelper遥测: true,\n  屏蔽SystemHelper遥测端口: true,\n};\n",
       "replace": "  屏蔽STUN端口: false,\n  屏蔽SystemHelper遥测: true,\n  屏蔽SystemHelper遥测端口: true,\n\n  // ---- 主防线开关（2026-10-30 新增，仅组合脚本先行试运行）----\n  // 防线段位于规则链最前（private 之后、geolocation-cn 之前），组成与命中实测见仓库外存档 PLAN-B。\n  // true=完整防线：例外名单 + AWAvenue + AdRules + 厂商遥测（vivo/华为）+ BanProgramAD + 定点段，约 20.7 万域名；\n  // false=轻量防线：仅去掉 AdRules，其余不变（约 2.3k 域名），低配设备或排查问题时用。\n  // 整体回滚：与本开关无关，把 AdBlock 组切到 PASS 即全部放行；关停 AdBlock 组则整段跳过。\n  完整防线: true,\n};\n"
     },
     {
