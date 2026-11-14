@@ -1272,14 +1272,64 @@ function splitComboSparkProxies(proxies) {
 
 
 /**
+ * [组合脚本专属] Spark 地区组工厂：结构与普通地区组同构（手动选择本体 + Auto + Eco-Auto），
+ * 遵循相同的开关（生成地区自动选择组 / 生成倍率组 / 隐藏地区手动选择组）。
+ * 不能直接复用 createRegionGroup：其 Eco-Auto 仅对主地区名生成，sc- 前缀名不在地区注册表内。
+ */
+function createComboScRegionGroup(name, icon, proxies) {
+  const generateRegionAutoSelectEnabled = ruleOptionsEnable.生成地区自动选择组;
+  const hideManualSelectGroupEnabled = ruleOptionsEnable.隐藏地区手动选择组;
+  const generateRateGroupsEnabled = ruleOptionsEnable.生成倍率组 !== false;
+
+  const groups = [];
+  const selectProxies = [...proxies];
+
+  if (generateRateGroupsEnabled) {
+    const lowRateRegex = rateRegionDefinitions.find((r) => r.name === lowRateRegionName)?.regex;
+    const lowRateProxies = lowRateRegex ? proxies.filter((n) => lowRateRegex.test(n)) : [];
+    if (lowRateProxies.length > 0) {
+      const lowRateAutoName = `${name}-Eco-Auto`;
+      groups.push({
+        ...urlTestBaseOption,
+        name: lowRateAutoName,
+        proxies: lowRateProxies,
+        icon: `${iconBaseUrl}Available.svg`,
+        hidden: true,
+      });
+      selectProxies.push(lowRateAutoName);
+    }
+  }
+
+  if (generateRegionAutoSelectEnabled) {
+    const urlTestName = `${name}-Auto`;
+    groups.push({
+      ...urlTestBaseOption,
+      name: urlTestName,
+      proxies,
+    });
+    selectProxies.push(urlTestName);
+  }
+
+  groups.push({
+    ...selectBaseOption,
+    name,
+    icon,
+    proxies: selectProxies,
+    hidden: hideManualSelectGroupEnabled,
+  });
+
+  return groups;
+}
+
+/**
  * [组合脚本专属] Spark 全地区 sc 分组（2026-11-14 新增，应用户要求）：
- * 全部 Spark 节点按地区各成一个 url-test 组：sc-hk / sc-tw / sc-sg / sc-us，
- * 未落入四地的（日本、韩国、欧洲各国、澳门及未识别地区）合进 sc-other。
+ * 全部 Spark 节点按地区各成一组：sc-hk / sc-tw / sc-sg / sc-us，未落入四地的
+ * （日本、韩国、欧洲各国、澳门及未识别地区）合进 sc-other。每组都是完整地区组
+ * 结构（select 本体带地区图标 + -Auto + 低倍率 -Eco-Auto，见 createComboScRegionGroup）；
+ * sc-other 在图标集里没有专属图标，用 Available.svg。
  * 多地区命中的节点按港 → 台 → 新 → 美的顺序只进先命中的组，保证五组互不重叠。
  * sc-hk / sc-sg 同时作为可选项进 AI / Claude / Financial / Cloudflare 组与 GLOBAL
- * （接替 2026-11-14 已删除的 Spark-中国香港 / Spark-新加坡 专属组）；五组本体
- * 只作为现成的 Spark 地区出口供手动选用；空地区不建组。
- * urlTestBaseOption 自带 hidden:true（本为地区 -Auto 子组设计），此处覆写为可见。
+ * （接替 2026-11-14 已删除的 Spark-中国香港 / Spark-新加坡 专属组）；空地区不建组。
  */
 const COMBO_SC_REGION_MAP = [
   { name: 'sc-hk', region: '中国香港' },
@@ -1296,16 +1346,16 @@ function buildComboScGroups(allSparkProxies) {
       .map((p) => p.name);
     if (nodes.length === 0) continue;
     nodes.forEach((n) => assigned.add(n));
-    groups.push({ ...urlTestBaseOption, name, proxies: nodes, hidden: false });
+    const icon = allRegionDefinitions.find((r) => r.name === region)?.icon;
+    groups.push(...createComboScRegionGroup(name, icon, nodes));
   }
   const rest = allSparkProxies.map((p) => p.name).filter((n) => !assigned.has(n));
   if (rest.length > 0) {
-    groups.push({ ...urlTestBaseOption, name: 'sc-other', proxies: rest, hidden: false });
+    groups.push(...createComboScRegionGroup('sc-other', `${iconBaseUrl}Available.svg`, rest));
   }
   const selectNames = ['sc-hk', 'sc-sg'].filter((n) => groups.some((g) => g.name === n));
   return { groups, selectNames };
 }
-
 // ---构建自定义节点组---
 
 
