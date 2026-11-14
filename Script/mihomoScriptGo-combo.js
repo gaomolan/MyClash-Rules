@@ -3,7 +3,7 @@
 // 脚本地址：https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-combo.js
 // 直连地址：https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-combo.js
 // 本文件由 mihomoScriptGo.js 派生：通用逻辑与 Go 主版保持同步，个人定制只存在于
-// 标记为 [组合脚本专属] 的代码段（Spark 港/新专属分组 + 其余 Spark 节点剔除 + 全局可见性隔离）。
+// 标记为 [组合脚本专属] 的代码段（Spark 港/新专属分组 + 其余 Spark 节点 sc 地区分组 + 全局可见性隔离）。
 // 更新规矩：底板永远是 Go 主版；Go 更新时把 [组合脚本专属] 段整体迁移到新底板，不在本文件上单独演进通用逻辑。
 // 2026-10-30 [组合脚本专属] 新增主防线（完整/轻量双档）：防线段前置 + AdRules/Native/BanProgramAD/例外名单/定点段；
 // Forked from AIsouler/MyClash (https://github.com/AIsouler/MyClash)
@@ -21,7 +21,7 @@
 // ===== [组合脚本专属] Spark 组合池配置 =====
 // 识别合并订阅里带 [Spark] 前缀的节点：
 //   · 中国香港 / 新加坡的 Spark 节点 → 只进 Spark 专属组（见 buildComboSparkGroups）；
-//   · 其他地区的 Spark 节点 → 直接从最终配置中剔除；
+//   · 其他地区的 Spark 节点 → 只进 sc 地区组（见 buildComboScGroups），不进通用分组池；
 //   · 非 Spark 节点（含无前缀的普通订阅）→ 行为与 Go 主版完全一致。
 const COMBO_SPARK_TAG = '[Spark]';
 const COMBO_SPARK_KEEP_REGIONS = ['中国香港', '新加坡'];
@@ -1252,16 +1252,17 @@ function buildRegionGroups(filteredProxies, customProxies) {
 // ===== [组合脚本专属] Spark 组合池 =====
 
 /**
- * [组合脚本专属] 把过滤后的节点拆成三份：
+ * [组合脚本专属] 把过滤后的节点拆成四份：
  * - generalProxies：非 Spark 节点 —— 通用分组池（地区组 / Auto / 手动选择等全部由此构建，
  *   从而任何通用组都不会显示 Spark 节点）；
  * - sparkProxies：保留地区（港/新）的 Spark 节点 —— 只进 Spark 专属组；
- * - keptProxies：最终保留的全部订阅节点（general + spark），供 DNS/hosts 处理与写回配置。
- * 其他地区的 Spark 节点不进任何一份，直接剔除。
+ * - restSparkProxies：其余地区的 Spark 节点 —— 只进 sc 地区组（见 buildComboScGroups）；
+ * - keptProxies：最终保留的全部订阅节点（general + spark + restSpark），供 DNS/hosts 处理与写回配置。
  */
 function splitComboSparkProxies(proxies) {
   const generalProxies = [];
   const sparkProxies = [];
+  const restSparkProxies = [];
   for (const proxy of proxies) {
     if (!proxy.name.includes(COMBO_SPARK_TAG)) {
       generalProxies.push(proxy);
@@ -1270,10 +1271,12 @@ function splitComboSparkProxies(proxies) {
     const matchedNames = getMatchedRegions(proxy.name).map((r) => r.name);
     if (matchedNames.some((n) => COMBO_SPARK_KEEP_REGIONS.includes(n))) {
       sparkProxies.push(proxy);
+    } else {
+      // 未命中保留地区的 Spark 节点：只进 sc 地区组
+      restSparkProxies.push(proxy);
     }
-    // 未命中保留地区的 Spark 节点：剔除，不进最终配置
   }
-  return { generalProxies, sparkProxies, keptProxies: [...generalProxies, ...sparkProxies] };
+  return { generalProxies, sparkProxies, restSparkProxies, keptProxies: [...generalProxies, ...sparkProxies, ...restSparkProxies] };
 }
 
 /**
@@ -1343,6 +1346,39 @@ function buildComboSparkGroups(sparkProxies) {
     selectNames.push(groupName);
   }
   return { groups, selectNames };
+}
+
+/**
+ * [组合脚本专属] Spark 全地区 sc 分组（2026-11-14 新增，应用户要求）：
+ * 全部 Spark 节点按地区各成一个 url-test 组：sc-hk / sc-tw / sc-sg / sc-us，
+ * 未落入四地的（日本、韩国、欧洲各国、澳门及未识别地区）合进 sc-other。
+ * 多地区命中的节点按港 → 台 → 新 → 美的顺序只进先命中的组，保证五组互不重叠。
+ * 与 Spark-中国香港 / Spark-新加坡 专属组并行存在（成员可重叠），不进 GLOBAL、
+ * 不进任何服务组，只作为现成的 Spark 地区出口供手动选用；空地区不建组。
+ * urlTestBaseOption 自带 hidden:true（本为地区 -Auto 子组设计），此处覆写为可见。
+ */
+const COMBO_SC_REGION_MAP = [
+  { name: 'sc-hk', region: '中国香港' },
+  { name: 'sc-tw', region: '中国台湾' },
+  { name: 'sc-sg', region: '新加坡' },
+  { name: 'sc-us', region: '美国' },
+];
+function buildComboScGroups(allSparkProxies) {
+  const groups = [];
+  const assigned = new Set();
+  for (const { name, region } of COMBO_SC_REGION_MAP) {
+    const nodes = allSparkProxies
+      .filter((p) => !assigned.has(p.name) && getMatchedRegions(p.name).some((r) => r.name === region))
+      .map((p) => p.name);
+    if (nodes.length === 0) continue;
+    nodes.forEach((n) => assigned.add(n));
+    groups.push({ ...urlTestBaseOption, name, proxies: nodes, hidden: false });
+  }
+  const rest = allSparkProxies.map((p) => p.name).filter((n) => !assigned.has(n));
+  if (rest.length > 0) {
+    groups.push({ ...urlTestBaseOption, name: 'sc-other', proxies: rest, hidden: false });
+  }
+  return groups;
 }
 
 // ---构建自定义节点组---
@@ -2159,11 +2195,12 @@ function main(config) {
   const filteredProxies = filterAndNormalizeProxies(config);
 
   // ===== [组合脚本专属] Spark 组合池拆分 =====
-  // 通用分组池只用非 Spark 节点；保留的 Spark 节点（港/新）只进专属组；
+  // 通用分组池只用非 Spark 节点；港/新 Spark 节点进专属组，其余 Spark 节点进 sc 组；
   // DNS/hosts 处理覆盖全部保留节点，保证 Spark 节点的域名解析与防死锁待遇不变。
   const comboSplit = splitComboSparkProxies(filteredProxies);
   const generalProxies = comboSplit.generalProxies;
   const comboSparkGroupsInfo = buildComboSparkGroups(comboSplit.sparkProxies);
+  const comboScGroups = buildComboScGroups([...comboSplit.sparkProxies, ...comboSplit.restSparkProxies]);
 
   const { customProxies, customProxyNames, customGroup } = buildCustomizeGroups(generalProxies);
 
@@ -2313,6 +2350,7 @@ function main(config) {
     directGroup,
     ...generatedRegionGroups,
     ...comboSparkGroupsInfo.groups, // [组合脚本专属] Spark 专属组（港/新）
+    ...comboScGroups, // [组合脚本专属] Spark 全地区 sc 分组（港/台/新/美/other）
   ];
   newConfig['rule-providers'] = finalRuleProviders;
 
