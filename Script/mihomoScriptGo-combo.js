@@ -3,7 +3,7 @@
 // 脚本地址：https://cdn.jsdelivr.net/gh/gaomolan/MyClash-Rules@myclash-rules/Script/mihomoScriptGo-combo.js
 // 直连地址：https://raw.githubusercontent.com/gaomolan/MyClash-Rules/myclash-rules/Script/mihomoScriptGo-combo.js
 // 本文件由 mihomoScriptGo.js 派生：通用逻辑与 Go 主版保持同步，个人定制只存在于
-// 标记为 [组合脚本专属] 的代码段（Spark 港/新专属分组 + 其余 Spark 节点 sc 地区分组 + 全局可见性隔离）。
+// 标记为 [组合脚本专属] 的代码段（Spark 节点 sc 地区分组 + 全局可见性隔离）。
 // 更新规矩：底板永远是 Go 主版；Go 更新时把 [组合脚本专属] 段整体迁移到新底板，不在本文件上单独演进通用逻辑。
 // 2026-10-30 [组合脚本专属] 新增主防线（完整/轻量双档）：防线段前置 + AdRules/Native/BanProgramAD/例外名单/定点段；
 // Forked from AIsouler/MyClash (https://github.com/AIsouler/MyClash)
@@ -20,11 +20,10 @@
 
 // ===== [组合脚本专属] Spark 组合池配置 =====
 // 识别合并订阅里带 [Spark] 前缀的节点：
-//   · 中国香港 / 新加坡的 Spark 节点 → 只进 Spark 专属组（见 buildComboSparkGroups）；
-//   · 其他地区的 Spark 节点 → 只进 sc 地区组（见 buildComboScGroups），不进通用分组池；
+//   · 全部 Spark 节点 → 只进 sc 地区组（sc-hk/sc-tw/sc-sg/sc-us/sc-other，见 buildComboScGroups），
+//     不进通用分组池；其中 sc-hk / sc-sg 另作为可选项进 AI / Claude / Financial / Cloudflare 组与 GLOBAL；
 //   · 非 Spark 节点（含无前缀的普通订阅）→ 行为与 Go 主版完全一致。
 const COMBO_SPARK_TAG = '[Spark]';
-const COMBO_SPARK_KEEP_REGIONS = ['中国香港', '新加坡'];
 
 // --- 静态配置区域 ---
 
@@ -1252,109 +1251,34 @@ function buildRegionGroups(filteredProxies, customProxies) {
 // ===== [组合脚本专属] Spark 组合池 =====
 
 /**
- * [组合脚本专属] 把过滤后的节点拆成四份：
+ * [组合脚本专属] 把过滤后的节点拆成三份：
  * - generalProxies：非 Spark 节点 —— 通用分组池（地区组 / Auto / 手动选择等全部由此构建，
  *   从而任何通用组都不会显示 Spark 节点）；
- * - sparkProxies：保留地区（港/新）的 Spark 节点 —— 只进 Spark 专属组；
- * - restSparkProxies：其余地区的 Spark 节点 —— 只进 sc 地区组（见 buildComboScGroups）；
- * - keptProxies：最终保留的全部订阅节点（general + spark + restSpark），供 DNS/hosts 处理与写回配置。
+ * - sparkProxies：全部 Spark 节点 —— 只进 sc 地区组（见 buildComboScGroups）；
+ * - keptProxies：最终保留的全部订阅节点（general + spark），供 DNS/hosts 处理与写回配置。
  */
 function splitComboSparkProxies(proxies) {
   const generalProxies = [];
   const sparkProxies = [];
-  const restSparkProxies = [];
   for (const proxy of proxies) {
     if (!proxy.name.includes(COMBO_SPARK_TAG)) {
       generalProxies.push(proxy);
       continue;
     }
-    const matchedNames = getMatchedRegions(proxy.name).map((r) => r.name);
-    if (matchedNames.some((n) => COMBO_SPARK_KEEP_REGIONS.includes(n))) {
-      sparkProxies.push(proxy);
-    } else {
-      // 未命中保留地区的 Spark 节点：只进 sc 地区组
-      restSparkProxies.push(proxy);
-    }
+    sparkProxies.push(proxy);
   }
-  return { generalProxies, sparkProxies, restSparkProxies, keptProxies: [...generalProxies, ...sparkProxies, ...restSparkProxies] };
+  return { generalProxies, sparkProxies, keptProxies: [...generalProxies, ...sparkProxies] };
 }
 
-/**
- * [组合脚本专属] Spark 地区组：结构与普通地区组同构（手动组 + Auto + Eco-Auto），
- * 遵循相同的开关（生成地区自动选择组 / 生成倍率组 / 隐藏地区手动选择组）。
- * 不能直接复用 createRegionGroup：其 Eco-Auto 仅对主地区名生成，Spark- 前缀名不在地区注册表内。
- */
-function createComboSparkRegionGroup(name, icon, proxies) {
-  const generateRegionAutoSelectEnabled = ruleOptionsEnable.生成地区自动选择组;
-  const hideManualSelectGroupEnabled = ruleOptionsEnable.隐藏地区手动选择组;
-  const generateRateGroupsEnabled = ruleOptionsEnable.生成倍率组 !== false;
-
-  const groups = [];
-  const selectProxies = [...proxies];
-
-  if (generateRateGroupsEnabled) {
-    const lowRateRegex = rateRegionDefinitions.find((r) => r.name === lowRateRegionName)?.regex;
-    const lowRateProxies = lowRateRegex ? proxies.filter((n) => lowRateRegex.test(n)) : [];
-    if (lowRateProxies.length > 0) {
-      const lowRateAutoName = `${name}-Eco-Auto`;
-      groups.push({
-        ...urlTestBaseOption,
-        name: lowRateAutoName,
-        proxies: lowRateProxies,
-        icon: `${iconBaseUrl}Available.svg`,
-        hidden: true,
-      });
-      selectProxies.push(lowRateAutoName);
-    }
-  }
-
-  if (generateRegionAutoSelectEnabled) {
-    const urlTestName = `${name}-Auto`;
-    groups.push({
-      ...urlTestBaseOption,
-      name: urlTestName,
-      proxies,
-    });
-    selectProxies.push(urlTestName);
-  }
-
-  groups.push({
-    ...selectBaseOption,
-    name,
-    icon,
-    proxies: selectProxies,
-    hidden: hideManualSelectGroupEnabled,
-  });
-
-  return groups;
-}
-
-/**
- * [组合脚本专属] 按保留地区构建 Spark 专属组，返回生成的组与手动组名（供 AI / Claude / Financial / Cloudflare 组拼成员）。
- */
-function buildComboSparkGroups(sparkProxies) {
-  const groups = [];
-  const selectNames = [];
-  for (const regionName of COMBO_SPARK_KEEP_REGIONS) {
-    const nodes = sparkProxies
-      .filter((p) => getMatchedRegions(p.name).some((r) => r.name === regionName))
-      .map((p) => p.name);
-    if (nodes.length === 0) continue;
-    const groupName = `Spark-${regionName}`;
-    const region = allRegionDefinitions.find((r) => r.name === regionName);
-    groups.push(...createComboSparkRegionGroup(groupName, region?.icon, nodes));
-    selectNames.push(groupName);
-  }
-  return { groups, selectNames };
-}
 
 /**
  * [组合脚本专属] Spark 全地区 sc 分组（2026-11-14 新增，应用户要求）：
  * 全部 Spark 节点按地区各成一个 url-test 组：sc-hk / sc-tw / sc-sg / sc-us，
  * 未落入四地的（日本、韩国、欧洲各国、澳门及未识别地区）合进 sc-other。
  * 多地区命中的节点按港 → 台 → 新 → 美的顺序只进先命中的组，保证五组互不重叠。
- * 与 Spark-中国香港 / Spark-新加坡 专属组并行存在（成员可重叠），不进 GLOBAL、
- * 不进任何服务组，只作为现成的 Spark 地区出口供手动选用；空地区不建组。
+ * sc-hk / sc-sg 同时作为可选项进 AI / Claude / Financial / Cloudflare 组与 GLOBAL
+ * （接替 2026-11-14 已删除的 Spark-中国香港 / Spark-新加坡 专属组）；五组本体
+ * 只作为现成的 Spark 地区出口供手动选用；空地区不建组。
  * urlTestBaseOption 自带 hidden:true（本为地区 -Auto 子组设计），此处覆写为可见。
  */
 const COMBO_SC_REGION_MAP = [
@@ -1378,7 +1302,8 @@ function buildComboScGroups(allSparkProxies) {
   if (rest.length > 0) {
     groups.push({ ...urlTestBaseOption, name: 'sc-other', proxies: rest, hidden: false });
   }
-  return groups;
+  const selectNames = ['sc-hk', 'sc-sg'].filter((n) => groups.some((g) => g.name === n));
+  return { groups, selectNames };
 }
 
 // ---构建自定义节点组---
@@ -1493,14 +1418,14 @@ function buildServiceGroups(ctx) {
           ];
     }
 
-    // [组合脚本专属] AI / Claude / Financial 组：Spark 专属组排到成员最前（默认选中保持不变，用户手动切）
-    if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboSparkSelectNames?.length) {
-      groupProxies = [...ctx.comboSparkSelectNames, ...groupProxies];
+    // [组合脚本专属] AI / Claude / Financial 组：sc-hk / sc-sg 排到成员最前（默认选中保持不变，用户手动切）
+    if ((svc.name === 'AI' || svc.name === 'Claude' || svc.name === 'Financial') && ctx.comboScSelectNames?.length) {
+      groupProxies = [...ctx.comboScSelectNames, ...groupProxies];
     }
     // [组合脚本专属] Cloudflare 组（固定成员且无默认选中，默认落点是首位的手动选择）：
-    // Spark 专属组插在手动选择/默认代理之后，只多两个可选项，不改默认落点。
-    if (svc.name === 'Cloudflare' && ctx.comboSparkSelectNames?.length) {
-      groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboSparkSelectNames, ...groupProxies.slice(2)];
+    // sc-hk / sc-sg 插在手动选择/默认代理之后，只多两个可选项，不改默认落点。
+    if (svc.name === 'Cloudflare' && ctx.comboScSelectNames?.length) {
+      groupProxies = [...groupProxies.slice(0, 2), ...ctx.comboScSelectNames, ...groupProxies.slice(2)];
     }
 
     // default-selected 指向地区组时校验该组已生成：单地区订阅下指向未生成的组
@@ -1541,7 +1466,7 @@ function buildServiceGroups(ctx) {
   //   节点，而该节点经地区组 / 手动选择同样可选，属重复入口；
   // · 地区组只取 select 本体（groupNamesOfSelect），-Auto / -Eco-Auto 等子组
   //   不进：点进地区组本体照样可选，组本身不删，零功能损失；
-  // · [组合脚本专属] Spark 专属组同理只进手动组本体（comboSparkSelectNames）。
+  // · [组合脚本专属] sc 组只进 sc-hk / sc-sg（comboScSelectNames），其余 sc 组不进。
   // 默认代理保持第一位：它同时是切到全局模式时的默认落点。
   const globalBaseOrder = ['Auto', '负载均衡', '手动选择'];
   const globalGroup = {
@@ -1552,7 +1477,7 @@ function buildServiceGroups(ctx) {
       ...globalBaseOrder.filter((n) => baseGroupNames.includes(n)),
       ...baseGroupNames.filter((n) => !globalBaseOrder.includes(n)),
       ...groupNamesOfSelect,
-      ...(ctx.comboSparkSelectNames || []),
+      ...(ctx.comboScSelectNames || []),
       ...customGroupNames,
       directGroup.name,
     ],
@@ -1660,8 +1585,8 @@ function buildRuleProviders() {
  */
 function buildFunctionalGroups(filteredProxies, generatedRegionGroups, customizeInfo) {
   const ctx = buildFunctionalContext(filteredProxies, generatedRegionGroups, customizeInfo);
-  // [组合脚本专属] Spark 专属组名透传给 buildServiceGroups（供 AI / Claude / Financial / Cloudflare 组拼成员）
-  ctx.comboSparkSelectNames = customizeInfo?.comboSparkSelectNames || [];
+  // [组合脚本专属] sc-hk / sc-sg 组名透传给 buildServiceGroups（供 AI / Claude / Financial / Cloudflare 组拼成员）
+  ctx.comboScSelectNames = customizeInfo?.comboScSelectNames || [];
   // fixedMembers 过滤需要地区组名集合，补入上下文
   ctx.generatedRegionGroups = generatedRegionGroups;
   ctx.generatedRegionGroupNames = new Set(generatedRegionGroups.map((g) => g.name));
@@ -2195,12 +2120,11 @@ function main(config) {
   const filteredProxies = filterAndNormalizeProxies(config);
 
   // ===== [组合脚本专属] Spark 组合池拆分 =====
-  // 通用分组池只用非 Spark 节点；港/新 Spark 节点进专属组，其余 Spark 节点进 sc 组；
+  // 通用分组池只用非 Spark 节点；Spark 节点只进 sc 组；
   // DNS/hosts 处理覆盖全部保留节点，保证 Spark 节点的域名解析与防死锁待遇不变。
   const comboSplit = splitComboSparkProxies(filteredProxies);
   const generalProxies = comboSplit.generalProxies;
-  const comboSparkGroupsInfo = buildComboSparkGroups(comboSplit.sparkProxies);
-  const comboScGroups = buildComboScGroups([...comboSplit.sparkProxies, ...comboSplit.restSparkProxies]);
+  const comboScInfo = buildComboScGroups(comboSplit.sparkProxies);
 
   const { customProxies, customProxyNames, customGroup } = buildCustomizeGroups(generalProxies);
 
@@ -2216,7 +2140,7 @@ function main(config) {
   } = buildFunctionalGroups(
     generalProxies,
     generatedRegionGroups,
-    { customProxyNames, customGroup, comboSparkSelectNames: comboSparkGroupsInfo.selectNames },
+    { customProxyNames, customGroup, comboScSelectNames: comboScInfo.selectNames },
   );
 
   const { dns, hosts, proxies: mappedProxies } = buildDnsAndHostsConfig(config, comboSplit.keptProxies);
@@ -2349,8 +2273,7 @@ function main(config) {
     ...(customGroup ? [customGroup] : []),
     directGroup,
     ...generatedRegionGroups,
-    ...comboSparkGroupsInfo.groups, // [组合脚本专属] Spark 专属组（港/新）
-    ...comboScGroups, // [组合脚本专属] Spark 全地区 sc 分组（港/台/新/美/other）
+    ...comboScInfo.groups, // [组合脚本专属] Spark sc 分组（港/台/新/美/other）
   ];
   newConfig['rule-providers'] = finalRuleProviders;
 
