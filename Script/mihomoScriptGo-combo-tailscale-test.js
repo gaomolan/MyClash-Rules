@@ -240,10 +240,10 @@ const s20pTailscaleProxy = {
   name: '家庭 Tailscale',
   type: 'tailscale',
   hostname: 'bettbox-s20p',
-  state-dir: './tailscale-s20p',
+  'state-dir': './tailscale-s20p',
   ephemeral: false,
   udp: true,
-  accept-routes: true,
+  'accept-routes': true,
   'ip-version': 'ipv4-prefer',
 };
 
