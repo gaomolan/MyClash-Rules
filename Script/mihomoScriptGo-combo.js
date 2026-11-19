@@ -2148,8 +2148,6 @@ function buildDnsAndHostsConfig(config, filteredProxies) {
   };
 
   const hosts = {
-    // 保留旧测试地址作为家庭路由器别名，避免系统 DNS 查询 .test 域名。
-    's20p-home.test': '192.168.123.1',
     'doh.pub': ['1.12.12.12', '120.53.53.53'],
     'cloudflare-dns.com': ['1.1.1.1', '1.0.0.1'],
     'dns.google': ['8.8.8.8', '8.8.4.4'],
@@ -2343,7 +2341,6 @@ function main(config) {
 
   newConfig['rules'] = [
     // 家庭网段必须早于 private 直连规则；仅家庭地址进入 Tailnet。
-    'DOMAIN,s20p-home.test,家庭 Tailscale',
     'IP-CIDR,192.168.123.0/24,家庭 Tailscale,no-resolve',
     'IP-CIDR,100.84.133.35/32,家庭 Tailscale,no-resolve',
     // 主防线段已并入此前缀（private 之后、geolocation-cn 之前），见 buildDefensePrefixRules。
