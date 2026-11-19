@@ -231,6 +231,18 @@ const blockStunPorts = [
   'AND,((NETWORK,UDP),(DST-PORT,19302-19309)),REJECT',
 ];
 
+// 家庭 Tailnet：沿用现有登录状态，访问 S20P 和家庭 LAN；不配置 Exit Node。
+const s20pTailscaleProxy = {
+  name: '家庭 Tailscale',
+  type: 'tailscale',
+  hostname: 'bettbox-s20p',
+  'state-dir': './tailscale-s20p',
+  ephemeral: false,
+  udp: true,
+  'accept-routes': true,
+  'ip-version': 'ipv4-prefer',
+};
+
 // 直连节点
 const directProxies = [
   {
@@ -2304,7 +2316,7 @@ function main(config) {
   // direct/reject/rematch 等伪节点不改写；不添加全局 UDP 劫持规则。
   // ⚠️ 本开关不保证每个节点都能承载 STUN：显式声明不支持 UDP 的节点仍可能导致 UDP 流量匹配后续规则。
   const webrtcProxyFixEnabled = ruleOptionsEnable.WebRTC走代理;
-  newConfig['proxies'] = [...mappedProxies, ...customProxies, ...directProxies].map((proxy) => {
+  newConfig['proxies'] = [...mappedProxies, ...customProxies, s20pTailscaleProxy, ...directProxies].map((proxy) => {
     const type = String(proxy.type ?? '').toLowerCase();
     if (
       !webrtcProxyFixEnabled ||
@@ -2328,6 +2340,9 @@ function main(config) {
   newConfig['rule-providers'] = finalRuleProviders;
 
   newConfig['rules'] = [
+    // 家庭网段必须早于 private 直连规则；仅家庭地址进入 Tailnet。
+    'IP-CIDR,192.168.123.0/24,家庭 Tailscale,no-resolve',
+    'IP-CIDR,100.84.133.35/32,家庭 Tailscale,no-resolve',
     // 主防线段已并入此前缀（private 之后、geolocation-cn 之前），见 buildDefensePrefixRules。
     ...buildDefensePrefixRules(),
     // 开关2「屏蔽STUN端口」：直接拦截常见 STUN/TURN 端口，优先级高于开关1；位置在 QUIC 屏蔽之前。
